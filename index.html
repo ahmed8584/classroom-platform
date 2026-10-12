@@ -21,48 +21,14 @@ header a { color: #fff; text-decoration: none; background: rgba(255,255,255,0.2)
 .sem-btn { background: none; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; color: #5f6368; font-size: 13px; transition: 0.2s; }
 .sem-btn.active { background: #1a73e8; color: #fff; }
 .sem-btn[data-sem="s2"].active { background: #34a853; }
-
-/* شريط التبويبات - يظهر فقط بعد الدخول */
-nav.tabs {
-  display: none;
-  gap: 6px;
-  padding: 10px 20px;
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
-  overflow-x: auto;
-  flex-wrap: nowrap;
-}
+nav.tabs { display: none; gap: 6px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #e0e0e0; overflow-x: auto; flex-wrap: nowrap; }
 body.authenticated nav.tabs { display: flex; }
-nav.tabs button {
-  background: #f1f3f4;
-  border: 1px solid transparent;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  color: #5f6368;
-  white-space: nowrap;
-  transition: 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
+nav.tabs button { background: #f1f3f4; border: 1px solid transparent; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; color: #5f6368; white-space: nowrap; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
 nav.tabs button:hover { background: #e8eaed; color: #1a73e8; }
-nav.tabs button.active {
-  background: linear-gradient(135deg, #1a73e8, #4285f4);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(26,115,232,0.35);
-  transform: translateY(-1px);
-}
+nav.tabs button.active { background: linear-gradient(135deg, #1a73e8, #4285f4); color: #fff; box-shadow: 0 2px 8px rgba(26,115,232,0.35); transform: translateY(-1px); }
 nav.tabs button.general { color: #8e34d6; }
 nav.tabs button.general:hover { background: #f3e8fd; color: #8e34d6; }
-nav.tabs button.general.active {
-  background: linear-gradient(135deg, #a142f4, #c17af9);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(161,66,244,0.35);
-}
-
+nav.tabs button.general.active { background: linear-gradient(135deg, #a142f4, #c17af9); color: #fff; box-shadow: 0 2px 8px rgba(161,66,244,0.35); }
 main { padding: 20px; max-width: 1200px; margin: 0 auto; }
 section.tab { display: none; }
 section.tab.active { display: block; animation: fadeIn 0.3s; }
@@ -86,7 +52,6 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .btn.purple:hover { background: #8e34d6; }
 .btn.small { padding: 6px 10px; font-size: 12px; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
 .toast-container { position: fixed; top: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
 .toast { padding: 12px 18px; border-radius: 10px; color: #fff; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transform: translateX(-120%); transition: transform 0.3s; min-width: 220px; }
 .toast.show { transform: translateX(0); }
@@ -94,12 +59,10 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .toast.success { background: #34a853; }
 .toast.error { background: #ea4335; }
 .toast.warn { background: #fbbc04; color: #202124; }
-
 .flash-overlay { position: fixed; inset: 0; background: rgba(26,115,232,0.85); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 60px; font-weight: 900; z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.4s; text-align: center; padding: 20px; }
 .flash-overlay.show { opacity: 1; }
 .flash-overlay.flash { animation: flashAnim 0.4s ease-in-out 3; }
 @keyframes flashAnim { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
 .timer-display, .stopwatch-display { font-size: 64px; font-weight: 900; text-align: center; font-variant-numeric: tabular-nums; color: #1a73e8; margin: 16px 0; letter-spacing: 2px; }
 .stopwatch-display { color: #34a853; }
 .wheel-wrap { position: relative; width: 400px; height: 400px; margin: 20px auto; max-width: 90vw; }
@@ -107,7 +70,6 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .wheel-pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 30px solid #ea4335; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
 .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; font-weight: 900; color: #1a73e8; font-size: 14px; z-index: 3; border: 3px solid #1a73e8; transition: 0.2s; }
 .wheel-center:hover { background: #1a73e8; color: #fff; }
-
 .points-input { width: 80px; }
 .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
 .student-card { background: #fff; border: 2px solid #e8eaed; border-radius: 10px; padding: 12px; transition: 0.2s; cursor: pointer; }
@@ -119,7 +81,6 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .points-pair span.active { background: #e8f0fe; color: #1a73e8; }
 .points-pair span.active.s2 { background: #e6f4ea; color: #34a853; }
 .student-card .actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-
 .leader-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; margin-bottom: 8px; background: #f8f9fa; border-right: 4px solid transparent; }
 .leader-item.top1 { background: linear-gradient(90deg, #fff8e1, #fff); border-right-color: #fbbc04; }
 .leader-item.top2 { background: linear-gradient(90deg, #f5f5f5, #fff); border-right-color: #9e9e9e; }
@@ -127,13 +88,11 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .leader-rank { font-size: 22px; font-weight: 900; width: 40px; text-align: center; }
 .leader-name { flex: 1; font-weight: 700; }
 .leader-points { font-size: 20px; font-weight: 900; color: #1a73e8; }
-
 .group-card { background: #fff; border-radius: 10px; padding: 14px; border: 2px solid #e8eaed; margin-bottom: 12px; }
 .group-card h3 { color: #1a73e8; margin-bottom: 8px; font-size: 15px; }
 .group-card ul { list-style: none; padding-right: 0; }
 .group-card li { padding: 6px 0; border-bottom: 1px dashed #e8eaed; font-size: 14px; }
 .group-card li:last-child { border-bottom: none; }
-
 .stat-card { flex: 1; min-width: 130px; background: #f8f9fa; padding: 14px; border-radius: 10px; text-align: center; border-right: 4px solid #1a73e8; }
 .stat-card.green { border-right-color: #34a853; }
 .stat-card.red { border-right-color: #ea4335; }
@@ -141,7 +100,6 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .stat-value { font-size: 24px; font-weight: 900; color: #1a73e8; }
 .stat-card.green .stat-value { color: #34a853; }
 .stat-card.red .stat-value { color: #ea4335; }
-
 .comparison-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 10px; margin-bottom: 8px; background: #f8f9fa; border-right: 4px solid #e8eaed; }
 .comparison-row.up { border-right-color: #34a853; background: #e6f4ea; }
 .comparison-row.down { border-right-color: #ea4335; background: #fce8e6; }
@@ -152,9 +110,7 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .cmp-diff { font-size: 16px; font-weight: 900; min-width: 70px; text-align: center; }
 .comparison-row.up .cmp-diff { color: #34a853; }
 .comparison-row.down .cmp-diff { color: #ea4335; }
-
 .empty { text-align: center; padding: 40px; color: #9aa0a6; font-size: 14px; }
-
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
 .modal-overlay.show { display: flex; }
 .modal { background: #fff; border-radius: 14px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
@@ -163,11 +119,9 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #5f6368; padding: 4px 10px; border-radius: 6px; }
 .modal-close:hover { background: #f1f3f4; }
 .modal-body { padding: 20px 22px; }
-
 .class-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px; border-right: 4px solid #a142f4; }
 .class-row .class-name { font-weight: 700; }
 .class-row .class-count { color: #5f6368; font-size: 12px; }
-
 .login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a73e8, #4285f4, #a142f4); display: flex; align-items: center; justify-content: center; z-index: 99999; padding: 20px; }
 body.authenticated .login-screen { display: none; }
 .login-box { background: #fff; border-radius: 16px; padding: 40px 32px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
@@ -177,19 +131,13 @@ body.authenticated .login-screen { display: none; }
 .login-box input:focus { border-color: #1a73e8; box-shadow: 0 0 0 4px rgba(26,115,232,0.12); }
 .login-box .btn { width: 100%; padding: 14px; font-size: 16px; }
 .login-error { color: #ea4335; font-size: 13px; margin-top: 12px; min-height: 20px; font-weight: 600; }
-
-body:not(.authenticated) header,
-body:not(.authenticated) .toolbar,
-body:not(.authenticated) main { display: none !important; }
-
+body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.authenticated) main { display: none !important; }
 .password-section input { padding: 10px 12px; border: 1px solid #dadce0; border-radius: 8px; outline: none; }
 .password-section input:focus { border-color: #1a73e8; }
-
 .drop-zone { border: 2px dashed #1a73e8; border-radius: 12px; padding: 26px 20px; text-align: center; background: #f0f7ff; cursor: pointer; transition: 0.2s; }
 .drop-zone:hover { background: #e3f0ff; }
 .drop-zone.dragover { background: #d2e7ff; border-color: #1557b0; transform: scale(1.01); }
 .drop-zone.has-file { background: #e6f4ea; border-color: #34a853; }
-
 @media (max-width: 600px) {
   .timer-display, .stopwatch-display { font-size: 44px; }
   header h1 { font-size: 16px; }
@@ -204,9 +152,8 @@ body:not(.authenticated) main { display: none !important; }
   <div class="login-box">
     <h1>🎓 منصة الحصة التفاعلية</h1>
     <p>الرجاء إدخال كلمة المرور للمتابعة</p>
-    <input type="password" id="login-password" placeholder="كلمة المرور"
-           onkeypress="if(event.key==='Enter')doLogin()" autofocus>
-    <button class="btn" id="login-btn" onclick="doLogin()">🔓 دخول</button>
+    <input type="password" id="login-password" placeholder="كلمة المرور" autofocus>
+    <button class="btn" id="login-btn" type="button">🔓 دخول</button>
     <div class="login-error" id="login-error"></div>
   </div>
 </div>
@@ -215,31 +162,31 @@ body:not(.authenticated) main { display: none !important; }
   <h1>🎓 منصة الحصة التفاعلية</h1>
   <div style="display:flex;gap:8px;align-items:center">
     <a id="sheet-link" href="#" target="_blank">📊 جدول البيانات</a>
-    <button class="logout-btn" onclick="doLogout()">🚪 خروج</button>
+    <button class="logout-btn" id="logout-btn" type="button">🚪 خروج</button>
   </div>
 </header>
 
 <div class="toolbar">
   <label>📚 الصف الحالي:</label>
-  <select id="class-selector" onchange="switchClass(this.value)"></select>
-  <button class="btn purple small" onclick="openClassesModal()">⚙️ إدارة الصفوف</button>
-  <button class="btn success small" onclick="openImportModal()">📥 استيراد الطلاب</button>
+  <select id="class-selector"></select>
+  <button class="btn purple small" id="btn-manage-classes" type="button">⚙️ إدارة الصفوف</button>
+  <button class="btn success small" id="btn-import" type="button">📥 استيراد الطلاب</button>
   <span class="class-info" id="class-info" style="display:none"></span>
   <div class="semester-toggle">
-    <button class="sem-btn active" data-sem="s1" onclick="switchSemester('s1')">📘 الفصل الأول</button>
-    <button class="sem-btn" data-sem="s2" onclick="switchSemester('s2')">📗 الفصل الثاني</button>
+    <button class="sem-btn active" data-sem="s1" type="button">📘 الفصل الأول</button>
+    <button class="sem-btn" data-sem="s2" type="button">📗 الفصل الثاني</button>
   </div>
 </div>
 
 <nav class="tabs">
-  <button data-tab="students" class="active">👥 الطلاب</button>
-  <button data-tab="points">🏆 التعزيز</button>
-  <button data-tab="leaderboard">🥇 المتصدرون</button>
-  <button data-tab="comparison">📊 المقارنة</button>
-  <button data-tab="groups">📊 المجموعات</button>
-  <button data-tab="wheel">🎡 العجلة</button>
-  <button data-tab="timer" class="general">⏱️ المؤقت</button>
-  <button data-tab="stopwatch" class="general">⏲️ ساعة الإيقاف</button>
+  <button data-tab="students" class="active" type="button">👥 الطلاب</button>
+  <button data-tab="points" type="button">🏆 التعزيز</button>
+  <button data-tab="leaderboard" type="button">🥇 المتصدرون</button>
+  <button data-tab="comparison" type="button">📊 المقارنة</button>
+  <button data-tab="groups" type="button">📊 المجموعات</button>
+  <button data-tab="wheel" type="button">🎡 العجلة</button>
+  <button data-tab="timer" class="general" type="button">⏱️ المؤقت</button>
+  <button data-tab="stopwatch" class="general" type="button">Ⲩ ساعة الإيقاف</button>
 </nav>
 
 <main>
@@ -247,22 +194,20 @@ body:not(.authenticated) main { display: none !important; }
     <div class="card">
       <h2>➕ إضافة طالب للصف الحالي</h2>
       <div class="row">
-        <input type="text" id="new-name" placeholder="اسم الطالب" style="flex:1;min-width:200px"
-               onkeypress="if(event.key==='Enter')addStudent()">
-        <button class="btn" onclick="addStudent()">إضافة</button>
+        <input type="text" id="new-name" placeholder="اسم الطالب" style="flex:1;min-width:200px">
+        <button class="btn" id="btn-add-student" type="button">إضافة</button>
       </div>
       <p style="color:#5f6368;font-size:12px;margin-top:8px">
-        💡 لإضافة مجموعة كبيرة من الطلاب، استخدم زر <b>📥 استيراد الطلاب</b> في الأعلى.
+        💡 لإضافة مجموعة كبيرة، استخدم زر <b>📥 استيراد الطلاب</b> في الأعلى.
       </p>
     </div>
-
     <div class="card">
       <div class="row" style="justify-content:space-between;margin-bottom:12px">
         <h2 style="margin:0">📋 طلاب الصف (<span id="student-count">0</span>)</h2>
         <div class="row">
-          <button class="btn success small" onclick="exportClassToExcel()">📥 تصدير Excel</button>
-          <button class="btn secondary small" onclick="loadStudents()">🔄 تحديث</button>
-          <button class="btn danger small" onclick="confirmDeleteAll()">🗑️ تصفير نقاط الفصل</button>
+          <button class="btn success small" id="btn-export" type="button">📥 تصدير Excel</button>
+          <button class="btn secondary small" id="btn-refresh" type="button">🔄 تحديث</button>
+          <button class="btn danger small" id="btn-reset-points" type="button">🗑️ تصفير نقاط الفصل</button>
         </div>
       </div>
       <div id="students-list"></div>
@@ -278,14 +223,11 @@ body:not(.authenticated) main { display: none !important; }
         <input type="text" id="points-reason" placeholder="سبب (اختياري)" style="flex:1;min-width:150px">
       </div>
       <div class="row">
-        <button class="btn success" onclick="applyPointsToSelected(1)">➕ إضافة للمحدد</button>
-        <button class="btn danger" onclick="applyPointsToSelected(-1)">➖ خصم من المحدد</button>
-        <button class="btn secondary" onclick="selectAll()">تحديد الكل</button>
-        <button class="btn secondary" onclick="clearSelection()">إلغاء التحديد</button>
+        <button class="btn success" id="btn-plus" type="button">➕ إضافة للمحدد</button>
+        <button class="btn danger" id="btn-minus" type="button">➖ خصم من المحدد</button>
+        <button class="btn secondary" id="btn-select-all" type="button">تحديد الكل</button>
+        <button class="btn secondary" id="btn-clear-selection" type="button">إلغاء التحديد</button>
       </div>
-      <p style="color:#5f6368;font-size:13px;margin-top:10px">
-        💡 اضغط على بطاقة الطالب لتحديده. النقاط تُسجَّل في <b>الفصل المختار</b>.
-      </p>
     </div>
     <div id="points-students" class="students-grid"></div>
   </section>
@@ -294,7 +236,7 @@ body:not(.authenticated) main { display: none !important; }
     <div class="card">
       <div class="row" style="justify-content:space-between;margin-bottom:14px">
         <h2 style="margin:0">🥇 متصدرون — <span id="lb-class-name">—</span></h2>
-        <button class="btn secondary small" onclick="loadLeaderboard()">🔄 تحديث</button>
+        <button class="btn secondary small" id="btn-refresh-lb" type="button">🔄 تحديث</button>
       </div>
       <div id="leaderboard-list"></div>
     </div>
@@ -305,8 +247,8 @@ body:not(.authenticated) main { display: none !important; }
       <div class="row" style="justify-content:space-between;margin-bottom:14px">
         <h2 style="margin:0">📊 مقارنة الفصلين — <span id="cmp-class-name">—</span></h2>
         <div class="row">
-          <button class="btn secondary small" onclick="loadComparison()">🔄 تحديث</button>
-          <button class="btn success small" onclick="exportClassToExcel()">📥 تصدير كامل</button>
+          <button class="btn secondary small" id="btn-refresh-cmp" type="button">🔄 تحديث</button>
+          <button class="btn success small" id="btn-export2" type="button">📥 تصدير كامل</button>
         </div>
       </div>
       <div id="comparison-stats" class="row" style="gap:12px;margin-bottom:18px"></div>
@@ -320,7 +262,7 @@ body:not(.authenticated) main { display: none !important; }
       <div class="row">
         <label>عدد المجموعات:</label>
         <input type="number" id="groups-count" value="3" min="2" max="10" style="width:80px;text-align:center">
-        <button class="btn" onclick="divideGroups()">🎲 تقسيم عشوائي</button>
+        <button class="btn" id="btn-divide" type="button">🎲 تقسيم عشوائي</button>
       </div>
     </div>
     <div id="groups-result"></div>
@@ -332,12 +274,12 @@ body:not(.authenticated) main { display: none !important; }
       <div class="wheel-wrap">
         <div class="wheel-pointer"></div>
         <canvas id="wheel-canvas" width="600" height="600"></canvas>
-        <div class="wheel-center" onclick="spinWheel()">ابدأ</div>
+        <div class="wheel-center" id="wheel-center" style="cursor:pointer">ابدأ</div>
       </div>
       <div class="row" style="justify-content:center;margin-top:14px">
-        <button class="btn secondary" onclick="drawWheel()">🔄 إعادة رسم</button>
-        <button class="btn success" onclick="spinWheel()">🎯 لف العجلة</button>
-        <button class="btn" onclick="randomPick()">🎲 اختيار سريع</button>
+        <button class="btn secondary" id="btn-redraw" type="button">🔄 إعادة رسم</button>
+        <button class="btn success" id="btn-spin" type="button">🎯 لف العجلة</button>
+        <button class="btn" id="btn-random" type="button">🎲 اختيار سريع</button>
       </div>
       <div id="wheel-result" class="empty">لم يتم الاختيار بعد</div>
     </div>
@@ -354,16 +296,16 @@ body:not(.authenticated) main { display: none !important; }
       </div>
       <div class="timer-display" id="timer-display">05:00</div>
       <div class="row" style="justify-content:center">
-        <button class="btn success" onclick="startTimer()">▶️ بدء</button>
-        <button class="btn secondary" onclick="pauseTimer()">⏸️ إيقاف</button>
-        <button class="btn danger" onclick="resetTimer()">🔄 إعادة</button>
+        <button class="btn success" id="btn-timer-start" type="button">▶️ بدء</button>
+        <button class="btn secondary" id="btn-timer-pause" type="button">⏸️ إيقاف</button>
+        <button class="btn danger" id="btn-timer-reset" type="button">🔄 إعادة</button>
       </div>
       <div class="row" style="justify-content:center;margin-top:14px">
-        <button class="btn secondary small" onclick="setTimerPreset(1)">1 د</button>
-        <button class="btn secondary small" onclick="setTimerPreset(3)">3 د</button>
-        <button class="btn secondary small" onclick="setTimerPreset(5)">5 د</button>
-        <button class="btn secondary small" onclick="setTimerPreset(10)">10 د</button>
-        <button class="btn secondary small" onclick="setTimerPreset(15)">15 د</button>
+        <button class="btn secondary small timer-preset" data-min="1" type="button">1 د</button>
+        <button class="btn secondary small timer-preset" data-min="3" type="button">3 د</button>
+        <button class="btn secondary small timer-preset" data-min="5" type="button">5 د</button>
+        <button class="btn secondary small timer-preset" data-min="10" type="button">10 د</button>
+        <button class="btn secondary small timer-preset" data-min="15" type="button">15 د</button>
       </div>
     </div>
   </section>
@@ -373,22 +315,21 @@ body:not(.authenticated) main { display: none !important; }
       <h2>⏲️ ساعة الإيقاف <span style="color:#a142f4;font-size:12px">(عام)</span></h2>
       <div class="stopwatch-display" id="stopwatch-display">00:00.0</div>
       <div class="row" style="justify-content:center">
-        <button class="btn success" onclick="startStopwatch()">▶️ بدء</button>
-        <button class="btn secondary" onclick="pauseStopwatch()">⏸️ إيقاف</button>
-        <button class="btn danger" onclick="resetStopwatch()">🔄 تصفير</button>
-        <button class="btn secondary" onclick="lapStopwatch()">🚩 لفة</button>
+        <button class="btn success" id="btn-sw-start" type="button">▶️ بدء</button>
+        <button class="btn secondary" id="btn-sw-pause" type="button">⏸️ إيقاف</button>
+        <button class="btn danger" id="btn-sw-reset" type="button">🔄 تصفير</button>
+        <button class="btn secondary" id="btn-sw-lap" type="button">🚩 لفة</button>
       </div>
       <div id="laps" style="margin-top:16px"></div>
     </div>
   </section>
 </main>
 
-<!-- Modal: إدارة الصفوف -->
 <div class="modal-overlay" id="classes-modal">
   <div class="modal">
     <div class="modal-header">
       <h2>⚙️ إدارة الصفوف والشعب</h2>
-      <button class="modal-close" onclick="closeClassesModal()">✕</button>
+      <button class="modal-close" id="close-classes" type="button">✕</button>
     </div>
     <div class="modal-body">
       <div class="card" style="box-shadow:none;border:1px solid #e8eaed">
@@ -396,11 +337,8 @@ body:not(.authenticated) main { display: none !important; }
         <div class="row">
           <select id="new-grade-select" style="flex:1"></select>
           <select id="new-section-select" style="width:170px"></select>
-          <button class="btn" onclick="addClassFromSelects()">إضافة</button>
+          <button class="btn" id="btn-add-class" type="button">إضافة</button>
         </div>
-        <p style="color:#5f6368;font-size:12px;margin-top:8px">
-          💡 اترك الشعبة "بدون شعبة" إذا لم تقسّم الصف.
-        </p>
       </div>
       <div class="card" style="box-shadow:none;border:1px solid #e8eaed">
         <h3>📋 نسخ صف كامل</h3>
@@ -415,14 +353,14 @@ body:not(.authenticated) main { display: none !important; }
         </div>
         <div class="row">
           <label style="font-size:13px"><input type="checkbox" id="copy-reset" checked> تصفير النقاط</label>
-          <button class="btn" onclick="doCopyClass()">📋 نسخ</button>
+          <button class="btn" id="btn-copy-class" type="button">📋 نسخ</button>
         </div>
       </div>
       <div class="card" style="box-shadow:none;border:1px solid #e8eaed">
         <h3>🎓 ترقية صف (نهاية العام)</h3>
         <div class="row" style="margin-bottom:8px">
           <label style="font-size:13px;font-weight:700">من:</label>
-          <select id="promote-source" style="flex:1" onchange="onPromoteSourceChange()"></select>
+          <select id="promote-source" style="flex:1"></select>
         </div>
         <div class="row" style="margin-bottom:8px">
           <label style="font-size:13px;font-weight:700">إلى:</label>
@@ -432,7 +370,7 @@ body:not(.authenticated) main { display: none !important; }
         <div class="row">
           <label style="font-size:13px"><input type="checkbox" id="promote-reset" checked> تصفير النقاط</label>
           <label style="font-size:13px"><input type="checkbox" id="promote-create" checked> إنشاء تلقائي</label>
-          <button class="btn purple" onclick="doPromoteClass()">🎓 ترقية</button>
+          <button class="btn purple" id="btn-promote" type="button">🎓 ترقية</button>
         </div>
       </div>
       <div class="card password-section" style="box-shadow:none;border:1px solid #e8eaed">
@@ -444,24 +382,22 @@ body:not(.authenticated) main { display: none !important; }
           <input type="password" id="pwd-new" placeholder="الجديدة" style="flex:1">
           <input type="password" id="pwd-confirm" placeholder="تأكيد الجديدة" style="flex:1">
         </div>
-        <button class="btn" onclick="doChangePassword()">💾 حفظ</button>
+        <button class="btn" id="btn-change-pwd" type="button">💾 حفظ</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal: استيراد الطلاب -->
 <div class="modal-overlay" id="import-modal">
   <div class="modal">
     <div class="modal-header">
       <h2>📥 استيراد طلاب من Excel / CSV</h2>
-      <button class="modal-close" onclick="closeImportModal()">✕</button>
+      <button class="modal-close" id="close-import" type="button">✕</button>
     </div>
     <div class="modal-body">
       <p style="color:#5f6368;font-size:13px;margin-bottom:14px">
-        اختر الصف والشعبة، ثم ارفع ملف الأسماء. سيتم استيرادهم إلى الوجهة المحددة.
+        اختر الصف والشعبة، ثم ارفع ملف الأسماء.
       </p>
-
       <div class="row" style="margin-bottom:14px">
         <label style="font-weight:700;font-size:13px;color:#5f6368;min-width:80px">📚 الصف:</label>
         <select id="import-grade" style="flex:1"></select>
@@ -470,7 +406,6 @@ body:not(.authenticated) main { display: none !important; }
         <label style="font-weight:700;font-size:13px;color:#5f6368;min-width:80px">🏷️ الشعبة:</label>
         <select id="import-section" style="flex:1"></select>
       </div>
-
       <div id="drop-zone" class="drop-zone">
         <div style="font-size: 42px; line-height: 1;">📄</div>
         <div style="margin-top: 10px; font-weight: 700; color: #1a73e8; font-size: 15px;">اضغط لاختيار ملف أو اسحبه هنا</div>
@@ -478,12 +413,9 @@ body:not(.authenticated) main { display: none !important; }
         <div id="file-name-display" style="font-size: 13px; color: #34a853; margin-top: 8px; font-weight: 700; min-height: 16px;"></div>
       </div>
       <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display:none;">
-
       <div class="row" style="justify-content:center;margin-top:18px">
-        <button class="btn success" id="import-btn" onclick="doImportStudents()" disabled style="min-width:200px">
-          📥 استيراد الآن
-        </button>
-        <button class="btn secondary" onclick="resetImportForm()">🔄 إعادة تعيين</button>
+        <button class="btn success" id="import-btn" type="button" disabled style="min-width:200px">📥 استيراد الآن</button>
+        <button class="btn secondary" id="btn-reset-import" type="button">🔄 إعادة تعيين</button>
       </div>
     </div>
   </div>
@@ -493,21 +425,26 @@ body:not(.authenticated) main { display: none !important; }
 <div class="flash-overlay" id="flash-overlay"></div>
 
 <script>
-/* ⬇️⬇️⬇️ ضع رابط Web App من Apps Script هنا ⬇️⬇️⬇️ */
-const API_URL = 'https://script.google.com/macros/s/AKfycbwoiILadO9u1TJb4hWSAWjuSCriFje5PUiLPpqumwLB20gi4GhVbTV6YvRfi15s_CPj/exec
-';
+/* ==========================================
+   API Configuration
+   ========================================== */
+var API_URL = 'https://script.google.com/macros/s/AKfycbwoiILadO9u1TJb4hWSAWjuSCriFje5PUiLPpqumwLB20gi4GhVbTV6YvRfi15s_CPj/exec';
 
-/* ==================== JSONP helper ==================== */
-function api(action, params = {}) {
-  return new Promise((resolve, reject) => {
-    const cb = 'api_cb_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
-    const timeout = setTimeout(() => {
+/* ==========================================
+   API Helper (JSONP)
+   ========================================== */
+function api(action, params) {
+  params = params || {};
+  return new Promise(function(resolve, reject) {
+    var cb = 'api_cb_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
+    var script = document.createElement('script');
+    var timeout = setTimeout(function() {
       delete window[cb];
       if (script.parentNode) script.parentNode.removeChild(script);
-      reject(new Error('انتهت المهلة — تحقق من الاتصال'));
+      reject(new Error('انتهت المهلة - تحقق من الاتصال'));
     }, 20000);
 
-    window[cb] = (data) => {
+    window[cb] = function(data) {
       clearTimeout(timeout);
       delete window[cb];
       if (script.parentNode) script.parentNode.removeChild(script);
@@ -518,10 +455,9 @@ function api(action, params = {}) {
       }
     };
 
-    const query = new URLSearchParams({ action, callback: cb, ...params });
-    const script = document.createElement('script');
-    script.src = `${API_URL}?${query}`;
-    script.onerror = () => {
+    var query = new URLSearchParams(Object.assign({ action: action, callback: cb }, params));
+    script.src = API_URL + '?' + query.toString();
+    script.onerror = function() {
       clearTimeout(timeout);
       delete window[cb];
       reject(new Error('فشل الاتصال بالخادم'));
@@ -530,8 +466,10 @@ function api(action, params = {}) {
   });
 }
 
-/* ==================== State ==================== */
-const state = {
+/* ==========================================
+   State
+   ========================================== */
+var state = {
   classes: [],
   currentClassId: null,
   students: [],
@@ -540,543 +478,469 @@ const state = {
   importFile: null
 };
 
-/* ==================== Utils ==================== */
-function showToast(msg, type = 'info') {
-  const c = document.getElementById('toast-container');
-  const t = document.createElement('div');
+/* ==========================================
+   Utils
+   ========================================== */
+function showToast(msg, type) {
+  type = type || 'info';
+  var c = document.getElementById('toast-container');
+  var t = document.createElement('div');
   t.className = 'toast ' + type;
   t.textContent = msg;
   c.appendChild(t);
-  requestAnimationFrame(() => t.classList.add('show'));
-  setTimeout(() => {
+  requestAnimationFrame(function() { t.classList.add('show'); });
+  setTimeout(function() {
     t.classList.remove('show');
-    setTimeout(() => t.remove(), 300);
+    setTimeout(function() { t.remove(); }, 300);
   }, 3000);
 }
 
-function flashScreen(text, duration = 1800) {
-  const o = document.getElementById('flash-overlay');
+function flashScreen(text, duration) {
+  duration = duration || 1800;
+  var o = document.getElementById('flash-overlay');
   o.textContent = text;
   o.classList.add('show', 'flash');
-  setTimeout(() => o.classList.remove('show', 'flash'), duration);
+  setTimeout(function() { o.classList.remove('show', 'flash'); }, duration);
 }
 
 function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
+  var m = Math.floor(sec / 60);
+  var s = sec % 60;
   return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
 }
 
 function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
   }
   return a;
 }
 
 function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  })[c]);
+  return String(str).replace(/[&<>"']/g, function(c) {
+    return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+  });
 }
 
-/* ==================== Tabs ==================== */
-document.querySelectorAll('nav.tabs button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('section.tab').forEach(s => s.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-    if (btn.dataset.tab === 'points') renderPointsStudents();
-    if (btn.dataset.tab === 'wheel') drawWheel();
-    if (btn.dataset.tab === 'leaderboard') loadLeaderboard();
-    if (btn.dataset.tab === 'comparison') loadComparison();
-  });
-});
+function $(id) { return document.getElementById(id); }
 
-/* ==================== Auth ==================== */
+/* ==========================================
+   Authentication
+   ========================================== */
 function getSessionToken() { return sessionStorage.getItem('session_token') || ''; }
 function setSessionToken(t) { if (t) sessionStorage.setItem('session_token', t); else sessionStorage.removeItem('session_token'); }
 
-async function doLogin() {
-  const pwd = document.getElementById('login-password').value;
-  const btn = document.getElementById('login-btn');
-  const err = document.getElementById('login-error');
+function doLogin() {
+  var pwd = $('login-password').value;
+  var btn = $('login-btn');
+  var err = $('login-error');
   if (!pwd) { err.textContent = 'أدخل كلمة المرور'; return; }
   btn.disabled = true; btn.textContent = 'جارٍ التحقق...'; err.textContent = '';
-  try {
-    const res = await api('verifyPassword', { password: pwd });
-    btn.disabled = false; btn.textContent = '🔓 دخول';
-    if (res.success) {
-      setSessionToken(res.token);
-      document.body.classList.add('authenticated');
-      document.getElementById('login-password').value = '';
-      bootApp();
-    } else {
-      err.textContent = res.message || 'فشل الدخول';
-      document.getElementById('login-password').focus();
-    }
-  } catch (e) {
-    btn.disabled = false; btn.textContent = '🔓 دخول';
-    err.textContent = 'خطأ: ' + e.message;
-  }
+
+  api('verifyPassword', { password: pwd })
+    .then(function(res) {
+      btn.disabled = false; btn.textContent = '🔓 دخول';
+      if (res.success) {
+        setSessionToken(res.token);
+        document.body.classList.add('authenticated');
+        $('login-password').value = '';
+        bootApp();
+      } else {
+        err.textContent = res.message || 'فشل الدخول';
+        $('login-password').focus();
+      }
+    })
+    .catch(function(e) {
+      btn.disabled = false; btn.textContent = '🔓 دخول';
+      err.textContent = 'خطأ: ' + e.message;
+    });
 }
 
 function doLogout() {
   if (!confirm('تسجيل الخروج؟')) return;
-  const token = getSessionToken();
+  var token = getSessionToken();
   setSessionToken('');
   document.body.classList.remove('authenticated');
-  document.getElementById('login-password').value = '';
-  document.getElementById('login-error').textContent = '';
-  if (token) api('logout', { token }).catch(() => {});
+  $('login-password').value = '';
+  $('login-error').textContent = '';
+  if (token) api('logout', { token: token }).catch(function() {});
 }
 
-async function checkExistingSession() {
-  const token = getSessionToken();
+function checkExistingSession() {
+  var token = getSessionToken();
   if (!token) return;
-  try {
-    const res = await api('validateSession', { token });
-    if (res.success) { document.body.classList.add('authenticated'); bootApp(); }
-    else setSessionToken('');
-  } catch (e) { setSessionToken(''); }
+  api('validateSession', { token: token })
+    .then(function(res) {
+      if (res.success) { document.body.classList.add('authenticated'); bootApp(); }
+      else setSessionToken('');
+    })
+    .catch(function() { setSessionToken(''); });
 }
 
-async function doChangePassword() {
-  const oldP = document.getElementById('pwd-old').value;
-  const newP = document.getElementById('pwd-new').value;
-  const confirmP = document.getElementById('pwd-confirm').value;
+function doChangePassword() {
+  var oldP = $('pwd-old').value;
+  var newP = $('pwd-new').value;
+  var confirmP = $('pwd-confirm').value;
   if (!oldP || !newP) return showToast('أدخل كلمتي المرور', 'warn');
   if (newP !== confirmP) return showToast('التأكيد لا يطابق', 'warn');
   if (newP.length < 4) return showToast('كلمة المرور قصيرة', 'warn');
-  try {
-    await api('changePassword', { old: oldP, newP, token: getSessionToken() });
-    document.getElementById('pwd-old').value = '';
-    document.getElementById('pwd-new').value = '';
-    document.getElementById('pwd-confirm').value = '';
-    showToast('تم تغيير كلمة المرور', 'success');
-  } catch (e) { showToast(e.message, 'error'); }
+  api('changePassword', { old: oldP, newP: newP, token: getSessionToken() })
+    .then(function() {
+      $('pwd-old').value = ''; $('pwd-new').value = ''; $('pwd-confirm').value = '';
+      showToast('تم تغيير كلمة المرور', 'success');
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-/* ==================== Semester ==================== */
+/* ==========================================
+   Semester
+   ========================================== */
 function switchSemester(sem) {
   state.semester = sem === 's2' ? 's2' : 's1';
   sessionStorage.setItem('semester', state.semester);
-  document.querySelectorAll('.sem-btn').forEach(b => b.classList.toggle('active', b.dataset.sem === state.semester));
+  document.querySelectorAll('.sem-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.sem === state.semester);
+  });
   renderPointsStudents();
   renderAll();
-  if (document.getElementById('tab-leaderboard').classList.contains('active')) loadLeaderboard();
-  if (document.getElementById('tab-comparison').classList.contains('active')) loadComparison();
+  if ($('tab-leaderboard').classList.contains('active')) loadLeaderboard();
+  if ($('tab-comparison').classList.contains('active')) loadComparison();
 }
 
-/* ==================== Classes ==================== */
-async function loadClasses() {
-  try {
-    const classes = await api('getClasses');
-    state.classes = classes;
-    const sel = document.getElementById('class-selector');
-    if (!classes.length) {
-      sel.innerHTML = '<option value="">— لا يوجد صفوف —</option>';
-      state.currentClassId = null; state.students = [];
-      document.getElementById('class-info').style.display = 'none';
-      renderAll();
-      return;
-    }
-    const grouped = {};
-    classes.forEach(c => { if (!grouped[c.grade]) grouped[c.grade] = []; grouped[c.grade].push(c); });
-    let html = '';
-    Object.keys(grouped).forEach(grade => {
-      const list = grouped[grade];
-      if (list.length === 1 && !list[0].section) {
-        html += `<option value="${list[0].id}">${escapeHtml(grade)}</option>`;
-      } else {
-        html += `<optgroup label="📚 ${escapeHtml(grade)}">`;
-        list.forEach(c => {
-          const label = c.section ? `شعبة ${escapeHtml(c.section)}` : 'بدون شعبة';
-          html += `<option value="${c.id}">${label}</option>`;
-        });
-        html += `</optgroup>`;
+/* ==========================================
+   Classes
+   ========================================== */
+function loadClasses() {
+  api('getClasses')
+    .then(function(classes) {
+      state.classes = classes;
+      var sel = $('class-selector');
+      if (!classes.length) {
+        sel.innerHTML = '<option value="">— لا يوجد صفوف —</option>';
+        state.currentClassId = null; state.students = [];
+        $('class-info').style.display = 'none';
+        renderAll();
+        return;
       }
-    });
-    sel.innerHTML = html;
-    if (!state.currentClassId || !classes.some(c => c.id === state.currentClassId)) {
-      state.currentClassId = classes[0].id;
-    }
-    sel.value = state.currentClassId;
-    switchClass(state.currentClassId);
-    if (document.getElementById('classes-modal').classList.contains('show')) {
-      populateGradeAndSectionSelects();
-      renderClassesList();
-    }
-  } catch (e) { showToast(e.message, 'error'); }
+      var grouped = {};
+      classes.forEach(function(c) {
+        if (!grouped[c.grade]) grouped[c.grade] = [];
+        grouped[c.grade].push(c);
+      });
+      var html = '';
+      Object.keys(grouped).forEach(function(grade) {
+        var list = grouped[grade];
+        if (list.length === 1 && !list[0].section) {
+          html += '<option value="' + list[0].id + '">' + escapeHtml(grade) + '</option>';
+        } else {
+          html += '<optgroup label="📚 ' + escapeHtml(grade) + '">';
+          list.forEach(function(c) {
+            var label = c.section ? 'شعبة ' + escapeHtml(c.section) : 'بدون شعبة';
+            html += '<option value="' + c.id + '">' + label + '</option>';
+          });
+          html += '</optgroup>';
+        }
+      });
+      sel.innerHTML = html;
+      if (!state.currentClassId || !classes.some(function(c) { return c.id === state.currentClassId; })) {
+        state.currentClassId = classes[0].id;
+      }
+      sel.value = state.currentClassId;
+      switchClass(state.currentClassId);
+      if ($('classes-modal').classList.contains('show')) {
+        populateGradeAndSectionSelects();
+        renderClassesList();
+      }
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-async function switchClass(classId) {
+function switchClass(classId) {
   state.currentClassId = classId || null;
   state.selected.clear();
   state.students = [];
   if (!classId) {
-    document.getElementById('class-info').style.display = 'none';
+    $('class-info').style.display = 'none';
     renderAll();
     return;
   }
-  const cls = state.classes.find(c => c.id === classId);
+  var cls = state.classes.find(function(c) { return c.id === classId; });
   if (cls) {
-    const display = cls.section ? `${cls.grade} / شعبة ${cls.section}` : cls.grade;
-    const info = document.getElementById('class-info');
+    var display = cls.section ? cls.grade + ' / شعبة ' + cls.section : cls.grade;
+    var info = $('class-info');
     info.textContent = display;
     info.style.display = 'inline-block';
-    document.getElementById('lb-class-name').textContent = display;
+    $('lb-class-name').textContent = display;
   }
   loadStudents();
 }
 
-async function loadStudents() {
+function loadStudents() {
   if (!state.currentClassId) { state.students = []; renderAll(); return; }
-  try {
-    const students = await api('getStudentsByClass', { classId: state.currentClassId });
-    state.students = students;
-    state.selected = new Set([...state.selected].filter(id => students.some(s => s.id === id)));
-    renderAll();
-  } catch (e) { showToast('خطأ: ' + e.message, 'error'); }
+  api('getStudentsByClass', { classId: state.currentClassId })
+    .then(function(students) {
+      state.students = students;
+      var newSelected = new Set();
+      state.selected.forEach(function(id) {
+        if (students.some(function(s) { return s.id === id; })) newSelected.add(id);
+      });
+      state.selected = newSelected;
+      renderAll();
+    })
+    .catch(function(e) { showToast('خطأ: ' + e.message, 'error'); });
 }
 
 function renderAll() {
   renderStudents();
   renderPointsStudents();
-  document.getElementById('student-count').textContent = state.students.length;
+  $('student-count').textContent = state.students.length;
   drawWheel();
-  if (document.getElementById('tab-comparison').classList.contains('active')) loadComparison();
+  if ($('tab-comparison').classList.contains('active')) loadComparison();
 }
 
-/* ==================== Classes Modal ==================== */
+/* ==========================================
+   Modal: Classes
+   ========================================== */
 function openClassesModal() {
-  document.getElementById('classes-modal').classList.add('show');
+  $('classes-modal').classList.add('show');
   populateGradeAndSectionSelects();
   renderClassesList();
 }
-function closeClassesModal() { document.getElementById('classes-modal').classList.remove('show'); }
+function closeClassesModal() { $('classes-modal').classList.remove('show'); }
 
-const GRADES_LIST = ['خامس','سادس','سابع','ثامن','تاسع','عاشر','حادي عشر','ثاني عشر'];
-const SECTIONS_LIST = ['1','2','3','4','5','6','7','8','9','10'];
+var GRADES_LIST = ['خامس','سادس','سابع','ثامن','تاسع','عاشر','حادي عشر','ثاني عشر'];
+var SECTIONS_LIST = ['1','2','3','4','5','6','7','8','9','10'];
 
 function fillSelect(el, items, placeholder) {
-  el.innerHTML = (placeholder ? `<option value="">${placeholder}</option>` : '') +
-    items.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+  el.innerHTML = (placeholder ? '<option value="">' + placeholder + '</option>' : '') +
+    items.map(function(v) { return '<option value="' + escapeHtml(v) + '">' + escapeHtml(v) + '</option>'; }).join('');
 }
 
 function populateGradeAndSectionSelects() {
-  fillSelect(document.getElementById('new-grade-select'), GRADES_LIST, '— اختر الصف —');
-  fillSelect(document.getElementById('new-section-select'), SECTIONS_LIST, 'بدون شعبة');
-  fillSelect(document.getElementById('copy-target-grade'), GRADES_LIST, '— اختر الصف —');
-  fillSelect(document.getElementById('copy-target-section'), SECTIONS_LIST, 'بدون شعبة');
+  fillSelect($('new-grade-select'), GRADES_LIST, '— اختر الصف —');
+  fillSelect($('new-section-select'), SECTIONS_LIST, 'بدون شعبة');
+  fillSelect($('copy-target-grade'), GRADES_LIST, '— اختر الصف —');
+  fillSelect($('copy-target-section'), SECTIONS_LIST, 'بدون شعبة');
   populateClassesIntoSelect('copy-source');
-  fillSelect(document.getElementById('promote-target-grade'), GRADES_LIST, '— اختر الصف —');
-  fillSelect(document.getElementById('promote-target-section'), SECTIONS_LIST, 'بدون شعبة');
+  fillSelect($('promote-target-grade'), GRADES_LIST, '— اختر الصف —');
+  fillSelect($('promote-target-section'), SECTIONS_LIST, 'بدون شعبة');
   populateClassesIntoSelect('promote-source');
 }
 
 function populateClassesIntoSelect(selectId) {
-  const sel = document.getElementById(selectId);
+  var sel = $(selectId);
   if (!state.classes.length) { sel.innerHTML = '<option value="">— لا يوجد صفوف —</option>'; return; }
-  sel.innerHTML = state.classes.map(c => {
-    const label = c.section ? `${c.grade} — شعبة ${c.section}` : c.grade;
-    return `<option value="${c.id}">${escapeHtml(label)}</option>`;
+  sel.innerHTML = state.classes.map(function(c) {
+    var label = c.section ? c.grade + ' — شعبة ' + c.section : c.grade;
+    return '<option value="' + c.id + '">' + escapeHtml(label) + '</option>';
   }).join('');
 }
 
-async function addClassFromSelects() {
-  const grade = document.getElementById('new-grade-select').value;
-  const section = document.getElementById('new-section-select').value;
+function addClassFromSelects() {
+  var grade = $('new-grade-select').value;
+  var section = $('new-section-select').value;
   if (!grade) return showToast('اختر الصف', 'warn');
-  try {
-    const cls = await api('addClass', { grade, section });
-    showToast(`تم إنشاء ${cls.grade}${cls.section ? ' / شعبة ' + cls.section : ''}`, 'success');
-    loadClasses();
-    setTimeout(() => { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
-  } catch (e) { showToast(e.message, 'error'); }
+  api('addClass', { grade: grade, section: section })
+    .then(function(cls) {
+      showToast('تم إنشاء ' + cls.grade + (cls.section ? ' / شعبة ' + cls.section : ''), 'success');
+      loadClasses();
+      setTimeout(function() { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-async function onPromoteSourceChange() {
-  const sourceId = document.getElementById('promote-source').value;
-  const src = state.classes.find(c => c.id === sourceId);
+function onPromoteSourceChange() {
+  var sourceId = $('promote-source').value;
+  var src = state.classes.find(function(c) { return c.id === sourceId; });
   if (!src) return;
-  try {
-    const res = await api('getNextGrade', { grade: src.grade });
-    if (res.nextGrade) document.getElementById('promote-target-grade').value = res.nextGrade;
-    document.getElementById('promote-target-section').value = src.section || '';
-  } catch (e) {}
+  api('getNextGrade', { grade: src.grade })
+    .then(function(res) {
+      if (res.nextGrade) $('promote-target-grade').value = res.nextGrade;
+      $('promote-target-section').value = src.section || '';
+    })
+    .catch(function() {});
 }
 
-async function doCopyClass() {
-  const sourceId = document.getElementById('copy-source').value;
-  const grade = document.getElementById('copy-target-grade').value;
-  const section = document.getElementById('copy-target-section').value;
-  const reset = document.getElementById('copy-reset').checked;
+function doCopyClass() {
+  var sourceId = $('copy-source').value;
+  var grade = $('copy-target-grade').value;
+  var section = $('copy-target-section').value;
+  var reset = $('copy-reset').checked;
   if (!sourceId) return showToast('اختر الصف المصدر', 'warn');
   if (!grade) return showToast('اختر الصف الهدف', 'warn');
-  const src = state.classes.find(c => c.id === sourceId);
-  const label = `${grade}${section ? ' / شعبة ' + section : ''}`;
-  if (!confirm(`سيتم إنشاء "${label}" بنسخ طلاب "${src.grade}${src.section ? ' / شعبة ' + src.section : ''}". متابعة؟`)) return;
-  try {
-    const res = await api('copyClass', { sourceId, grade, section, reset: String(reset) });
-    showToast(`✅ تم نسخ ${res.copied} طالبًا إلى ${label}`, 'success');
-    loadClasses();
-    setTimeout(() => { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
-  } catch (e) { showToast(e.message, 'error'); }
+  var src = state.classes.find(function(c) { return c.id === sourceId; });
+  var label = grade + (section ? ' / شعبة ' + section : '');
+  if (!confirm('سيتم إنشاء "' + label + '" بنسخ طلاب "' + src.grade + (src.section ? ' / شعبة ' + src.section : '') + '". متابعة؟')) return;
+  api('copyClass', { sourceId: sourceId, grade: grade, section: section, reset: String(reset) })
+    .then(function(res) {
+      showToast('✅ تم نسخ ' + res.copied + ' طالبًا إلى ' + label, 'success');
+      loadClasses();
+      setTimeout(function() { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-async function doPromoteClass() {
-  const sourceId = document.getElementById('promote-source').value;
-  const grade = document.getElementById('promote-target-grade').value;
-  const section = document.getElementById('promote-target-section').value;
-  const reset = document.getElementById('promote-reset').checked;
-  const createIfMissing = document.getElementById('promote-create').checked;
+function doPromoteClass() {
+  var sourceId = $('promote-source').value;
+  var grade = $('promote-target-grade').value;
+  var section = $('promote-target-section').value;
+  var reset = $('promote-reset').checked;
+  var createIfMissing = $('promote-create').checked;
   if (!sourceId) return showToast('اختر الصف المصدر', 'warn');
   if (!grade) return showToast('اختر الصف الهدف', 'warn');
-  const src = state.classes.find(c => c.id === sourceId);
-  const label = `${grade}${section ? ' / شعبة ' + section : ''}`;
-  if (!confirm(`⚠️ سيتم نقل طلاب "${src.grade}${src.section ? ' / شعبة ' + src.section : ''}" إلى "${label}" وحذفهم من المصدر.\n\nهذا الإجراء لا يمكن التراجع عنه. متابعة؟`)) return;
-  try {
-    const res = await api('promoteClass', { sourceId, grade, section, reset: String(reset), create: String(createIfMissing) });
-    const msg = `🎓 تم نقل ${res.moved} طالبًا${res.skipped ? ` (تم تجاهل ${res.skipped} مكرر)` : ''}`;
-    showToast(msg, 'success');
-    loadClasses();
-    setTimeout(() => { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
-  } catch (e) { showToast(e.message, 'error'); }
+  var src = state.classes.find(function(c) { return c.id === sourceId; });
+  var label = grade + (section ? ' / شعبة ' + section : '');
+  if (!confirm('⚠️ سيتم نقل طلاب "' + src.grade + (src.section ? ' / شعبة ' + src.section : '') + '" إلى "' + label + '" وحذفهم من المصدر. متابعة؟')) return;
+  api('promoteClass', { sourceId: sourceId, grade: grade, section: section, reset: String(reset), create: String(createIfMissing) })
+    .then(function(res) {
+      var msg = '🎓 تم نقل ' + res.moved + ' طالبًا' + (res.skipped ? ' (تم تجاهل ' + res.skipped + ' مكرر)' : '');
+      showToast(msg, 'success');
+      loadClasses();
+      setTimeout(function() { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-async function renderClassesList() {
-  const c = document.getElementById('classes-list');
+function renderClassesList() {
+  var c = $('classes-list');
   if (!c) return;
   if (!state.classes.length) { c.innerHTML = '<div class="empty">لا يوجد صفوف بعد</div>'; return; }
-  try {
-    const all = await api('getStudents');
-    const counts = {};
-    all.forEach(s => { counts[s.classId] = (counts[s.classId] || 0) + 1; });
-    const grouped = {};
-    state.classes.forEach(cls => { if (!grouped[cls.grade]) grouped[cls.grade] = []; grouped[cls.grade].push(cls); });
-    let html = '';
-    Object.keys(grouped).forEach(grade => {
-      html += `<div style="margin-bottom:14px"><div style="font-weight:700;color:#1a73e8;margin-bottom:6px">📚 ${escapeHtml(grade)}</div>`;
-      grouped[grade].forEach(cls => {
-        const label = cls.section ? `شعبة ${escapeHtml(cls.section)}` : 'بدون تقسيم';
-        html += `<div class="class-row" style="margin-right:14px">
-          <div><div class="class-name">${label}</div><div class="class-count">${counts[cls.id] || 0} طالب</div></div>
-          <button class="btn danger small" onclick="deleteClass('${cls.id}')">🗑️</button>
-        </div>`;
+  api('getStudents')
+    .then(function(all) {
+      var counts = {};
+      all.forEach(function(s) { counts[s.classId] = (counts[s.classId] || 0) + 1; });
+      var grouped = {};
+      state.classes.forEach(function(cls) {
+        if (!grouped[cls.grade]) grouped[cls.grade] = [];
+        grouped[cls.grade].push(cls);
       });
-      html += `</div>`;
-    });
-    c.innerHTML = html;
-  } catch (e) { c.innerHTML = '<div class="empty">خطأ في التحميل</div>'; }
+      var html = '';
+      Object.keys(grouped).forEach(function(grade) {
+        html += '<div style="margin-bottom:14px"><div style="font-weight:700;color:#1a73e8;margin-bottom:6px">📚 ' + escapeHtml(grade) + '</div>';
+        grouped[grade].forEach(function(cls) {
+          var label = cls.section ? 'شعبة ' + escapeHtml(cls.section) : 'بدون تقسيم';
+          html += '<div class="class-row" style="margin-right:14px">' +
+            '<div><div class="class-name">' + label + '</div>' +
+            '<div class="class-count">' + (counts[cls.id] || 0) + ' طالب</div></div>' +
+            '<button class="btn danger small" type="button" data-delete-class="' + cls.id + '">🗑️</button>' +
+            '</div>';
+        });
+        html += '</div>';
+      });
+      c.innerHTML = html;
+      c.querySelectorAll('[data-delete-class]').forEach(function(btn) {
+        btn.addEventListener('click', function() { deleteClass(btn.dataset.deleteClass); });
+      });
+    })
+    .catch(function() { c.innerHTML = '<div class="empty">خطأ في التحميل</div>'; });
 }
 
-async function deleteClass(id) {
-  const cls = state.classes.find(c => c.id === id);
+function deleteClass(id) {
+  var cls = state.classes.find(function(c) { return c.id === id; });
   if (!cls) return;
-  if (!confirm(`⚠️ سيتم حذف "${cls.grade}${cls.section ? ' / شعبة ' + cls.section : ''}" وكل طلابها. متأكد؟`)) return;
-  try {
-    await api('deleteClass', { id });
-    showToast('تم حذف الصف', 'success');
-    if (state.currentClassId === id) state.currentClassId = null;
-    loadClasses();
-    setTimeout(renderClassesList, 400);
-  } catch (e) { showToast(e.message, 'error'); }
-}
-
-/* ==================== Import Modal ==================== */
-function openImportModal() {
-  // املأ القوائم
-  fillSelect(document.getElementById('import-grade'), GRADES_LIST, '— اختر الصف —');
-  fillSelect(document.getElementById('import-section'), SECTIONS_LIST, 'بدون شعبة');
-  resetImportForm();
-  document.getElementById('import-modal').classList.add('show');
-}
-function closeImportModal() {
-  document.getElementById('import-modal').classList.remove('show');
-  resetImportForm();
-}
-
-function setImportFile(file) {
-  state.importFile = file;
-  const nameDisplay = document.getElementById('file-name-display');
-  const dropZone = document.getElementById('drop-zone');
-  const importBtn = document.getElementById('import-btn');
-
-  if (file) {
-    nameDisplay.textContent = '✓ ' + file.name;
-    dropZone.classList.add('has-file');
-    importBtn.disabled = false;
-  } else {
-    nameDisplay.textContent = '';
-    dropZone.classList.remove('has-file');
-    importBtn.disabled = true;
-  }
-}
-
-function resetImportForm() {
-  state.importFile = null;
-  const fi = document.getElementById('file-input');
-  if (fi) fi.value = '';
-  setImportFile(null);
-  const g = document.getElementById('import-grade');
-  const s = document.getElementById('import-section');
-  if (g) g.value = '';
-  if (s) s.value = '';
-}
-
-async function findOrCreateClass(grade, section) {
-  let cls = state.classes.find(c => c.grade === grade && c.section === section);
-  if (cls) return cls;
-  await api('addClass', { grade, section });
-  const classes = await api('getClasses');
-  state.classes = classes;
-  cls = classes.find(c => c.grade === grade && c.section === section);
-  return cls;
-}
-
-async function doImportStudents() {
-  const grade = document.getElementById('import-grade').value;
-  const section = document.getElementById('import-section').value;
-
-  if (!grade) return showToast('اختر الصف أولًا', 'warn');
-  if (!state.importFile) return showToast('اختر ملفًا أولًا', 'warn');
-
-  let targetClass;
-  try {
-    showToast('جارٍ التحقق من الصف...', 'info');
-    targetClass = await findOrCreateClass(grade, section);
-    if (!targetClass) throw new Error('فشل إنشاء الصف');
-  } catch (e) {
-    return showToast(e.message, 'error');
-  }
-
-  const reader = new FileReader();
-  reader.onload = async (evt) => {
-    try {
-      const data = new Uint8Array(evt.target.result);
-      const wb = XLSX.read(data, { type: 'array' });
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-      const students = [];
-      for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
-        if (!row || !row[0]) continue;
-        const name = String(row[0]).trim();
-        if (name) students.push({ name });
-      }
-      if (!students.length) return showToast('لم يتم العثور على أسماء', 'warn');
-
-      showToast(`جارٍ استيراد ${students.length} طالبًا...`, 'info');
-      const res = await api('bulkImportStudents', {
-        students: JSON.stringify(students),
-        classId: targetClass.id
-      });
-
-      const targetLabel = targetClass.section
-        ? `${targetClass.grade} / شعبة ${targetClass.section}`
-        : targetClass.grade;
-      showToast(`✅ تم استيراد ${res.count} طالبًا إلى "${targetLabel}"`, 'success');
-      flashScreen('✅ تم الاستيراد!', 1500);
-
-      // إن كان الصف الحالي هو الهدف، حدّث القائمة
-      if (state.currentClassId === targetClass.id) {
-        loadStudents();
-      } else {
-        if (document.getElementById('classes-modal').classList.contains('show')) renderClassesList();
-      }
-
-      closeImportModal();
-      // حدّث قائمة الصفوف في الأعلى ليشمل الجديد
+  if (!confirm('⚠️ سيتم حذف "' + cls.grade + (cls.section ? ' / شعبة ' + cls.section : '') + '" وكل طلابها. متأكد؟')) return;
+  api('deleteClass', { id: id })
+    .then(function() {
+      showToast('تم حذف الصف', 'success');
+      if (state.currentClassId === id) state.currentClassId = null;
       loadClasses();
-    } catch (err) {
-      showToast('خطأ في القراءة: ' + err.message, 'error');
-    }
-  };
-  reader.readAsArrayBuffer(state.importFile);
+      setTimeout(renderClassesList, 400);
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-/* ==================== Students ==================== */
+/* ==========================================
+   Students
+   ========================================== */
 function renderStudents() {
-  const c = document.getElementById('students-list');
+  var c = $('students-list');
   if (!state.currentClassId) { c.innerHTML = '<div class="empty">👆 اختر صفًا أولًا</div>'; return; }
   if (!state.students.length) { c.innerHTML = '<div class="empty">لا يوجد طلاب في هذا الصف بعد</div>'; return; }
-  c.innerHTML = state.students.map(s => `
-    <div class="student-card" style="margin-bottom:10px">
-      <div class="row" style="justify-content:space-between">
-        <div style="flex:1">
-          <div class="name">${escapeHtml(s.name)}</div>
-          <div class="points-pair">
-            <span>ف1: ${s.s1}</span>
-            <span>ف2: ${s.s2}</span>
-            <span>المجموع: ${s.s1 + s.s2}</span>
-          </div>
-        </div>
-        <button class="btn danger small" onclick="deleteStudent('${s.id}')">حذف</button>
-      </div>
-    </div>
-  `).join('');
+  c.innerHTML = state.students.map(function(s) {
+    return '<div class="student-card" style="margin-bottom:10px">' +
+      '<div class="row" style="justify-content:space-between">' +
+      '<div style="flex:1">' +
+      '<div class="name">' + escapeHtml(s.name) + '</div>' +
+      '<div class="points-pair">' +
+      '<span>ف1: ' + s.s1 + '</span>' +
+      '<span>ف2: ' + s.s2 + '</span>' +
+      '<span>المجموع: ' + (s.s1 + s.s2) + '</span>' +
+      '</div></div>' +
+      '<button class="btn danger small" type="button" data-delete-student="' + s.id + '">حذف</button>' +
+      '</div></div>';
+  }).join('');
+  c.querySelectorAll('[data-delete-student]').forEach(function(btn) {
+    btn.addEventListener('click', function() { deleteStudent(btn.dataset.deleteStudent); });
+  });
 }
 
-async function addStudent() {
+function addStudent() {
   if (!state.currentClassId) return showToast('اختر صفًا أولًا', 'warn');
-  const name = document.getElementById('new-name').value.trim();
+  var name = $('new-name').value.trim();
   if (!name) return showToast('أدخل اسم الطالب', 'warn');
-  try {
-    await api('addStudent', { name, classId: state.currentClassId });
-    document.getElementById('new-name').value = '';
-    showToast('تم إضافة ' + name, 'success');
-    loadStudents();
-  } catch (e) { showToast(e.message, 'error'); }
+  api('addStudent', { name: name, classId: state.currentClassId })
+    .then(function() {
+      $('new-name').value = '';
+      showToast('تم إضافة ' + name, 'success');
+      loadStudents();
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-async function deleteStudent(id) {
+function deleteStudent(id) {
   if (!confirm('حذف الطالب؟')) return;
-  try {
-    await api('deleteStudent', { id });
-    showToast('تم الحذف', 'success');
-    loadStudents();
-  } catch (e) { showToast(e.message, 'error'); }
+  api('deleteStudent', { id: id })
+    .then(function() { showToast('تم الحذف', 'success'); loadStudents(); })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-async function confirmDeleteAll() {
+function confirmDeleteAll() {
   if (!state.currentClassId) return showToast('اختر صفًا أولًا', 'warn');
-  const semLabel = state.semester === 's1' ? 'الفصل الأول' : 'الفصل الثاني';
-  if (!confirm(`⚠️ سيتم تصفير نقاط ${semLabel} لجميع طلاب هذا الصف. متابعة؟`)) return;
-  try {
-    const res = await api('resetSemesterInClass', { classId: state.currentClassId, semester: state.semester });
-    showToast(`تم تصفير ${res.count} طالب في ${semLabel}`, 'success');
-    loadStudents();
-  } catch (e) { showToast(e.message, 'error'); }
+  var semLabel = state.semester === 's1' ? 'الفصل الأول' : 'الفصل الثاني';
+  if (!confirm('⚠️ سيتم تصفير نقاط ' + semLabel + ' لجميع طلاب هذا الصف. متابعة؟')) return;
+  api('resetSemesterInClass', { classId: state.currentClassId, semester: state.semester })
+    .then(function(res) {
+      showToast('تم تصفير ' + res.count + ' طالب في ' + semLabel, 'success');
+      loadStudents();
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-/* ==================== Points ==================== */
+/* ==========================================
+   Points
+   ========================================== */
 function renderPointsStudents() {
-  const c = document.getElementById('points-students');
+  var c = $('points-students');
   if (!state.currentClassId) { c.innerHTML = '<div class="empty">اختر صفًا أولًا</div>'; return; }
   if (!state.students.length) { c.innerHTML = '<div class="empty">لا يوجد طلاب</div>'; return; }
-  const cur = state.semester;
-  c.innerHTML = state.students.map(s => {
-    const a1 = cur === 's1' ? 'active' : '';
-    const a2 = cur === 's2' ? 'active s2' : '';
-    return `
-      <div class="student-card ${state.selected.has(s.id) ? 'selected' : ''}" onclick="toggleSelect('${s.id}')">
-        <div class="name">${escapeHtml(s.name)}</div>
-        <div class="points-pair">
-          <span class="${a1}">ف1: ${s.s1}</span>
-          <span class="${a2}">ف2: ${s.s2}</span>
-        </div>
-        <div class="actions">
-          <button class="btn success small" onclick="event.stopPropagation();quickPoints('${s.id}',1)">+1</button>
-          <button class="btn success small" onclick="event.stopPropagation();quickPoints('${s.id}',5)">+5</button>
-          <button class="btn danger small" onclick="event.stopPropagation();quickPoints('${s.id}',-1)">-1</button>
-        </div>
-      </div>
-    `;
+  var cur = state.semester;
+  c.innerHTML = state.students.map(function(s) {
+    var a1 = cur === 's1' ? 'active' : '';
+    var a2 = cur === 's2' ? 'active s2' : '';
+    var selCls = state.selected.has(s.id) ? 'selected' : '';
+    return '<div class="student-card ' + selCls + '" data-select-student="' + s.id + '">' +
+      '<div class="name">' + escapeHtml(s.name) + '</div>' +
+      '<div class="points-pair">' +
+      '<span class="' + a1 + '">ف1: ' + s.s1 + '</span>' +
+      '<span class="' + a2 + '">ف2: ' + s.s2 + '</span>' +
+      '</div>' +
+      '<div class="actions">' +
+      '<button class="btn success small" type="button" data-quick="' + s.id + '" data-delta="1">+1</button>' +
+      '<button class="btn success small" type="button" data-quick="' + s.id + '" data-delta="5">+5</button>' +
+      '<button class="btn danger small" type="button" data-quick="' + s.id + '" data-delta="-1">-1</button>' +
+      '</div></div>';
   }).join('');
+  c.querySelectorAll('[data-select-student]').forEach(function(card) {
+    card.addEventListener('click', function() { toggleSelect(card.dataset.selectStudent); });
+  });
+  c.querySelectorAll('[data-quick]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      quickPoints(btn.dataset.quick, Number(btn.dataset.delta));
+    });
+  });
 }
 
 function toggleSelect(id) {
@@ -1085,55 +949,60 @@ function toggleSelect(id) {
   renderPointsStudents();
 }
 function clearSelection() { state.selected.clear(); renderPointsStudents(); }
-function selectAll() { state.students.forEach(s => state.selected.add(s.id)); renderPointsStudents(); }
+function selectAll() { state.students.forEach(function(s) { state.selected.add(s.id); }); renderPointsStudents(); }
 
-async function quickPoints(id, delta) {
-  const reason = document.getElementById('points-reason').value.trim();
-  try {
-    const r = await api('updatePoints', { id, delta, reason, semester: state.semester });
-    const s = state.students.find(x => x.id === id);
-    if (s) s[r.semester] = r.points;
-    renderPointsStudents();
-    renderStudents();
-    showToast(`${delta > 0 ? '+' : ''}${delta} ${r.semester === 's1' ? '(ف1)' : '(ف2)'}`, delta > 0 ? 'success' : 'warn');
-  } catch (e) { showToast(e.message, 'error'); }
-}
-
-async function applyPointsToSelected(sign) {
-  const ids = [...state.selected];
-  if (!ids.length) return showToast('لم تحدد أي طالب', 'warn');
-  const value = Math.abs(Number(document.getElementById('points-value').value) || 1);
-  const delta = sign * value;
-  const reason = document.getElementById('points-reason').value.trim();
-  try {
-    const results = await api('updatePointsBulk', { ids: JSON.stringify(ids), delta, reason, semester: state.semester });
-    results.forEach(r => {
-      const s = state.students.find(x => x.id === r.id);
+function quickPoints(id, delta) {
+  var reason = $('points-reason').value.trim();
+  api('updatePoints', { id: id, delta: delta, reason: reason, semester: state.semester })
+    .then(function(r) {
+      var s = state.students.find(function(x) { return x.id === id; });
       if (s) s[r.semester] = r.points;
-    });
-    renderPointsStudents();
-    renderStudents();
-    showToast(`تم تحديث ${results.length} طالب`, 'success');
-    flashScreen(delta > 0 ? '👏 أحسنتم!' : '💪 حاولوا مرة أخرى', 1200);
-  } catch (e) { showToast(e.message, 'error'); }
+      renderPointsStudents();
+      renderStudents();
+      showToast((delta > 0 ? '+' : '') + delta + ' ' + (r.semester === 's1' ? '(ف1)' : '(ف2)'), delta > 0 ? 'success' : 'warn');
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-/* ==================== Timer ==================== */
-let timerInterval = null, timerRemaining = 0;
-function updateTimerDisplay() { document.getElementById('timer-display').textContent = formatTime(Math.max(0, timerRemaining)); }
+function applyPointsToSelected(sign) {
+  var ids = Array.from(state.selected);
+  if (!ids.length) return showToast('لم تحدد أي طالب', 'warn');
+  var value = Math.abs(Number($('points-value').value) || 1);
+  var delta = sign * value;
+  var reason = $('points-reason').value.trim();
+  api('updatePointsBulk', { ids: JSON.stringify(ids), delta: delta, reason: reason, semester: state.semester })
+    .then(function(results) {
+      results.forEach(function(r) {
+        var s = state.students.find(function(x) { return x.id === r.id; });
+        if (s) s[r.semester] = r.points;
+      });
+      renderPointsStudents();
+      renderStudents();
+      showToast('تم تحديث ' + results.length + ' طالب', 'success');
+      flashScreen(delta > 0 ? '👏 أحسنتم!' : '💪 حاولوا مرة أخرى', 1200);
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
+}
+
+/* ==========================================
+   Timer
+   ========================================== */
+var timerInterval = null, timerRemaining = 0;
+
+function updateTimerDisplay() { $('timer-display').textContent = formatTime(Math.max(0, timerRemaining)); }
 function setTimerPreset(min) {
-  document.getElementById('timer-min').value = min;
-  document.getElementById('timer-sec').value = 0;
+  $('timer-min').value = min;
+  $('timer-sec').value = 0;
   resetTimer();
 }
 function startTimer() {
   if (timerInterval) return;
-  const m = Number(document.getElementById('timer-min').value) || 0;
-  const s = Number(document.getElementById('timer-sec').value) || 0;
+  var m = Number($('timer-min').value) || 0;
+  var s = Number($('timer-sec').value) || 0;
   if (!timerRemaining) timerRemaining = m * 60 + s;
   if (timerRemaining <= 0) return showToast('أدخل وقتًا صحيحًا', 'warn');
   updateTimerDisplay();
-  timerInterval = setInterval(() => {
+  timerInterval = setInterval(function() {
     timerRemaining--;
     updateTimerDisplay();
     if (timerRemaining <= 0) {
@@ -1149,8 +1018,8 @@ function resetTimer() { pauseTimer(); timerRemaining = 0; updateTimerDisplay(); 
 
 function playBeep() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator(), gain = ctx.createGain();
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = ctx.createOscillator(), gain = ctx.createGain();
     osc.connect(gain); gain.connect(ctx.destination);
     osc.frequency.value = 880;
     gain.gain.setValueAtTime(0.3, ctx.currentTime);
@@ -1159,40 +1028,44 @@ function playBeep() {
   } catch(e) {}
 }
 
-/* ==================== Stopwatch ==================== */
-let swInterval = null, swStart = 0, swElapsed = 0;
+/* ==========================================
+   Stopwatch
+   ========================================== */
+var swInterval = null, swStart = 0, swElapsed = 0;
 function renderStopwatch() {
-  const m = Math.floor(swElapsed / 60000);
-  const s = Math.floor((swElapsed % 60000) / 1000);
-  const d = Math.floor((swElapsed % 1000) / 100);
-  document.getElementById('stopwatch-display').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + '.' + d;
+  var m = Math.floor(swElapsed / 60000);
+  var s = Math.floor((swElapsed % 60000) / 1000);
+  var d = Math.floor((swElapsed % 1000) / 100);
+  $('stopwatch-display').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + '.' + d;
 }
 function startStopwatch() {
   if (swInterval) return;
   swStart = Date.now() - swElapsed;
-  swInterval = setInterval(() => { swElapsed = Date.now() - swStart; renderStopwatch(); }, 100);
+  swInterval = setInterval(function() { swElapsed = Date.now() - swStart; renderStopwatch(); }, 100);
 }
 function pauseStopwatch() { clearInterval(swInterval); swInterval = null; }
-function resetStopwatch() { pauseStopwatch(); swElapsed = 0; renderStopwatch(); document.getElementById('laps').innerHTML = ''; }
+function resetStopwatch() { pauseStopwatch(); swElapsed = 0; renderStopwatch(); $('laps').innerHTML = ''; }
 function lapStopwatch() {
   if (!swElapsed) return;
-  const div = document.createElement('div');
+  var div = document.createElement('div');
   div.style.padding = '8px';
   div.style.borderBottom = '1px solid #e8eaed';
-  div.textContent = `لفة ${document.getElementById('laps').children.length + 1}: ${(swElapsed/1000).toFixed(2)} ث`;
-  document.getElementById('laps').prepend(div);
+  div.textContent = 'لفة ' + ($('laps').children.length + 1) + ': ' + (swElapsed/1000).toFixed(2) + ' ث';
+  $('laps').prepend(div);
 }
 
-/* ==================== Wheel ==================== */
-const WHEEL_COLORS = ['#1a73e8','#34a853','#fbbc04','#ea4335','#a142f4','#00acc1','#ff7043','#8bc34a','#ec407a','#26a69a'];
-let wheelRotation = 0, wheelSpinning = false;
+/* ==========================================
+   Wheel
+   ========================================== */
+var WHEEL_COLORS = ['#1a73e8','#34a853','#fbbc04','#ea4335','#a142f4','#00acc1','#ff7043','#8bc34a','#ec407a','#26a69a'];
+var wheelRotation = 0, wheelSpinning = false;
 
 function drawWheel() {
-  const canvas = document.getElementById('wheel-canvas');
-  const ctx = canvas.getContext('2d');
-  const size = canvas.width, c = size / 2, r = c - 20;
+  var canvas = $('wheel-canvas');
+  var ctx = canvas.getContext('2d');
+  var size = canvas.width, c = size / 2, r = c - 20;
   ctx.clearRect(0, 0, size, size);
-  const students = state.students;
+  var students = state.students;
   if (!students.length) {
     ctx.fillStyle = '#e8eaed';
     ctx.beginPath(); ctx.arc(c, c, r, 0, 2 * Math.PI); ctx.fill();
@@ -1201,10 +1074,10 @@ function drawWheel() {
     ctx.fillText('لا يوجد طلاب', c, c);
     return;
   }
-  const step = (2 * Math.PI) / students.length;
-  students.forEach((s, i) => {
-    const start = i * step - Math.PI / 2;
-    const end = start + step;
+  var step = (2 * Math.PI) / students.length;
+  students.forEach(function(s, i) {
+    var start = i * step - Math.PI / 2;
+    var end = start + step;
     ctx.beginPath();
     ctx.moveTo(c, c); ctx.arc(c, c, r, start, end); ctx.closePath();
     ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length]; ctx.fill();
@@ -1213,36 +1086,36 @@ function drawWheel() {
     ctx.translate(c, c); ctx.rotate(start + step / 2);
     ctx.textAlign = 'right'; ctx.fillStyle = '#fff';
     ctx.font = 'bold 22px sans-serif';
-    const label = s.name.length > 15 ? s.name.slice(0, 14) + '…' : s.name;
+    var label = s.name.length > 15 ? s.name.slice(0, 14) + '…' : s.name;
     ctx.fillText(label, r - 20, 8);
     ctx.restore();
   });
-  canvas.style.transform = `rotate(${wheelRotation}deg)`;
+  canvas.style.transform = 'rotate(' + wheelRotation + 'deg)';
 }
 
 function spinWheel() {
   if (wheelSpinning) return;
-  const students = state.students;
+  var students = state.students;
   if (!students.length) return showToast('لا يوجد طلاب', 'warn');
   wheelSpinning = true;
-  const canvas = document.getElementById('wheel-canvas');
-  const duration = 4500;
-  const startRot = wheelRotation;
-  const targetRot = wheelRotation + 360 * (5 + Math.floor(Math.random() * 4)) + Math.random() * 360;
-  const t0 = performance.now();
+  var canvas = $('wheel-canvas');
+  var duration = 4500;
+  var startRot = wheelRotation;
+  var targetRot = wheelRotation + 360 * (5 + Math.floor(Math.random() * 4)) + Math.random() * 360;
+  var t0 = performance.now();
   function animate(t) {
-    const p = Math.min((t - t0) / duration, 1);
-    const eased = 1 - Math.pow(1 - p, 3);
+    var p = Math.min((t - t0) / duration, 1);
+    var eased = 1 - Math.pow(1 - p, 3);
     wheelRotation = startRot + (targetRot - startRot) * eased;
-    canvas.style.transform = `rotate(${wheelRotation}deg)`;
+    canvas.style.transform = 'rotate(' + wheelRotation + 'deg)';
     if (p < 1) requestAnimationFrame(animate);
     else {
       wheelSpinning = false;
-      const anglePerSeg = 360 / students.length;
-      const normalized = ((-wheelRotation % 360) + 360) % 360;
-      const idx = Math.floor(normalized / anglePerSeg) % students.length;
-      const winner = students[idx];
-      document.getElementById('wheel-result').innerHTML = `<div style="font-size:24px;font-weight:900;color:#1a73e8">🎉 ${escapeHtml(winner.name)}</div>`;
+      var anglePerSeg = 360 / students.length;
+      var normalized = ((-wheelRotation % 360) + 360) % 360;
+      var idx = Math.floor(normalized / anglePerSeg) % students.length;
+      var winner = students[idx];
+      $('wheel-result').innerHTML = '<div style="font-size:24px;font-weight:900;color:#1a73e8">🎉 ' + escapeHtml(winner.name) + '</div>';
       flashScreen('🎉 ' + winner.name, 2000);
       showToast('الفائز: ' + winner.name, 'success');
     }
@@ -1252,199 +1125,406 @@ function spinWheel() {
 
 function randomPick() {
   if (!state.students.length) return showToast('لا يوجد طلاب', 'warn');
-  const w = state.students[Math.floor(Math.random() * state.students.length)];
-  document.getElementById('wheel-result').innerHTML = `<div style="font-size:24px;font-weight:900;color:#34a853">🎲 ${escapeHtml(w.name)}</div>`;
+  var w = state.students[Math.floor(Math.random() * state.students.length)];
+  $('wheel-result').innerHTML = '<div style="font-size:24px;font-weight:900;color:#34a853">🎲 ' + escapeHtml(w.name) + '</div>';
   flashScreen('🎲 ' + w.name, 1800);
 }
 
-/* ==================== Groups ==================== */
+/* ==========================================
+   Groups
+   ========================================== */
 function divideGroups() {
   if (!state.currentClassId) return showToast('اختر صفًا أولًا', 'warn');
-  const n = Number(document.getElementById('groups-count').value) || 2;
+  var n = Number($('groups-count').value) || 2;
   if (state.students.length < n) return showToast('عدد الطلاب أقل من عدد المجموعات', 'warn');
-  const shuffled = shuffle(state.students);
-  const groups = Array.from({ length: n }, () => []);
-  shuffled.forEach((s, i) => groups[i % n].push(s));
-  const colors = ['#1a73e8','#34a853','#fbbc04','#ea4335','#a142f4','#00acc1','#ff7043'];
-  document.getElementById('groups-result').innerHTML = groups.map((g, i) => `
-    <div class="group-card" style="border-color:${colors[i % colors.length]}">
-      <h3 style="color:${colors[i % colors.length]}">مجموعة ${i + 1} (${g.length})</h3>
-      <ul>${g.map(s => `<li>${escapeHtml(s.name)}</li>`).join('')}</ul>
-    </div>
-  `).join('');
+  var shuffled = shuffle(state.students);
+  var groups = [];
+  for (var i = 0; i < n; i++) groups.push([]);
+  shuffled.forEach(function(s, i) { groups[i % n].push(s); });
+  var colors = ['#1a73e8','#34a853','#fbbc04','#ea4335','#a142f4','#00acc1','#ff7043'];
+  $('groups-result').innerHTML = groups.map(function(g, i) {
+    return '<div class="group-card" style="border-color:' + colors[i % colors.length] + '">' +
+      '<h3 style="color:' + colors[i % colors.length] + '">مجموعة ' + (i + 1) + ' (' + g.length + ')</h3>' +
+      '<ul>' + g.map(function(s) { return '<li>' + escapeHtml(s.name) + '</li>'; }).join('') + '</ul>' +
+      '</div>';
+  }).join('');
 }
 
-/* ==================== Leaderboard ==================== */
-async function loadLeaderboard() {
-  const list = document.getElementById('leaderboard-list');
+/* ==========================================
+   Leaderboard
+   ========================================== */
+function loadLeaderboard() {
+  var list = $('leaderboard-list');
   if (!state.currentClassId) { list.innerHTML = '<div class="empty">اختر صفًا أولًا</div>'; return; }
   list.innerHTML = '<div class="empty">جارٍ التحميل...</div>';
-  try {
-    const students = await api('getLeaderboard', { classId: state.currentClassId, semester: state.semester });
-    if (!students.length) { list.innerHTML = '<div class="empty">لا يوجد طلاب</div>'; return; }
-    const sem = state.semester;
-    const medals = ['🥇','🥈','🥉'];
-    list.innerHTML = students.map((s, i) => `
-      <div class="leader-item ${i < 3 ? 'top' + (i+1) : ''}">
-        <div class="leader-rank">${medals[i] || (i+1)}</div>
-        <div class="leader-name">${escapeHtml(s.name)}</div>
-        <div class="leader-points">${s[sem]}</div>
-      </div>
-    `).join('');
-  } catch (e) { list.innerHTML = '<div class="empty">خطأ: ' + e.message + '</div>'; }
+  api('getLeaderboard', { classId: state.currentClassId, semester: state.semester })
+    .then(function(students) {
+      if (!students.length) { list.innerHTML = '<div class="empty">لا يوجد طلاب</div>'; return; }
+      var sem = state.semester;
+      var medals = ['🥇','🥈','🥉'];
+      list.innerHTML = students.map(function(s, i) {
+        var topCls = i < 3 ? 'top' + (i+1) : '';
+        return '<div class="leader-item ' + topCls + '">' +
+          '<div class="leader-rank">' + (medals[i] || (i+1)) + '</div>' +
+          '<div class="leader-name">' + escapeHtml(s.name) + '</div>' +
+          '<div class="leader-points">' + s[sem] + '</div>' +
+          '</div>';
+      }).join('');
+    })
+    .catch(function(e) { list.innerHTML = '<div class="empty">خطأ: ' + e.message + '</div>'; });
 }
 
-/* ==================== Comparison ==================== */
-async function loadComparison() {
-  const list = document.getElementById('comparison-list');
+/* ==========================================
+   Comparison
+   ========================================== */
+function loadComparison() {
+  var list = $('comparison-list');
   if (!state.currentClassId) {
     list.innerHTML = '<div class="empty">اختر صفًا أولًا</div>';
-    document.getElementById('comparison-stats').innerHTML = '';
+    $('comparison-stats').innerHTML = '';
     return;
   }
-  const cls = state.classes.find(c => c.id === state.currentClassId);
+  var cls = state.classes.find(function(c) { return c.id === state.currentClassId; });
   if (cls) {
-    const display = cls.section ? `${cls.grade} / شعبة ${cls.section}` : cls.grade;
-    document.getElementById('cmp-class-name').textContent = display;
+    var display = cls.section ? cls.grade + ' / شعبة ' + cls.section : cls.grade;
+    $('cmp-class-name').textContent = display;
   }
   list.innerHTML = '<div class="empty">جارٍ التحميل...</div>';
-  try {
-    const data = await api('getComparisonData', { classId: state.currentClassId });
-    if (!data.length) {
-      list.innerHTML = '<div class="empty">لا يوجد طلاب في هذا الصف</div>';
-      document.getElementById('comparison-stats').innerHTML = '';
-      return;
-    }
-    const s1Total = data.reduce((a, s) => a + s.s1, 0);
-    const s2Total = data.reduce((a, s) => a + s.s2, 0);
-    const improved = data.filter(s => s.diff > 0).length;
-    const declined = data.filter(s => s.diff < 0).length;
-    const same = data.filter(s => s.diff === 0).length;
-    const avg1 = (s1Total / data.length).toFixed(1);
-    const avg2 = (s2Total / data.length).toFixed(1);
-    document.getElementById('comparison-stats').innerHTML = `
-      <div class="stat-card"><div class="stat-label">مجموع ف1</div><div class="stat-value">${s1Total}</div></div>
-      <div class="stat-card green"><div class="stat-label">مجموع ف2</div><div class="stat-value">${s2Total}</div></div>
-      <div class="stat-card"><div class="stat-label">متوسط ف1</div><div class="stat-value" style="font-size:20px">${avg1}</div></div>
-      <div class="stat-card green"><div class="stat-label">متوسط ف2</div><div class="stat-value" style="font-size:20px">${avg2}</div></div>
-      <div class="stat-card green"><div class="stat-label">📈 تحسّن</div><div class="stat-value">${improved}</div></div>
-      <div class="stat-card red"><div class="stat-label">📉 تراجع</div><div class="stat-value">${declined}</div></div>
-      <div class="stat-card"><div class="stat-label">➖ ثابت</div><div class="stat-value" style="color:#5f6368">${same}</div></div>
-    `;
-    list.innerHTML = data.map(s => {
-      const trend = s.diff > 0 ? '📈' : s.diff < 0 ? '📉' : '➖';
-      const rowCls = s.diff > 0 ? 'up' : s.diff < 0 ? 'down' : 'same';
-      const diffText = s.diff > 0 ? '+' + s.diff : String(s.diff);
-      return `
-        <div class="comparison-row ${rowCls}">
-          <div class="cmp-name">${escapeHtml(s.name)}</div>
-          <div class="cmp-sem">ف1: <b>${s.s1}</b></div>
-          <div class="cmp-sem">ف2: <b>${s.s2}</b></div>
-          <div class="cmp-sem">المجموع: <b>${s.total}</b></div>
-          <div class="cmp-diff">${trend} ${diffText}</div>
-        </div>
-      `;
-    }).join('');
-  } catch (e) { list.innerHTML = '<div class="empty">خطأ: ' + e.message + '</div>'; }
+  api('getComparisonData', { classId: state.currentClassId })
+    .then(function(data) {
+      if (!data.length) {
+        list.innerHTML = '<div class="empty">لا يوجد طلاب في هذا الصف</div>';
+        $('comparison-stats').innerHTML = '';
+        return;
+      }
+      var s1Total = data.reduce(function(a, s) { return a + s.s1; }, 0);
+      var s2Total = data.reduce(function(a, s) { return a + s.s2; }, 0);
+      var improved = data.filter(function(s) { return s.diff > 0; }).length;
+      var declined = data.filter(function(s) { return s.diff < 0; }).length;
+      var same = data.filter(function(s) { return s.diff === 0; }).length;
+      var avg1 = (s1Total / data.length).toFixed(1);
+      var avg2 = (s2Total / data.length).toFixed(1);
+      $('comparison-stats').innerHTML =
+        '<div class="stat-card"><div class="stat-label">مجموع ف1</div><div class="stat-value">' + s1Total + '</div></div>' +
+        '<div class="stat-card green"><div class="stat-label">مجموع ف2</div><div class="stat-value">' + s2Total + '</div></div>' +
+        '<div class="stat-card"><div class="stat-label">متوسط ف1</div><div class="stat-value" style="font-size:20px">' + avg1 + '</div></div>' +
+        '<div class="stat-card green"><div class="stat-label">متوسط ف2</div><div class="stat-value" style="font-size:20px">' + avg2 + '</div></div>' +
+        '<div class="stat-card green"><div class="stat-label">📈 تحسّن</div><div class="stat-value">' + improved + '</div></div>' +
+        '<div class="stat-card red"><div class="stat-label">📉 تراجع</div><div class="stat-value">' + declined + '</div></div>' +
+        '<div class="stat-card"><div class="stat-label">➖ ثابت</div><div class="stat-value" style="color:#5f6368">' + same + '</div></div>';
+
+      list.innerHTML = data.map(function(s) {
+        var trend = s.diff > 0 ? '📈' : s.diff < 0 ? '📉' : '➖';
+        var rowCls = s.diff > 0 ? 'up' : s.diff < 0 ? 'down' : 'same';
+        var diffText = s.diff > 0 ? '+' + s.diff : String(s.diff);
+        return '<div class="comparison-row ' + rowCls + '">' +
+          '<div class="cmp-name">' + escapeHtml(s.name) + '</div>' +
+          '<div class="cmp-sem">ف1: <b>' + s.s1 + '</b></div>' +
+          '<div class="cmp-sem">ف2: <b>' + s.s2 + '</b></div>' +
+          '<div class="cmp-sem">المجموع: <b>' + s.total + '</b></div>' +
+          '<div class="cmp-diff">' + trend + ' ' + diffText + '</div>' +
+          '</div>';
+      }).join('');
+    })
+    .catch(function(e) { list.innerHTML = '<div class="empty">خطأ: ' + e.message + '</div>'; });
 }
 
-/* ==================== Export ==================== */
-async function exportClassToExcel() {
+/* ==========================================
+   Export
+   ========================================== */
+function exportClassToExcel() {
   if (!state.currentClassId) return showToast('اختر صفًا أولًا', 'warn');
   if (!state.students.length) return showToast('لا يوجد طلاب في هذا الصف', 'warn');
-  try {
-    const data = await api('exportClassData', { classId: state.currentClassId });
-    const wb = XLSX.utils.book_new();
-    const rows = [['م', 'الاسم', 'الفصل الأول', 'الفصل الثاني', 'المجموع', 'الفرق', 'ملاحظات']];
-    data.students.forEach((s, i) => {
-      rows.push([i + 1, s.name, s.s1, s.s2, s.total, s.diff, s.notes || '']);
-    });
-    const ws1 = XLSX.utils.aoa_to_sheet(rows);
-    ws1['!cols'] = [{wch:6},{wch:26},{wch:12},{wch:12},{wch:10},{wch:10},{wch:22}];
-    XLSX.utils.book_append_sheet(wb, ws1, 'القائمة');
+  api('exportClassData', { classId: state.currentClassId })
+    .then(function(data) {
+      try {
+        var wb = XLSX.utils.book_new();
+        var rows = [['م', 'الاسم', 'الفصل الأول', 'الفصل الثاني', 'المجموع', 'الفرق', 'ملاحظات']];
+        data.students.forEach(function(s, i) {
+          rows.push([i + 1, s.name, s.s1, s.s2, s.total, s.diff, s.notes || '']);
+        });
+        var ws1 = XLSX.utils.aoa_to_sheet(rows);
+        ws1['!cols'] = [{wch:6},{wch:26},{wch:12},{wch:12},{wch:10},{wch:10},{wch:22}];
+        XLSX.utils.book_append_sheet(wb, ws1, 'القائمة');
 
-    const sorted = [...data.students].sort((a, b) => b.total - a.total);
-    const rows2 = [['الترتيب', 'الاسم', 'الفصل الأول', 'الفصل الثاني', 'الفرق', 'الاتجاه']];
-    sorted.forEach((s, i) => {
-      const trend = s.diff > 0 ? 'تحسّن 📈' : s.diff < 0 ? 'تراجع 📉' : 'ثابت ➖';
-      rows2.push([i + 1, s.name, s.s1, s.s2, s.diff, trend]);
-    });
-    const ws2 = XLSX.utils.aoa_to_sheet(rows2);
-    ws2['!cols'] = [{wch:8},{wch:26},{wch:12},{wch:12},{wch:8},{wch:12}];
-    XLSX.utils.book_append_sheet(wb, ws2, 'المقارنة');
+        var sorted = data.students.slice().sort(function(a, b) { return b.total - a.total; });
+        var rows2 = [['الترتيب', 'الاسم', 'الفصل الأول', 'الفصل الثاني', 'الفرق', 'الاتجاه']];
+        sorted.forEach(function(s, i) {
+          var trend = s.diff > 0 ? 'تحسّن 📈' : s.diff < 0 ? 'تراجع 📉' : 'ثابت ➖';
+          rows2.push([i + 1, s.name, s.s1, s.s2, s.diff, trend]);
+        });
+        var ws2 = XLSX.utils.aoa_to_sheet(rows2);
+        ws2['!cols'] = [{wch:8},{wch:26},{wch:12},{wch:12},{wch:8},{wch:12}];
+        XLSX.utils.book_append_sheet(wb, ws2, 'المقارنة');
 
-    const s1Total = data.students.reduce((a, s) => a + s.s1, 0);
-    const s2Total = data.students.reduce((a, s) => a + s.s2, 0);
-    const improved = data.students.filter(s => s.diff > 0).length;
-    const declined = data.students.filter(s => s.diff < 0).length;
-    const info = [
-      ['الصف', data.className],
-      ['تاريخ التصدير', data.exportDate],
-      ['عدد الطلاب', data.students.length],
-      ['مجموع الفصل الأول', s1Total],
-      ['مجموع الفصل الثاني', s2Total],
-      ['متوسط الفصل الأول', (s1Total / data.students.length).toFixed(1)],
-      ['متوسط الفصل الثاني', (s2Total / data.students.length).toFixed(1)],
-      ['عدد المتحسنين', improved],
-      ['عدد المتراجعين', declined]
-    ];
-    const ws3 = XLSX.utils.aoa_to_sheet(info);
-    ws3['!cols'] = [{wch:22},{wch:28}];
-    XLSX.utils.book_append_sheet(wb, ws3, 'إحصائيات');
+        var s1Total = data.students.reduce(function(a, s) { return a + s.s1; }, 0);
+        var s2Total = data.students.reduce(function(a, s) { return a + s.s2; }, 0);
+        var improved = data.students.filter(function(s) { return s.diff > 0; }).length;
+        var declined = data.students.filter(function(s) { return s.diff < 0; }).length;
+        var info = [
+          ['الصف', data.className],
+          ['تاريخ التصدير', data.exportDate],
+          ['عدد الطلاب', data.students.length],
+          ['مجموع الفصل الأول', s1Total],
+          ['مجموع الفصل الثاني', s2Total],
+          ['متوسط الفصل الأول', (s1Total / data.students.length).toFixed(1)],
+          ['متوسط الفصل الثاني', (s2Total / data.students.length).toFixed(1)],
+          ['عدد المتحسنين', improved],
+          ['عدد المتراجعين', declined]
+        ];
+        var ws3 = XLSX.utils.aoa_to_sheet(info);
+        ws3['!cols'] = [{wch:22},{wch:28}];
+        XLSX.utils.book_append_sheet(wb, ws3, 'إحصائيات');
 
-    const safeName = data.className.replace(/[\/\\:*?"<>|]/g, '-');
-    XLSX.writeFile(wb, `${safeName}_مقارنة_${data.exportDate}.xlsx`);
-    showToast('تم تصدير الملف', 'success');
-  } catch (e) { showToast('خطأ في التصدير: ' + e.message, 'error'); }
+        var safeName = data.className.replace(/[\/\\:*?"<>|]/g, '-');
+        XLSX.writeFile(wb, safeName + '_مقارنة_' + data.exportDate + '.xlsx');
+        showToast('تم تصدير الملف', 'success');
+      } catch (e) {
+        showToast('خطأ في التصدير: ' + e.message, 'error');
+      }
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-/* ==================== Boot ==================== */
-async function bootApp() {
-  try {
-    const res = await api('getSpreadsheetUrl');
-    if (res.url) document.getElementById('sheet-link').href = res.url;
-  } catch (e) {}
+/* ==========================================
+   Import Modal
+   ========================================== */
+function openImportModal() {
+  fillSelect($('import-grade'), GRADES_LIST, '— اختر الصف —');
+  fillSelect($('import-section'), SECTIONS_LIST, 'بدون شعبة');
+  resetImportForm();
+  $('import-modal').classList.add('show');
+}
+function closeImportModal() {
+  $('import-modal').classList.remove('show');
+  resetImportForm();
+}
+
+function setImportFile(file) {
+  state.importFile = file;
+  var nameDisplay = $('file-name-display');
+  var dropZone = $('drop-zone');
+  var importBtn = $('import-btn');
+  if (file) {
+    nameDisplay.textContent = '✓ ' + file.name;
+    dropZone.classList.add('has-file');
+    importBtn.disabled = false;
+  } else {
+    nameDisplay.textContent = '';
+    dropZone.classList.remove('has-file');
+    importBtn.disabled = true;
+  }
+}
+
+function resetImportForm() {
+  state.importFile = null;
+  var fi = $('file-input');
+  if (fi) fi.value = '';
+  setImportFile(null);
+  if ($('import-grade')) $('import-grade').value = '';
+  if ($('import-section')) $('import-section').value = '';
+}
+
+function findOrCreateClass(grade, section) {
+  return new Promise(function(resolve, reject) {
+    var cls = state.classes.find(function(c) { return c.grade === grade && c.section === section; });
+    if (cls) return resolve(cls);
+    api('addClass', { grade: grade, section: section })
+      .then(function() { return api('getClasses'); })
+      .then(function(classes) {
+        state.classes = classes;
+        var newCls = classes.find(function(c) { return c.grade === grade && c.section === section; });
+        resolve(newCls);
+      })
+      .catch(reject);
+  });
+}
+
+function doImportStudents() {
+  var grade = $('import-grade').value;
+  var section = $('import-section').value;
+  if (!grade) return showToast('اختر الصف أولًا', 'warn');
+  if (!state.importFile) return showToast('اختر ملفًا أولًا', 'warn');
+
+  showToast('جارٍ التحقق من الصف...', 'info');
+  findOrCreateClass(grade, section)
+    .then(function(targetClass) {
+      if (!targetClass) throw new Error('فشل إنشاء الصف');
+      return new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function(evt) {
+          try {
+            var data = new Uint8Array(evt.target.result);
+            var wb = XLSX.read(data, { type: 'array' });
+            var sheet = wb.Sheets[wb.SheetNames[0]];
+            var rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            var students = [];
+            for (var i = 1; i < rows.length; i++) {
+              var row = rows[i];
+              if (!row || !row[0]) continue;
+              var name = String(row[0]).trim();
+              if (name) students.push({ name: name });
+            }
+            if (!students.length) { reject(new Error('لم يتم العثور على أسماء')); return; }
+            showToast('جارٍ استيراد ' + students.length + ' طالبًا...', 'info');
+            api('bulkImportStudents', { students: JSON.stringify(students), classId: targetClass.id })
+              .then(function(res) {
+                var targetLabel = targetClass.section ? targetClass.grade + ' / شعبة ' + targetClass.section : targetClass.grade;
+                showToast('✅ تم استيراد ' + res.count + ' طالبًا إلى "' + targetLabel + '"', 'success');
+                flashScreen('✅ تم الاستيراد!', 1500);
+                if (state.currentClassId === targetClass.id) loadStudents();
+                closeImportModal();
+                loadClasses();
+                resolve();
+              })
+              .catch(reject);
+          } catch (err) { reject(err); }
+        };
+        reader.onerror = function() { reject(new Error('فشل قراءة الملف')); };
+        reader.readAsArrayBuffer(state.importFile);
+      });
+    })
+    .catch(function(e) { showToast(e.message || 'خطأ', 'error'); });
+}
+
+/* ==========================================
+   Boot
+   ========================================== */
+function bootApp() {
+  api('getSpreadsheetUrl')
+    .then(function(res) { if (res.url) $('sheet-link').href = res.url; })
+    .catch(function() {});
   loadClasses();
   switchSemester(state.semester);
 }
 
-/* ==================== Drop Zone (Import Modal) ==================== */
-document.addEventListener('DOMContentLoaded', () => {
-  const dropZone = document.getElementById('drop-zone');
-  const fileInput = document.getElementById('file-input');
+/* ==========================================
+   Event Listeners
+   ========================================== */
+document.addEventListener('DOMContentLoaded', function() {
+  // Login
+  $('login-btn').addEventListener('click', doLogin);
+  $('login-password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
 
+  // Logout
+  $('logout-btn').addEventListener('click', doLogout);
+
+  // Tabs
+  document.querySelectorAll('nav.tabs button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('nav.tabs button').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('section.tab').forEach(function(s) { s.classList.remove('active'); });
+      btn.classList.add('active');
+      $('tab-' + btn.dataset.tab).classList.add('active');
+      if (btn.dataset.tab === 'points') renderPointsStudents();
+      if (btn.dataset.tab === 'wheel') drawWheel();
+      if (btn.dataset.tab === 'leaderboard') loadLeaderboard();
+      if (btn.dataset.tab === 'comparison') loadComparison();
+    });
+  });
+
+  // Semester toggles
+  document.querySelectorAll('.sem-btn').forEach(function(b) {
+    b.addEventListener('click', function() { switchSemester(b.dataset.sem); });
+  });
+
+  // Toolbar
+  $('class-selector').addEventListener('change', function() { switchClass(this.value); });
+  $('btn-manage-classes').addEventListener('click', openClassesModal);
+  $('btn-import').addEventListener('click', openImportModal);
+
+  // Students tab
+  $('btn-add-student').addEventListener('click', addStudent);
+  $('new-name').addEventListener('keypress', function(e) { if (e.key === 'Enter') addStudent(); });
+  $('btn-export').addEventListener('click', exportClassToExcel);
+  $('btn-refresh').addEventListener('click', loadStudents);
+  $('btn-reset-points').addEventListener('click', confirmDeleteAll);
+
+  // Points tab
+  $('btn-plus').addEventListener('click', function() { applyPointsToSelected(1); });
+  $('btn-minus').addEventListener('click', function() { applyPointsToSelected(-1); });
+  $('btn-select-all').addEventListener('click', selectAll);
+  $('btn-clear-selection').addEventListener('click', clearSelection);
+
+  // Leaderboard
+  $('btn-refresh-lb').addEventListener('click', loadLeaderboard);
+
+  // Comparison
+  $('btn-refresh-cmp').addEventListener('click', loadComparison);
+  $('btn-export2').addEventListener('click', exportClassToExcel);
+
+  // Groups
+  $('btn-divide').addEventListener('click', divideGroups);
+
+  // Wheel
+  $('btn-redraw').addEventListener('click', drawWheel);
+  $('btn-spin').addEventListener('click', spinWheel);
+  $('btn-random').addEventListener('click', randomPick);
+  $('wheel-center').addEventListener('click', spinWheel);
+
+  // Timer
+  $('btn-timer-start').addEventListener('click', startTimer);
+  $('btn-timer-pause').addEventListener('click', pauseTimer);
+  $('btn-timer-reset').addEventListener('click', resetTimer);
+  document.querySelectorAll('.timer-preset').forEach(function(b) {
+    b.addEventListener('click', function() { setTimerPreset(Number(b.dataset.min)); });
+  });
+
+  // Stopwatch
+  $('btn-sw-start').addEventListener('click', startStopwatch);
+  $('btn-sw-pause').addEventListener('click', pauseStopwatch);
+  $('btn-sw-reset').addEventListener('click', resetStopwatch);
+  $('btn-sw-lap').addEventListener('click', lapStopwatch);
+
+  // Classes modal
+  $('close-classes').addEventListener('click', closeClassesModal);
+  $('btn-add-class').addEventListener('click', addClassFromSelects);
+  $('btn-copy-class').addEventListener('click', doCopyClass);
+  $('btn-promote').addEventListener('click', doPromoteClass);
+  $('btn-change-pwd').addEventListener('click', doChangePassword);
+  $('promote-source').addEventListener('change', onPromoteSourceChange);
+
+  // Import modal
+  $('close-import').addEventListener('click', closeImportModal);
+  $('btn-reset-import').addEventListener('click', resetImportForm);
+  $('import-btn').addEventListener('click', doImportStudents);
+
+  // Drop zone
+  var dropZone = $('drop-zone');
+  var fileInput = $('file-input');
   if (dropZone && fileInput) {
-    dropZone.addEventListener('click', () => fileInput.click());
-
-    fileInput.addEventListener('change', (e) => {
-      const f = e.target.files[0];
+    dropZone.addEventListener('click', function() { fileInput.click(); });
+    fileInput.addEventListener('change', function(e) {
+      var f = e.target.files[0];
       if (f) setImportFile(f);
     });
-
-    dropZone.addEventListener('dragover', (e) => {
+    dropZone.addEventListener('dragover', function(e) {
       e.preventDefault();
       dropZone.classList.add('dragover');
     });
-    dropZone.addEventListener('dragleave', () => {
+    dropZone.addEventListener('dragleave', function() {
       dropZone.classList.remove('dragover');
     });
-    dropZone.addEventListener('drop', (e) => {
+    dropZone.addEventListener('drop', function(e) {
       e.preventDefault();
       dropZone.classList.remove('dragover');
-      const f = e.dataTransfer.files[0];
+      var f = e.dataTransfer.files[0];
       if (f) setImportFile(f);
     });
   }
 
-  // إغلاق المودالات بالنقر على الخلفية
-  document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', (e) => {
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+    overlay.addEventListener('click', function(e) {
       if (e.target === overlay) overlay.classList.remove('show');
     });
   });
-});
 
-checkExistingSession();
+  // Check existing session
+  checkExistingSession();
+});
 </script>
 
 </body>
