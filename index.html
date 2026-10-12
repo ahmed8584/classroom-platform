@@ -13,6 +13,8 @@ header h1 { font-size: 20px; }
 header a { color: #fff; text-decoration: none; background: rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 8px; font-size: 13px; }
 .logout-btn { background: rgba(255,255,255,0.2); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .logout-btn:hover { background: rgba(255,255,255,0.35); }
+.back-home-btn { background: rgba(255,255,255,0.2); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.back-home-btn:hover { background: rgba(255,255,255,0.35); }
 .toolbar { background: #fff; padding: 12px 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
 .toolbar label { font-weight: 700; color: #5f6368; font-size: 14px; }
 #class-selector { padding: 9px 14px; border: 2px solid #1a73e8; border-radius: 8px; font-weight: 700; font-size: 14px; color: #1a73e8; background: #fff; cursor: pointer; min-width: 220px; outline: none; }
@@ -22,7 +24,7 @@ header a { color: #fff; text-decoration: none; background: rgba(255,255,255,0.2)
 .sem-btn.active { background: #1a73e8; color: #fff; }
 .sem-btn[data-sem="s2"].active { background: #34a853; }
 nav.tabs { display: none; gap: 6px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #e0e0e0; overflow-x: auto; flex-wrap: nowrap; }
-body.authenticated nav.tabs { display: flex; }
+body.authenticated.page-selected nav.tabs { display: flex; }
 nav.tabs button { background: #f1f3f4; border: 1px solid transparent; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; color: #5f6368; white-space: nowrap; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
 nav.tabs button:hover { background: #e8eaed; color: #1a73e8; }
 nav.tabs button.active { background: linear-gradient(135deg, #1a73e8, #4285f4); color: #fff; box-shadow: 0 2px 8px rgba(26,115,232,0.35); transform: translateY(-1px); }
@@ -30,6 +32,8 @@ nav.tabs button.general { color: #8e34d6; }
 nav.tabs button.general:hover { background: #f3e8fd; color: #8e34d6; }
 nav.tabs button.general.active { background: linear-gradient(135deg, #a142f4, #c17af9); color: #fff; box-shadow: 0 2px 8px rgba(161,66,244,0.35); }
 main { padding: 20px; max-width: 1200px; margin: 0 auto; }
+body.authenticated:not(.page-selected) main,
+body.authenticated:not(.page-selected) .toolbar { display: none !important; }
 section.tab { display: none; }
 section.tab.active { display: block; animation: fadeIn 0.3s; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
@@ -131,18 +135,100 @@ body.authenticated .login-screen { display: none; }
 .login-box input:focus { border-color: #1a73e8; box-shadow: 0 0 0 4px rgba(26,115,232,0.12); }
 .login-box .btn { width: 100%; padding: 14px; font-size: 16px; }
 .login-error { color: #ea4335; font-size: 13px; margin-top: 12px; min-height: 20px; font-weight: 600; }
-body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.authenticated) main { display: none !important; }
+body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.authenticated) main, body:not(.authenticated) .welcome-screen { display: none !important; }
 .password-section input { padding: 10px 12px; border: 1px solid #dadce0; border-radius: 8px; outline: none; }
 .password-section input:focus { border-color: #1a73e8; }
 .drop-zone { border: 2px dashed #1a73e8; border-radius: 12px; padding: 26px 20px; text-align: center; background: #f0f7ff; cursor: pointer; transition: 0.2s; }
 .drop-zone:hover { background: #e3f0ff; }
 .drop-zone.dragover { background: #d2e7ff; border-color: #1557b0; transform: scale(1.01); }
 .drop-zone.has-file { background: #e6f4ea; border-color: #34a853; }
+
+/* صفحة الترحيب */
+.welcome-screen {
+  display: none;
+  padding: 30px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+body.authenticated:not(.page-selected) .welcome-screen {
+  display: block;
+}
+.welcome-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.welcome-header h1 {
+  font-size: 28px;
+  color: #1a73e8;
+  margin-bottom: 8px;
+}
+.welcome-header p {
+  color: #5f6368;
+  font-size: 15px;
+}
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.tile {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border: 2px solid transparent;
+}
+.tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(26,115,232,0.2);
+  border-color: #1a73e8;
+}
+.tile .tile-icon {
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.tile .tile-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #202124;
+  margin-bottom: 4px;
+}
+.tile .tile-desc {
+  font-size: 12px;
+  color: #5f6368;
+  line-height: 1.4;
+}
+.tile.tile-general {
+  background: linear-gradient(135deg, #f8f0ff, #fff);
+  border: 2px solid #f3e8fd;
+}
+.tile.tile-general:hover {
+  border-color: #a142f4;
+  box-shadow: 0 8px 24px rgba(161,66,244,0.2);
+}
+.tile.tile-general .tile-title { color: #8e34d6; }
+.tile.tile-manage {
+  background: linear-gradient(135deg, #fff8e1, #fff);
+  border: 2px solid #fff3c4;
+}
+.tile.tile-manage:hover {
+  border-color: #fbbc04;
+  box-shadow: 0 8px 24px rgba(251,188,4,0.25);
+}
+.tile.tile-manage .tile-title { color: #c67b00; }
+
 @media (max-width: 600px) {
   .timer-display, .stopwatch-display { font-size: 44px; }
   header h1 { font-size: 16px; }
   nav.tabs { padding: 8px 12px; }
   nav.tabs button { padding: 8px 12px; font-size: 12px; }
+  .welcome-header h1 { font-size: 22px; }
+  .tile { padding: 18px 14px; }
+  .tile .tile-icon { font-size: 38px; }
 }
 </style>
 </head>
@@ -160,11 +246,72 @@ body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.au
 
 <header>
   <h1>🎓 منصة الحصة التفاعلية</h1>
-  <div style="display:flex;gap:8px;align-items:center">
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <a id="sheet-link" href="#" target="_blank">📊 جدول البيانات</a>
+    <button class="back-home-btn" id="btn-home" type="button">🏠 الرئيسية</button>
     <button class="logout-btn" id="logout-btn" type="button">🚪 خروج</button>
   </div>
 </header>
+
+<!-- صفحة الترحيب -->
+<section class="welcome-screen" id="welcome-screen">
+  <div class="welcome-header">
+    <h1>🎓 مرحبًا بك في منصة الحصة التفاعلية</h1>
+    <p>اختر الأداة أو الصفحة التي تريد البدء بها</p>
+  </div>
+  <div class="tiles-grid">
+    <div class="tile" data-goto="students">
+      <div class="tile-icon">👥</div>
+      <div class="tile-title">الطلاب</div>
+      <div class="tile-desc">إدارة الطلاب والاستيراد</div>
+    </div>
+    <div class="tile" data-goto="points">
+      <div class="tile-icon">🏆</div>
+      <div class="tile-title">التعزيز</div>
+      <div class="tile-desc">منح وخصم النقاط</div>
+    </div>
+    <div class="tile" data-goto="leaderboard">
+      <div class="tile-icon">🥇</div>
+      <div class="tile-title">المتصدرون</div>
+      <div class="tile-desc">ترتيب الطلاب حسب النقاط</div>
+    </div>
+    <div class="tile" data-goto="comparison">
+      <div class="tile-icon">📊</div>
+      <div class="tile-title">المقارنة</div>
+      <div class="tile-desc">مقارنة الفصلين الدراسيين</div>
+    </div>
+    <div class="tile" data-goto="groups">
+      <div class="tile-icon">📊</div>
+      <div class="tile-title">المجموعات</div>
+      <div class="tile-desc">تقسيم الطلاب عشوائيًا</div>
+    </div>
+    <div class="tile" data-goto="wheel">
+      <div class="tile-icon">🎡</div>
+      <div class="tile-title">العجلة</div>
+      <div class="tile-desc">اختيار طالب عشوائي</div>
+    </div>
+    <div class="tile tile-general" data-goto="timer">
+      <div class="tile-icon">⏱️</div>
+      <div class="tile-title">المؤقت</div>
+      <div class="tile-desc">مؤقت تنازلي</div>
+    </div>
+    <div class="tile tile-general" data-goto="stopwatch">
+      <div class="tile-icon">⏲️</div>
+      <div class="tile-title">ساعة الإيقاف</div>
+      <div class="tile-desc">عدّاد تصاعدي مع لفات</div>
+    </div>
+    <div class="tile tile-manage" id="tile-manage">
+      <div class="tile-icon">⚙️</div>
+      <div class="tile-title">إدارة الصفوف</div>
+      <div class="tile-desc">إضافة وتعديل الصفوف والشعب</div>
+    </div>
+    <div class="tile tile-manage" id="tile-import">
+      <div class="tile-icon">📥</div>
+      <div class="tile-title">استيراد الطلاب</div>
+      <div class="tile-desc">رفع أسماء من Excel</div>
+    </div>
+  </div>
+</section>
 
 <div class="toolbar">
   <label>📚 الصف الحالي:</label>
@@ -186,7 +333,7 @@ body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.au
   <button data-tab="groups" type="button">📊 المجموعات</button>
   <button data-tab="wheel" type="button">🎡 العجلة</button>
   <button data-tab="timer" class="general" type="button">⏱️ المؤقت</button>
-  <button data-tab="stopwatch" class="general" type="button">Ⲩ ساعة الإيقاف</button>
+  <button data-tab="stopwatch" class="general" type="button">⏲️ ساعة الإيقاف</button>
 </nav>
 
 <main>
@@ -274,7 +421,7 @@ body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.au
       <div class="wheel-wrap">
         <div class="wheel-pointer"></div>
         <canvas id="wheel-canvas" width="600" height="600"></canvas>
-        <div class="wheel-center" id="wheel-center" style="cursor:pointer">ابدأ</div>
+        <div class="wheel-center" id="wheel-center">ابدأ</div>
       </div>
       <div class="row" style="justify-content:center;margin-top:14px">
         <button class="btn secondary" id="btn-redraw" type="button">🔄 إعادة رسم</button>
@@ -545,6 +692,7 @@ function doLogin() {
       if (res.success) {
         setSessionToken(res.token);
         document.body.classList.add('authenticated');
+        document.body.classList.remove('page-selected');
         $('login-password').value = '';
         bootApp();
       } else {
@@ -563,6 +711,7 @@ function doLogout() {
   var token = getSessionToken();
   setSessionToken('');
   document.body.classList.remove('authenticated');
+  document.body.classList.remove('page-selected');
   $('login-password').value = '';
   $('login-error').textContent = '';
   if (token) api('logout', { token: token }).catch(function() {});
@@ -573,7 +722,11 @@ function checkExistingSession() {
   if (!token) return;
   api('validateSession', { token: token })
     .then(function(res) {
-      if (res.success) { document.body.classList.add('authenticated'); bootApp(); }
+      if (res.success) {
+        document.body.classList.add('authenticated');
+        document.body.classList.remove('page-selected');
+        bootApp();
+      }
       else setSessionToken('');
     })
     .catch(function() { setSessionToken(''); });
@@ -592,6 +745,29 @@ function doChangePassword() {
       showToast('تم تغيير كلمة المرور', 'success');
     })
     .catch(function(e) { showToast(e.message, 'error'); });
+}
+
+/* ==========================================
+   Welcome / Home Navigation
+   ========================================== */
+function gotoPage(tabName) {
+  document.body.classList.add('page-selected');
+  document.querySelectorAll('nav.tabs button').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.tab === tabName);
+  });
+  document.querySelectorAll('section.tab').forEach(function(s) {
+    s.classList.toggle('active', s.id === 'tab-' + tabName);
+  });
+  if (tabName === 'points') renderPointsStudents();
+  if (tabName === 'wheel') drawWheel();
+  if (tabName === 'leaderboard') loadLeaderboard();
+  if (tabName === 'comparison') loadComparison();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome() {
+  document.body.classList.remove('page-selected');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /* ==========================================
@@ -1408,8 +1584,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'Enter') doLogin();
   });
 
-  // Logout
+  // Logout / Home
   $('logout-btn').addEventListener('click', doLogout);
+  $('btn-home').addEventListener('click', goHome);
+
+  // Welcome tiles
+  document.querySelectorAll('.tile[data-goto]').forEach(function(tile) {
+    tile.addEventListener('click', function() { gotoPage(tile.dataset.goto); });
+  });
+  $('tile-manage').addEventListener('click', openClassesModal);
+  $('tile-import').addEventListener('click', openImportModal);
 
   // Tabs
   document.querySelectorAll('nav.tabs button').forEach(function(btn) {
