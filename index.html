@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>منصة الحصة التفاعلية</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f4f8; color: #202124; min-height: 100vh; }
@@ -15,6 +16,9 @@ header a { color: #fff; text-decoration: none; background: rgba(255,255,255,0.2)
 .logout-btn:hover { background: rgba(255,255,255,0.35); }
 .back-home-btn { background: rgba(255,255,255,0.2); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .back-home-btn:hover { background: rgba(255,255,255,0.35); }
+.notif-btn { background: rgba(255,255,255,0.2); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.notif-btn:hover { background: rgba(255,255,255,0.35); }
+.notif-btn.active { background: #34a853; }
 .toolbar { background: #fff; padding: 12px 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
 .toolbar label { font-weight: 700; color: #5f6368; font-size: 14px; }
 #class-selector { padding: 9px 14px; border: 2px solid #1a73e8; border-radius: 8px; font-weight: 700; font-size: 14px; color: #1a73e8; background: #fff; cursor: pointer; min-width: 220px; outline: none; }
@@ -42,8 +46,8 @@ section.tab.active { display: block; animation: fadeIn 0.3s; }
 .card h3 { font-size: 15px; margin-bottom: 10px; color: #202124; }
 .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 input, select, button { font-family: inherit; font-size: 14px; }
-input[type=text], input[type=number], input[type=password], select { padding: 10px 12px; border: 1px solid #dadce0; border-radius: 8px; outline: none; transition: 0.2s; background: #fff; }
-input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.12); }
+input[type=text], input[type=number], input[type=password], select, textarea { padding: 10px 12px; border: 1px solid #dadce0; border-radius: 8px; outline: none; transition: 0.2s; background: #fff; font-family: inherit; font-size: 14px; }
+input:focus, select:focus, textarea:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.12); }
 .btn { padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; background: #1a73e8; color: #fff; }
 .btn:hover { background: #1557b0; transform: translateY(-1px); }
 .btn.secondary { background: #e8eaed; color: #202124; }
@@ -54,6 +58,8 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .btn.danger:hover { background: #c5362b; }
 .btn.purple { background: #a142f4; }
 .btn.purple:hover { background: #8e34d6; }
+.btn.warn { background: #fbbc04; color: #202124; }
+.btn.warn:hover { background: #e0a800; }
 .btn.small { padding: 6px 10px; font-size: 12px; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .toast-container { position: fixed; top: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
@@ -76,22 +82,36 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .wheel-center:hover { background: #1a73e8; color: #fff; }
 .points-input { width: 80px; }
 .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-.student-card { background: #fff; border: 2px solid #e8eaed; border-radius: 10px; padding: 12px; transition: 0.2s; cursor: pointer; }
+.student-card { background: #fff; border: 2px solid #e8eaed; border-radius: 10px; padding: 12px; transition: 0.2s; cursor: pointer; position: relative; }
 .student-card:hover { border-color: #1a73e8; box-shadow: 0 4px 12px rgba(26,115,232,0.15); }
 .student-card.selected { border-color: #34a853; background: #e6f4ea; }
-.student-card .name { font-weight: 700; margin-bottom: 6px; }
+.student-card .name { font-weight: 700; margin-bottom: 6px; padding-right: 44px; }
 .points-pair { display: flex; gap: 8px; margin-top: 6px; font-size: 13px; flex-wrap: wrap; }
 .points-pair span { padding: 3px 10px; border-radius: 6px; background: #f1f3f4; color: #5f6368; font-weight: 600; }
 .points-pair span.active { background: #e8f0fe; color: #1a73e8; }
 .points-pair span.active.s2 { background: #e6f4ea; color: #34a853; }
 .student-card .actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+
+/* أفاتار الطالب */
+.student-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 18px; color: #fff;
+  position: absolute; top: 12px; left: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer; transition: 0.2s;
+  user-select: none;
+}
+.student-avatar:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+
 .leader-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; margin-bottom: 8px; background: #f8f9fa; border-right: 4px solid transparent; }
 .leader-item.top1 { background: linear-gradient(90deg, #fff8e1, #fff); border-right-color: #fbbc04; }
 .leader-item.top2 { background: linear-gradient(90deg, #f5f5f5, #fff); border-right-color: #9e9e9e; }
 .leader-item.top3 { background: linear-gradient(90deg, #fbe9e7, #fff); border-right-color: #bf8970; }
 .leader-rank { font-size: 22px; font-weight: 900; width: 40px; text-align: center; }
-.leader-name { flex: 1; font-weight: 700; }
+.leader-name { flex: 1; font-weight: 700; display: flex; align-items: center; gap: 10px; }
 .leader-points { font-size: 20px; font-weight: 900; color: #1a73e8; }
+
 .group-card { background: #fff; border-radius: 10px; padding: 14px; border: 2px solid #e8eaed; margin-bottom: 12px; }
 .group-card h3 { color: #1a73e8; margin-bottom: 8px; font-size: 15px; }
 .group-card ul { list-style: none; padding-right: 0; }
@@ -108,7 +128,7 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .comparison-row.up { border-right-color: #34a853; background: #e6f4ea; }
 .comparison-row.down { border-right-color: #ea4335; background: #fce8e6; }
 .comparison-row.same { border-right-color: #9aa0a6; }
-.cmp-name { flex: 1; font-weight: 700; }
+.cmp-name { flex: 1; font-weight: 700; display: flex; align-items: center; gap: 10px; }
 .cmp-sem { font-size: 13px; color: #5f6368; min-width: 70px; text-align: center; }
 .cmp-sem b { color: #202124; font-size: 16px; }
 .cmp-diff { font-size: 16px; font-weight: 900; min-width: 70px; text-align: center; }
@@ -118,7 +138,7 @@ input:focus, select:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
 .modal-overlay.show { display: flex; }
 .modal { background: #fff; border-radius: 14px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-.modal-header { padding: 18px 22px; border-bottom: 1px solid #e8eaed; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: #fff; z-index: 1; }
+.modal-header { padding: 18px 22px; border-bottom: 1px solid #e8eaed; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: #fff; z-index: 1; border-radius: 14px 14px 0 0; }
 .modal-header h2 { font-size: 18px; color: #1a73e8; }
 .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #5f6368; padding: 4px 10px; border-radius: 6px; }
 .modal-close:hover { background: #f1f3f4; }
@@ -144,82 +164,53 @@ body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.au
 .drop-zone.has-file { background: #e6f4ea; border-color: #34a853; }
 
 /* صفحة الترحيب */
-.welcome-screen {
-  display: none;
-  padding: 30px 20px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-body.authenticated:not(.page-selected) .welcome-screen {
-  display: block;
-}
-.welcome-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.welcome-header h1 {
-  font-size: 28px;
-  color: #1a73e8;
-  margin-bottom: 8px;
-}
-.welcome-header p {
-  color: #5f6368;
-  font-size: 15px;
-}
-.tiles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-}
-.tile {
-  background: #fff;
-  border-radius: 16px;
-  padding: 24px 18px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.25s;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-  border: 2px solid transparent;
-}
-.tile:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(26,115,232,0.2);
-  border-color: #1a73e8;
-}
-.tile .tile-icon {
-  font-size: 48px;
-  line-height: 1;
-  margin-bottom: 12px;
-}
-.tile .tile-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #202124;
-  margin-bottom: 4px;
-}
-.tile .tile-desc {
-  font-size: 12px;
-  color: #5f6368;
-  line-height: 1.4;
-}
-.tile.tile-general {
-  background: linear-gradient(135deg, #f8f0ff, #fff);
-  border: 2px solid #f3e8fd;
-}
-.tile.tile-general:hover {
-  border-color: #a142f4;
-  box-shadow: 0 8px 24px rgba(161,66,244,0.2);
-}
+.welcome-screen { display: none; padding: 30px 20px; max-width: 1100px; margin: 0 auto; }
+body.authenticated:not(.page-selected) .welcome-screen { display: block; }
+.welcome-header { text-align: center; margin-bottom: 30px; }
+.welcome-header h1 { font-size: 28px; color: #1a73e8; margin-bottom: 8px; }
+.welcome-header p { color: #5f6368; font-size: 15px; }
+.tiles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.tile { background: #fff; border-radius: 16px; padding: 24px 18px; text-align: center; cursor: pointer; transition: 0.25s; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 2px solid transparent; }
+.tile:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(26,115,232,0.2); border-color: #1a73e8; }
+.tile .tile-icon { font-size: 48px; line-height: 1; margin-bottom: 12px; }
+.tile .tile-title { font-size: 16px; font-weight: 700; color: #202124; margin-bottom: 4px; }
+.tile .tile-desc { font-size: 12px; color: #5f6368; line-height: 1.4; }
+.tile.tile-general { background: linear-gradient(135deg, #f8f0ff, #fff); border: 2px solid #f3e8fd; }
+.tile.tile-general:hover { border-color: #a142f4; box-shadow: 0 8px 24px rgba(161,66,244,0.2); }
 .tile.tile-general .tile-title { color: #8e34d6; }
-.tile.tile-manage {
-  background: linear-gradient(135deg, #fff8e1, #fff);
-  border: 2px solid #fff3c4;
-}
-.tile.tile-manage:hover {
-  border-color: #fbbc04;
-  box-shadow: 0 8px 24px rgba(251,188,4,0.25);
-}
+.tile.tile-manage { background: linear-gradient(135deg, #fff8e1, #fff); border: 2px solid #fff3c4; }
+.tile.tile-manage:hover { border-color: #fbbc04; box-shadow: 0 8px 24px rgba(251,188,4,0.25); }
 .tile.tile-manage .tile-title { color: #c67b00; }
+
+/* صف الطالب */
+.student-row { display: flex; align-items: center; gap: 12px; padding: 12px; background: #fff; border: 2px solid #e8eaed; border-radius: 10px; margin-bottom: 8px; transition: 0.2s; }
+.student-row:hover { border-color: #1a73e8; box-shadow: 0 2px 8px rgba(26,115,232,0.1); }
+.student-row .s-info { flex: 1; min-width: 0; padding-right: 0; }
+.student-row .s-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+.student-row .s-notes { font-size: 12px; color: #5f6368; margin-top: 4px; font-style: italic; }
+.student-row .s-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.student-row .student-avatar { position: static; }
+
+/* منتقي الألوان */
+.color-picker {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+.color-swatch {
+  width: 36px; height: 36px; border-radius: 50%;
+  cursor: pointer; transition: 0.2s;
+  border: 3px solid transparent;
+}
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch.selected { border-color: #202124; transform: scale(1.15); }
+
+/* رسم بياني */
+.chart-container {
+  background: #f8f9fa; border-radius: 12px; padding: 20px;
+  margin-top: 12px; height: 300px; position: relative;
+}
 
 @media (max-width: 600px) {
   .timer-display, .stopwatch-display { font-size: 44px; }
@@ -229,6 +220,9 @@ body.authenticated:not(.page-selected) .welcome-screen {
   .welcome-header h1 { font-size: 22px; }
   .tile { padding: 18px 14px; }
   .tile .tile-icon { font-size: 38px; }
+  .student-row { flex-direction: column; align-items: stretch; }
+  .student-row .s-actions { justify-content: flex-end; }
+  .color-picker { grid-template-columns: repeat(5, 1fr); }
 }
 </style>
 </head>
@@ -249,11 +243,11 @@ body.authenticated:not(.page-selected) .welcome-screen {
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <a id="sheet-link" href="#" target="_blank">📊 جدول البيانات</a>
     <button class="back-home-btn" id="btn-home" type="button">🏠 الرئيسية</button>
+    <button class="notif-btn" id="btn-notif" type="button">🔔 الإشعارات</button>
     <button class="logout-btn" id="logout-btn" type="button">🚪 خروج</button>
   </div>
 </header>
 
-<!-- صفحة الترحيب -->
 <section class="welcome-screen" id="welcome-screen">
   <div class="welcome-header">
     <h1>🎓 مرحبًا بك في منصة الحصة التفاعلية</h1>
@@ -270,18 +264,23 @@ body.authenticated:not(.page-selected) .welcome-screen {
       <div class="tile-title">التعزيز</div>
       <div class="tile-desc">منح وخصم النقاط</div>
     </div>
+    <div class="tile" data-goto="chart">
+      <div class="tile-icon">📊</div>
+      <div class="tile-title">الرسم البياني</div>
+      <div class="tile-desc">تطور نقاط الطلاب</div>
+    </div>
     <div class="tile" data-goto="leaderboard">
       <div class="tile-icon">🥇</div>
       <div class="tile-title">المتصدرون</div>
       <div class="tile-desc">ترتيب الطلاب حسب النقاط</div>
     </div>
     <div class="tile" data-goto="comparison">
-      <div class="tile-icon">📊</div>
+      <div class="tile-icon">📈</div>
       <div class="tile-title">المقارنة</div>
       <div class="tile-desc">مقارنة الفصلين الدراسيين</div>
     </div>
     <div class="tile" data-goto="groups">
-      <div class="tile-icon">📊</div>
+      <div class="tile-icon">👨‍👩‍👧</div>
       <div class="tile-title">المجموعات</div>
       <div class="tile-desc">تقسيم الطلاب عشوائيًا</div>
     </div>
@@ -328,9 +327,10 @@ body.authenticated:not(.page-selected) .welcome-screen {
 <nav class="tabs">
   <button data-tab="students" class="active" type="button">👥 الطلاب</button>
   <button data-tab="points" type="button">🏆 التعزيز</button>
+  <button data-tab="chart" type="button">📊 الرسم البياني</button>
   <button data-tab="leaderboard" type="button">🥇 المتصدرون</button>
-  <button data-tab="comparison" type="button">📊 المقارنة</button>
-  <button data-tab="groups" type="button">📊 المجموعات</button>
+  <button data-tab="comparison" type="button">📈 المقارنة</button>
+  <button data-tab="groups" type="button">👨‍👩‍👧 المجموعات</button>
   <button data-tab="wheel" type="button">🎡 العجلة</button>
   <button data-tab="timer" class="general" type="button">⏱️ المؤقت</button>
   <button data-tab="stopwatch" class="general" type="button">⏲️ ساعة الإيقاف</button>
@@ -354,7 +354,7 @@ body.authenticated:not(.page-selected) .welcome-screen {
         <div class="row">
           <button class="btn success small" id="btn-export" type="button">📥 تصدير Excel</button>
           <button class="btn secondary small" id="btn-refresh" type="button">🔄 تحديث</button>
-          <button class="btn danger small" id="btn-reset-points" type="button">🗑️ تصفير نقاط الفصل</button>
+          <button class="btn warn small" id="btn-reset-points" type="button">🗑️ تصفير نقاط الفصل</button>
         </div>
       </div>
       <div id="students-list"></div>
@@ -379,6 +379,23 @@ body.authenticated:not(.page-selected) .welcome-screen {
     <div id="points-students" class="students-grid"></div>
   </section>
 
+  <section id="tab-chart" class="tab">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:14px">
+        <h2 style="margin:0">📊 تطور نقاط الطلاب</h2>
+        <button class="btn secondary small" id="btn-refresh-chart" type="button">🔄 تحديث</button>
+      </div>
+      <div class="row" style="margin-bottom:12px">
+        <button class="btn small chart-type-btn active" data-chart="bar" type="button">📊 أعمدة</button>
+        <button class="btn small secondary chart-type-btn" data-chart="line" type="button">📈 خطي</button>
+        <button class="btn small secondary chart-type-btn" data-chart="doughnut" type="button">🍩 دائري</button>
+      </div>
+      <div class="chart-container">
+        <canvas id="students-chart"></canvas>
+      </div>
+    </div>
+  </section>
+
   <section id="tab-leaderboard" class="tab">
     <div class="card">
       <div class="row" style="justify-content:space-between;margin-bottom:14px">
@@ -392,7 +409,7 @@ body.authenticated:not(.page-selected) .welcome-screen {
   <section id="tab-comparison" class="tab">
     <div class="card">
       <div class="row" style="justify-content:space-between;margin-bottom:14px">
-        <h2 style="margin:0">📊 مقارنة الفصلين — <span id="cmp-class-name">—</span></h2>
+        <h2 style="margin:0">📈 مقارنة الفصلين — <span id="cmp-class-name">—</span></h2>
         <div class="row">
           <button class="btn secondary small" id="btn-refresh-cmp" type="button">🔄 تحديث</button>
           <button class="btn success small" id="btn-export2" type="button">📥 تصدير كامل</button>
@@ -405,7 +422,7 @@ body.authenticated:not(.page-selected) .welcome-screen {
 
   <section id="tab-groups" class="tab">
     <div class="card">
-      <h2>📊 تقسيم مجموعات الصف الحالي</h2>
+      <h2>👨‍👩‍👧 تقسيم مجموعات الصف الحالي</h2>
       <div class="row">
         <label>عدد المجموعات:</label>
         <input type="number" id="groups-count" value="3" min="2" max="10" style="width:80px;text-align:center">
@@ -454,6 +471,7 @@ body.authenticated:not(.page-selected) .welcome-screen {
         <button class="btn secondary small timer-preset" data-min="10" type="button">10 د</button>
         <button class="btn secondary small timer-preset" data-min="15" type="button">15 د</button>
       </div>
+      <div id="notif-status" style="margin-top:14px;text-align:center;font-size:13px;color:#5f6368"></div>
     </div>
   </section>
 
@@ -472,6 +490,7 @@ body.authenticated:not(.page-selected) .welcome-screen {
   </section>
 </main>
 
+<!-- مودال: إدارة الصفوف -->
 <div class="modal-overlay" id="classes-modal">
   <div class="modal">
     <div class="modal-header">
@@ -535,6 +554,80 @@ body.authenticated:not(.page-selected) .welcome-screen {
   </div>
 </div>
 
+<!-- مودال: تعديل طالب -->
+<div class="modal-overlay" id="edit-student-modal">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <h2>✏️ تعديل بيانات الطالب</h2>
+      <button class="modal-close" id="close-edit-student" type="button">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-student-id">
+      <div style="text-align:center;margin-bottom:14px">
+        <div id="edit-avatar-preview" class="student-avatar" style="position:static;margin:0 auto;width:60px;height:60px;font-size:26px;cursor:default">؟</div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-weight:700;font-size:13px;color:#5f6368;display:block;margin-bottom:6px">الاسم:</label>
+        <input type="text" id="edit-student-name" style="width:100%">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-weight:700;font-size:13px;color:#5f6368;display:block;margin-bottom:6px">🎨 لون الأفاتار:</label>
+        <div class="color-picker" id="color-picker"></div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-weight:700;font-size:13px;color:#5f6368;display:block;margin-bottom:6px">ملاحظات:</label>
+        <textarea id="edit-student-notes" rows="3" style="width:100%;resize:vertical" placeholder="ملاحظات عن الطالب (اختياري)"></textarea>
+      </div>
+      <div style="margin-bottom:14px;padding:10px;background:#f8f9fa;border-radius:8px;font-size:13px">
+        <div style="margin-bottom:6px"><b>النقاط الحالية:</b></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span style="background:#e8f0fe;color:#1a73e8;padding:3px 10px;border-radius:6px;font-weight:600">ف1: <span id="edit-s1">0</span></span>
+          <span style="background:#e6f4ea;color:#34a853;padding:3px 10px;border-radius:6px;font-weight:600">ف2: <span id="edit-s2">0</span></span>
+        </div>
+      </div>
+      <div class="row" style="gap:8px">
+        <button class="btn success" id="btn-save-student" type="button" style="flex:1">💾 حفظ التعديلات</button>
+        <button class="btn danger" id="btn-delete-student-from-edit" type="button">🗑️ حذف الطالب</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- مودال: تفاصيل الطالب + رسم بياني -->
+<div class="modal-overlay" id="student-details-modal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <h2>👤 تفاصيل الطالب</h2>
+      <button class="modal-close" id="close-student-details" type="button">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;margin-bottom:16px">
+        <div id="details-avatar" class="student-avatar" style="position:static;margin:0 auto 10px;width:70px;height:70px;font-size:30px;cursor:default">؟</div>
+        <h3 id="details-name" style="color:#1a73e8;margin-bottom:4px"></h3>
+        <p id="details-notes" style="color:#5f6368;font-size:13px;font-style:italic"></p>
+      </div>
+      <div class="row" style="gap:12px;margin-bottom:16px">
+        <div class="stat-card">
+          <div class="stat-label">الفصل الأول</div>
+          <div class="stat-value" id="details-s1">0</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">الفصل الثاني</div>
+          <div class="stat-value" id="details-s2">0</div>
+        </div>
+        <div class="stat-card" id="details-diff-card">
+          <div class="stat-label">الفرق</div>
+          <div class="stat-value" id="details-diff">0</div>
+        </div>
+      </div>
+      <div class="chart-container" style="height:250px">
+        <canvas id="student-chart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- مودال: استيراد طلاب -->
 <div class="modal-overlay" id="import-modal">
   <div class="modal">
     <div class="modal-header">
@@ -578,6 +671,11 @@ body.authenticated:not(.page-selected) .welcome-screen {
 var API_URL = 'https://script.google.com/macros/s/AKfycbwoiILadO9u1TJb4hWSAWjuSCriFje5PUiLPpqumwLB20gi4GhVbTV6YvRfi15s_CPj/exec';
 
 /* ==========================================
+   Avatar Colors
+   ========================================== */
+var AVATAR_COLORS = ['#1a73e8','#34a853','#ea4335','#fbbc04','#a142f4','#00acc1','#ff7043','#ec407a','#8bc34a','#795548'];
+
+/* ==========================================
    API Helper (JSONP)
    ========================================== */
 function api(action, params) {
@@ -590,18 +688,13 @@ function api(action, params) {
       if (script.parentNode) script.parentNode.removeChild(script);
       reject(new Error('انتهت المهلة - تحقق من الاتصال'));
     }, 20000);
-
     window[cb] = function(data) {
       clearTimeout(timeout);
       delete window[cb];
       if (script.parentNode) script.parentNode.removeChild(script);
-      if (data && data.success === false && data.error) {
-        reject(new Error(data.error));
-      } else {
-        resolve(data);
-      }
+      if (data && data.success === false && data.error) reject(new Error(data.error));
+      else resolve(data);
     };
-
     var query = new URLSearchParams(Object.assign({ action: action, callback: cb }, params));
     script.src = API_URL + '?' + query.toString();
     script.onerror = function() {
@@ -622,7 +715,10 @@ var state = {
   students: [],
   selected: new Set(),
   semester: sessionStorage.getItem('semester') || 's1',
-  importFile: null
+  importFile: null,
+  chartType: 'bar',
+  mainChart: null,
+  studentChart: null
 };
 
 /* ==========================================
@@ -673,6 +769,34 @@ function escapeHtml(str) {
 
 function $(id) { return document.getElementById(id); }
 
+/* الحصول على أول حرف من الاسم */
+function getInitial(name) {
+  if (!name) return '؟';
+  var trimmed = name.trim();
+  return trimmed.charAt(0);
+}
+
+/* الحصول على لون الطالب (من الأفاتار أو عشوائي ثابت من الاسم) */
+function getStudentColor(student) {
+  if (student.avatar && AVATAR_COLORS.indexOf(student.avatar) !== -1) {
+    return student.avatar;
+  }
+  // لون ثابت بناءً على الاسم
+  var hash = 0;
+  for (var i = 0; i < student.name.length; i++) {
+    hash = student.name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+/* بناء HTML للأفاتار */
+function avatarHTML(student, size) {
+  size = size || 38;
+  var color = getStudentColor(student);
+  var initial = getInitial(student.name);
+  return '<div class="student-avatar" style="background:' + color + ';width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.45) + 'px">' + escapeHtml(initial) + '</div>';
+}
+
 /* ==========================================
    Authentication
    ========================================== */
@@ -685,7 +809,6 @@ function doLogin() {
   var err = $('login-error');
   if (!pwd) { err.textContent = 'أدخل كلمة المرور'; return; }
   btn.disabled = true; btn.textContent = 'جارٍ التحقق...'; err.textContent = '';
-
   api('verifyPassword', { password: pwd })
     .then(function(res) {
       btn.disabled = false; btn.textContent = '🔓 دخول';
@@ -726,8 +849,7 @@ function checkExistingSession() {
         document.body.classList.add('authenticated');
         document.body.classList.remove('page-selected');
         bootApp();
-      }
-      else setSessionToken('');
+      } else setSessionToken('');
     })
     .catch(function() { setSessionToken(''); });
 }
@@ -762,12 +884,82 @@ function gotoPage(tabName) {
   if (tabName === 'wheel') drawWheel();
   if (tabName === 'leaderboard') loadLeaderboard();
   if (tabName === 'comparison') loadComparison();
+  if (tabName === 'chart') renderMainChart();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goHome() {
   document.body.classList.remove('page-selected');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ==========================================
+   Notifications
+   ========================================== */
+function updateNotifBtn() {
+  var btn = $('btn-notif');
+  if (!('Notification' in window)) {
+    btn.style.display = 'none';
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    btn.classList.add('active');
+    btn.textContent = '🔔 الإشعارات ✓';
+  } else if (Notification.permission === 'denied') {
+    btn.classList.remove('active');
+    btn.textContent = '🔕 الإشعارات (مرفوضة)';
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = '🔔 تفعيل الإشعارات';
+  }
+  var status = $('notif-status');
+  if (status) {
+    if (Notification.permission === 'granted') {
+      status.textContent = '✅ الإشعارات مُفعّلة - ستصلك عند انتهاء المؤقت';
+      status.style.color = '#34a853';
+    } else if (Notification.permission === 'denied') {
+      status.textContent = '⚠️ الإشعارات مرفوضة - يمكنك تفعيلها من إعدادات المتصفح';
+      status.style.color = '#ea4335';
+    } else {
+      status.textContent = 'ℹ️ الإشعارات غير مُفعّلة - اضغط زر "الإشعارات" في الأعلى';
+      status.style.color = '#5f6368';
+    }
+  }
+}
+
+function requestNotifPermission() {
+  if (!('Notification' in window)) {
+    showToast('المتصفح لا يدعم الإشعارات', 'warn');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    showToast('الإشعارات مُفعّلة مسبقًا ✓', 'success');
+    return;
+  }
+  if (Notification.permission === 'denied') {
+    showToast('الإشعارات مرفوضة - فعّلها من إعدادات المتصفح', 'error');
+    return;
+  }
+  Notification.requestPermission().then(function(perm) {
+    updateNotifBtn();
+    if (perm === 'granted') {
+      showToast('✅ تم تفعيل الإشعارات', 'success');
+      sendNotification('الإشعارات مُفعّلة!', 'ستصلك تنبيهات عند انتهاء المؤقت.');
+    } else {
+      showToast('لم يتم تفعيل الإشعارات', 'warn');
+    }
+  });
+}
+
+function sendNotification(title, body) {
+  try {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    new Notification(title, {
+      body: body,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="78" font-size="78">⏰</text></svg>',
+      tag: 'classroom-timer'
+    });
+  } catch(e) {}
 }
 
 /* ==========================================
@@ -783,6 +975,7 @@ function switchSemester(sem) {
   renderAll();
   if ($('tab-leaderboard').classList.contains('active')) loadLeaderboard();
   if ($('tab-comparison').classList.contains('active')) loadComparison();
+  if ($('tab-chart').classList.contains('active')) renderMainChart();
 }
 
 /* ==========================================
@@ -874,6 +1067,7 @@ function renderAll() {
   $('student-count').textContent = state.students.length;
   drawWheel();
   if ($('tab-comparison').classList.contains('active')) loadComparison();
+  if ($('tab-chart').classList.contains('active')) renderMainChart();
 }
 
 /* ==========================================
@@ -1000,7 +1194,10 @@ function renderClassesList() {
           html += '<div class="class-row" style="margin-right:14px">' +
             '<div><div class="class-name">' + label + '</div>' +
             '<div class="class-count">' + (counts[cls.id] || 0) + ' طالب</div></div>' +
-            '<button class="btn danger small" type="button" data-delete-class="' + cls.id + '">🗑️</button>' +
+            '<div style="display:flex;gap:6px">' +
+            '<button class="btn warn small" type="button" data-reset-class="' + cls.id + '">🔄 تصفير</button>' +
+            '<button class="btn danger small" type="button" data-delete-class="' + cls.id + '">🗑️ حذف</button>' +
+            '</div>' +
             '</div>';
         });
         html += '</div>';
@@ -1009,14 +1206,34 @@ function renderClassesList() {
       c.querySelectorAll('[data-delete-class]').forEach(function(btn) {
         btn.addEventListener('click', function() { deleteClass(btn.dataset.deleteClass); });
       });
+      c.querySelectorAll('[data-reset-class]').forEach(function(btn) {
+        btn.addEventListener('click', function() { resetClassPoints(btn.dataset.resetClass); });
+      });
     })
     .catch(function() { c.innerHTML = '<div class="empty">خطأ في التحميل</div>'; });
+}
+
+function resetClassPoints(classId) {
+  var cls = state.classes.find(function(c) { return c.id === classId; });
+  if (!cls) return;
+  var label = cls.grade + (cls.section ? ' / شعبة ' + cls.section : '');
+  if (!confirm('⚠️ سيتم تصفير نقاط الفصلين لجميع طلاب "' + label + '".\n\nمتابعة؟')) return;
+  api('resetSemesterInClass', { classId: classId, semester: 's1' })
+    .then(function() { return api('resetSemesterInClass', { classId: classId, semester: 's2' }); })
+    .then(function() {
+      showToast('✅ تم تصفير نقاط الصف بالكامل', 'success');
+      if (state.currentClassId === classId) loadStudents();
+      renderClassesList();
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
 }
 
 function deleteClass(id) {
   var cls = state.classes.find(function(c) { return c.id === id; });
   if (!cls) return;
-  if (!confirm('⚠️ سيتم حذف "' + cls.grade + (cls.section ? ' / شعبة ' + cls.section : '') + '" وكل طلابها. متأكد؟')) return;
+  var label = cls.grade + (cls.section ? ' / شعبة ' + cls.section : '');
+  if (!confirm('⚠️ تحذير!\n\nسيتم حذف "' + label + '" بالكامل مع جميع طلابها ونقاطهم.\n\nهذا الإجراء لا يمكن التراجع عنه. متابعة؟')) return;
+  if (!confirm('تأكيد أخير: هل أنت متأكد من حذف الصف "' + label + '"؟')) return;
   api('deleteClass', { id: id })
     .then(function() {
       showToast('تم حذف الصف', 'success');
@@ -1035,20 +1252,32 @@ function renderStudents() {
   if (!state.currentClassId) { c.innerHTML = '<div class="empty">👆 اختر صفًا أولًا</div>'; return; }
   if (!state.students.length) { c.innerHTML = '<div class="empty">لا يوجد طلاب في هذا الصف بعد</div>'; return; }
   c.innerHTML = state.students.map(function(s) {
-    return '<div class="student-card" style="margin-bottom:10px">' +
-      '<div class="row" style="justify-content:space-between">' +
-      '<div style="flex:1">' +
-      '<div class="name">' + escapeHtml(s.name) + '</div>' +
+    var notesHtml = s.notes ? '<div class="s-notes">📝 ' + escapeHtml(s.notes) + '</div>' : '';
+    return '<div class="student-row">' +
+      '<div class="student-avatar" style="background:' + getStudentColor(s) + '" data-avatar-color="' + getStudentColor(s) + '" data-view-student="' + s.id + '">' + escapeHtml(getInitial(s.name)) + '</div>' +
+      '<div class="s-info">' +
+      '<div class="s-name">' + escapeHtml(s.name) + '</div>' +
       '<div class="points-pair">' +
       '<span>ف1: ' + s.s1 + '</span>' +
       '<span>ف2: ' + s.s2 + '</span>' +
       '<span>المجموع: ' + (s.s1 + s.s2) + '</span>' +
-      '</div></div>' +
-      '<button class="btn danger small" type="button" data-delete-student="' + s.id + '">حذف</button>' +
-      '</div></div>';
+      '</div>' +
+      notesHtml +
+      '</div>' +
+      '<div class="s-actions">' +
+      '<button class="btn purple small" type="button" data-edit-student="' + s.id + '">✏️</button>' +
+      '<button class="btn danger small" type="button" data-delete-student="' + s.id + '">🗑️</button>' +
+      '</div>' +
+      '</div>';
   }).join('');
+  c.querySelectorAll('[data-edit-student]').forEach(function(btn) {
+    btn.addEventListener('click', function() { openEditStudentModal(btn.dataset.editStudent); });
+  });
   c.querySelectorAll('[data-delete-student]').forEach(function(btn) {
     btn.addEventListener('click', function() { deleteStudent(btn.dataset.deleteStudent); });
+  });
+  c.querySelectorAll('[data-view-student]').forEach(function(el) {
+    el.addEventListener('click', function() { openStudentDetails(el.dataset.viewStudent); });
   });
 }
 
@@ -1066,22 +1295,236 @@ function addStudent() {
 }
 
 function deleteStudent(id) {
-  if (!confirm('حذف الطالب؟')) return;
+  var s = state.students.find(function(x) { return x.id === id; });
+  if (!s) return;
+  if (!confirm('🗑️ حذف الطالب "' + s.name + '"؟\n\nسيتم حذف نقاطه من الفصلين أيضًا.')) return;
   api('deleteStudent', { id: id })
-    .then(function() { showToast('تم الحذف', 'success'); loadStudents(); })
+    .then(function() { showToast('تم حذف الطالب', 'success'); loadStudents(); })
     .catch(function(e) { showToast(e.message, 'error'); });
 }
 
-function confirmDeleteAll() {
-  if (!state.currentClassId) return showToast('اختر صفًا أولًا', 'warn');
-  var semLabel = state.semester === 's1' ? 'الفصل الأول' : 'الفصل الثاني';
-  if (!confirm('⚠️ سيتم تصفير نقاط ' + semLabel + ' لجميع طلاب هذا الصف. متابعة؟')) return;
-  api('resetSemesterInClass', { classId: state.currentClassId, semester: state.semester })
-    .then(function(res) {
-      showToast('تم تصفير ' + res.count + ' طالب في ' + semLabel, 'success');
+/* ==========================================
+   Edit Student Modal
+   ========================================== */
+var editingStudentId = null;
+var currentAvatarColor = null;
+
+function buildColorPicker(selectedColor) {
+  var picker = $('color-picker');
+  picker.innerHTML = AVATAR_COLORS.map(function(c) {
+    return '<div class="color-swatch ' + (c === selectedColor ? 'selected' : '') + '" style="background:' + c + '" data-color="' + c + '"></div>';
+  }).join('');
+  picker.querySelectorAll('.color-swatch').forEach(function(sw) {
+    sw.addEventListener('click', function() {
+      currentAvatarColor = sw.dataset.color;
+      picker.querySelectorAll('.color-swatch').forEach(function(s) { s.classList.remove('selected'); });
+      sw.classList.add('selected');
+      var preview = $('edit-avatar-preview');
+      preview.style.background = currentAvatarColor;
+      var name = $('edit-student-name').value.trim();
+      preview.textContent = name ? name.charAt(0) : '؟';
+    });
+  });
+}
+
+function openEditStudentModal(id) {
+  var s = state.students.find(function(x) { return x.id === id; });
+  if (!s) return;
+  editingStudentId = id;
+  currentAvatarColor = getStudentColor(s);
+  $('edit-student-id').value = id;
+  $('edit-student-name').value = s.name;
+  $('edit-student-notes').value = s.notes || '';
+  $('edit-s1').textContent = s.s1;
+  $('edit-s2').textContent = s.s2;
+  var preview = $('edit-avatar-preview');
+  preview.style.background = currentAvatarColor;
+  preview.textContent = s.name.charAt(0);
+  buildColorPicker(currentAvatarColor);
+  $('edit-student-modal').classList.add('show');
+  setTimeout(function() { $('edit-student-name').focus(); }, 100);
+}
+
+function closeEditStudentModal() {
+  $('edit-student-modal').classList.remove('show');
+  editingStudentId = null;
+}
+
+function saveStudentEdits() {
+  var id = $('edit-student-id').value;
+  var newName = $('edit-student-name').value.trim();
+  var newNotes = $('edit-student-notes').value.trim();
+  if (!id) return;
+  if (!newName) return showToast('الاسم لا يمكن أن يكون فارغًا', 'warn');
+
+  Promise.all([
+    api('updateStudent', { id: id, name: newName }),
+    api('updateStudentNotes', { id: id, notes: newNotes }),
+    api('updateStudentAvatar', { id: id, avatar: currentAvatarColor })
+  ])
+    .then(function() {
+      showToast('✅ تم حفظ التعديلات', 'success');
+      closeEditStudentModal();
       loadStudents();
     })
     .catch(function(e) { showToast(e.message, 'error'); });
+}
+
+function deleteStudentFromEdit() {
+  var id = $('edit-student-id').value;
+  var s = state.students.find(function(x) { return x.id === id; });
+  if (!s) return;
+  if (!confirm('🗑️ حذف الطالب "' + s.name + '"؟')) return;
+  api('deleteStudent', { id: id })
+    .then(function() {
+      showToast('تم حذف الطالب', 'success');
+      closeEditStudentModal();
+      loadStudents();
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
+}
+
+/* ==========================================
+   Student Details Modal + Chart
+   ========================================== */
+function openStudentDetails(id) {
+  var s = state.students.find(function(x) { return x.id === id; });
+  if (!s) return;
+  $('details-avatar').style.background = getStudentColor(s);
+  $('details-avatar').textContent = getInitial(s.name);
+  $('details-name').textContent = s.name;
+  $('details-notes').textContent = s.notes || '';
+  $('details-s1').textContent = s.s1;
+  $('details-s2').textContent = s.s2;
+  var diff = s.s2 - s.s1;
+  $('details-diff').textContent = (diff > 0 ? '+' : '') + diff;
+  var card = $('details-diff-card');
+  card.className = 'stat-card ' + (diff > 0 ? 'green' : diff < 0 ? 'red' : '');
+  $('student-details-modal').classList.add('show');
+
+  // رسم بياني للطالب
+  setTimeout(function() {
+    var ctx = $('student-chart').getContext('2d');
+    if (state.studentChart) state.studentChart.destroy();
+    state.studentChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['الفصل الأول', 'الفصل الثاني'],
+        datasets: [{
+          label: 'النقاط',
+          data: [s.s1, s.s2],
+          backgroundColor: ['#1a73e8', '#34a853'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+  }, 100);
+}
+
+function closeStudentDetails() {
+  $('student-details-modal').classList.remove('show');
+  if (state.studentChart) { state.studentChart.destroy(); state.studentChart = null; }
+}
+
+/* ==========================================
+   Main Chart (طلاب الصف)
+   ========================================== */
+function renderMainChart() {
+  if (!state.currentClassId) {
+    showToast('اختر صفًا أولًا', 'warn');
+    return;
+  }
+  if (!state.students.length) {
+    showToast('لا يوجد طلاب في هذا الصف', 'warn');
+    return;
+  }
+  var ctx = $('students-chart').getContext('2d');
+  if (state.mainChart) state.mainChart.destroy();
+
+  var labels = state.students.map(function(s) { return s.name; });
+  var s1Data = state.students.map(function(s) { return s.s1; });
+  var s2Data = state.students.map(function(s) { return s.s2; });
+
+  if (state.chartType === 'doughnut') {
+    var total1 = s1Data.reduce(function(a, b) { return a + b; }, 0);
+    var total2 = s2Data.reduce(function(a, b) { return a + b; }, 0);
+    state.mainChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['الفصل الأول', 'الفصل الثاني'],
+        datasets: [{
+          data: [total1, total2],
+          backgroundColor: ['#1a73e8', '#34a853'],
+          borderColor: '#fff',
+          borderWidth: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: 14 } } }
+        }
+      }
+    });
+  } else {
+    var colors = state.students.map(function(s) { return getStudentColor(s); });
+    state.mainChart = new Chart(ctx, {
+      type: state.chartType,
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'الفصل الأول',
+            data: s1Data,
+            backgroundColor: state.chartType === 'line' ? 'rgba(26,115,232,0.1)' : '#1a73e8',
+            borderColor: '#1a73e8',
+            borderWidth: 2,
+            fill: state.chartType === 'line',
+            tension: 0.3,
+            borderRadius: 6
+          },
+          {
+            label: 'الفصل الثاني',
+            data: s2Data,
+            backgroundColor: state.chartType === 'line' ? 'rgba(52,168,83,0.1)' : '#34a853',
+            borderColor: '#34a853',
+            borderWidth: 2,
+            fill: state.chartType === 'line',
+            tension: 0.3,
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { font: { size: 14, weight: 'bold' } } }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+  }
+}
+
+function switchChartType(type) {
+  state.chartType = type;
+  document.querySelectorAll('.chart-type-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.chart === type);
+    b.classList.toggle('secondary', b.dataset.chart !== type);
+  });
+  renderMainChart();
 }
 
 /* ==========================================
@@ -1097,6 +1540,7 @@ function renderPointsStudents() {
     var a2 = cur === 's2' ? 'active s2' : '';
     var selCls = state.selected.has(s.id) ? 'selected' : '';
     return '<div class="student-card ' + selCls + '" data-select-student="' + s.id + '">' +
+      '<div class="student-avatar" style="background:' + getStudentColor(s) + '">' + escapeHtml(getInitial(s.name)) + '</div>' +
       '<div class="name">' + escapeHtml(s.name) + '</div>' +
       '<div class="points-pair">' +
       '<span class="' + a1 + '">ف1: ' + s.s1 + '</span>' +
@@ -1135,6 +1579,7 @@ function quickPoints(id, delta) {
       if (s) s[r.semester] = r.points;
       renderPointsStudents();
       renderStudents();
+      if ($('tab-chart').classList.contains('active')) renderMainChart();
       showToast((delta > 0 ? '+' : '') + delta + ' ' + (r.semester === 's1' ? '(ف1)' : '(ف2)'), delta > 0 ? 'success' : 'warn');
     })
     .catch(function(e) { showToast(e.message, 'error'); });
@@ -1154,6 +1599,7 @@ function applyPointsToSelected(sign) {
       });
       renderPointsStudents();
       renderStudents();
+      if ($('tab-chart').classList.contains('active')) renderMainChart();
       showToast('تم تحديث ' + results.length + ' طالب', 'success');
       flashScreen(delta > 0 ? '👏 أحسنتم!' : '💪 حاولوا مرة أخرى', 1200);
     })
@@ -1185,6 +1631,7 @@ function startTimer() {
       clearInterval(timerInterval); timerInterval = null;
       flashScreen('⏰ انتهى الوقت!', 2500);
       playBeep();
+      sendNotification('⏰ انتهى الوقت!', 'المؤقت وصل إلى الصفر');
       showToast('انتهى الوقت!', 'success');
     }
   }, 1000);
@@ -1321,7 +1768,7 @@ function divideGroups() {
   $('groups-result').innerHTML = groups.map(function(g, i) {
     return '<div class="group-card" style="border-color:' + colors[i % colors.length] + '">' +
       '<h3 style="color:' + colors[i % colors.length] + '">مجموعة ' + (i + 1) + ' (' + g.length + ')</h3>' +
-      '<ul>' + g.map(function(s) { return '<li>' + escapeHtml(s.name) + '</li>'; }).join('') + '</ul>' +
+      '<ul>' + g.map(function(s) { return '<li>' + avatarHTML(s, 28) + escapeHtml(s.name) + '</li>'; }).join('') + '</ul>' +
       '</div>';
   }).join('');
 }
@@ -1342,7 +1789,7 @@ function loadLeaderboard() {
         var topCls = i < 3 ? 'top' + (i+1) : '';
         return '<div class="leader-item ' + topCls + '">' +
           '<div class="leader-rank">' + (medals[i] || (i+1)) + '</div>' +
-          '<div class="leader-name">' + escapeHtml(s.name) + '</div>' +
+          '<div class="leader-name">' + avatarHTML(s, 32) + escapeHtml(s.name) + '</div>' +
           '<div class="leader-points">' + s[sem] + '</div>' +
           '</div>';
       }).join('');
@@ -1393,8 +1840,10 @@ function loadComparison() {
         var trend = s.diff > 0 ? '📈' : s.diff < 0 ? '📉' : '➖';
         var rowCls = s.diff > 0 ? 'up' : s.diff < 0 ? 'down' : 'same';
         var diffText = s.diff > 0 ? '+' + s.diff : String(s.diff);
+        var studentObj = state.students.find(function(x) { return x.name === s.name; });
+        var av = studentObj ? avatarHTML(studentObj, 30) : '';
         return '<div class="comparison-row ' + rowCls + '">' +
-          '<div class="cmp-name">' + escapeHtml(s.name) + '</div>' +
+          '<div class="cmp-name">' + av + escapeHtml(s.name) + '</div>' +
           '<div class="cmp-sem">ف1: <b>' + s.s1 + '</b></div>' +
           '<div class="cmp-sem">ف2: <b>' + s.s2 + '</b></div>' +
           '<div class="cmp-sem">المجموع: <b>' + s.total + '</b></div>' +
@@ -1572,30 +2021,25 @@ function bootApp() {
     .catch(function() {});
   loadClasses();
   switchSemester(state.semester);
+  updateNotifBtn();
 }
 
 /* ==========================================
    Event Listeners
    ========================================== */
 document.addEventListener('DOMContentLoaded', function() {
-  // Login
   $('login-btn').addEventListener('click', doLogin);
-  $('login-password').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') doLogin();
-  });
-
-  // Logout / Home
+  $('login-password').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
   $('logout-btn').addEventListener('click', doLogout);
   $('btn-home').addEventListener('click', goHome);
+  $('btn-notif').addEventListener('click', requestNotifPermission);
 
-  // Welcome tiles
   document.querySelectorAll('.tile[data-goto]').forEach(function(tile) {
     tile.addEventListener('click', function() { gotoPage(tile.dataset.goto); });
   });
   $('tile-manage').addEventListener('click', openClassesModal);
   $('tile-import').addEventListener('click', openImportModal);
 
-  // Tabs
   document.querySelectorAll('nav.tabs button').forEach(function(btn) {
     btn.addEventListener('click', function() {
       document.querySelectorAll('nav.tabs button').forEach(function(b) { b.classList.remove('active'); });
@@ -1606,49 +2050,43 @@ document.addEventListener('DOMContentLoaded', function() {
       if (btn.dataset.tab === 'wheel') drawWheel();
       if (btn.dataset.tab === 'leaderboard') loadLeaderboard();
       if (btn.dataset.tab === 'comparison') loadComparison();
+      if (btn.dataset.tab === 'chart') renderMainChart();
     });
   });
 
-  // Semester toggles
   document.querySelectorAll('.sem-btn').forEach(function(b) {
     b.addEventListener('click', function() { switchSemester(b.dataset.sem); });
   });
 
-  // Toolbar
   $('class-selector').addEventListener('change', function() { switchClass(this.value); });
   $('btn-manage-classes').addEventListener('click', openClassesModal);
   $('btn-import').addEventListener('click', openImportModal);
 
-  // Students tab
   $('btn-add-student').addEventListener('click', addStudent);
   $('new-name').addEventListener('keypress', function(e) { if (e.key === 'Enter') addStudent(); });
   $('btn-export').addEventListener('click', exportClassToExcel);
   $('btn-refresh').addEventListener('click', loadStudents);
   $('btn-reset-points').addEventListener('click', confirmDeleteAll);
 
-  // Points tab
   $('btn-plus').addEventListener('click', function() { applyPointsToSelected(1); });
   $('btn-minus').addEventListener('click', function() { applyPointsToSelected(-1); });
   $('btn-select-all').addEventListener('click', selectAll);
   $('btn-clear-selection').addEventListener('click', clearSelection);
 
-  // Leaderboard
-  $('btn-refresh-lb').addEventListener('click', loadLeaderboard);
+  $('btn-refresh-chart').addEventListener('click', renderMainChart);
+  document.querySelectorAll('.chart-type-btn').forEach(function(b) {
+    b.addEventListener('click', function() { switchChartType(b.dataset.chart); });
+  });
 
-  // Comparison
+  $('btn-refresh-lb').addEventListener('click', loadLeaderboard);
   $('btn-refresh-cmp').addEventListener('click', loadComparison);
   $('btn-export2').addEventListener('click', exportClassToExcel);
-
-  // Groups
   $('btn-divide').addEventListener('click', divideGroups);
-
-  // Wheel
   $('btn-redraw').addEventListener('click', drawWheel);
   $('btn-spin').addEventListener('click', spinWheel);
   $('btn-random').addEventListener('click', randomPick);
   $('wheel-center').addEventListener('click', spinWheel);
 
-  // Timer
   $('btn-timer-start').addEventListener('click', startTimer);
   $('btn-timer-pause').addEventListener('click', pauseTimer);
   $('btn-timer-reset').addEventListener('click', resetTimer);
@@ -1656,13 +2094,11 @@ document.addEventListener('DOMContentLoaded', function() {
     b.addEventListener('click', function() { setTimerPreset(Number(b.dataset.min)); });
   });
 
-  // Stopwatch
   $('btn-sw-start').addEventListener('click', startStopwatch);
   $('btn-sw-pause').addEventListener('click', pauseStopwatch);
   $('btn-sw-reset').addEventListener('click', resetStopwatch);
   $('btn-sw-lap').addEventListener('click', lapStopwatch);
 
-  // Classes modal
   $('close-classes').addEventListener('click', closeClassesModal);
   $('btn-add-class').addEventListener('click', addClassFromSelects);
   $('btn-copy-class').addEventListener('click', doCopyClass);
@@ -1670,12 +2106,21 @@ document.addEventListener('DOMContentLoaded', function() {
   $('btn-change-pwd').addEventListener('click', doChangePassword);
   $('promote-source').addEventListener('change', onPromoteSourceChange);
 
-  // Import modal
+  $('close-edit-student').addEventListener('click', closeEditStudentModal);
+  $('btn-save-student').addEventListener('click', saveStudentEdits);
+  $('btn-delete-student-from-edit').addEventListener('click', deleteStudentFromEdit);
+
+  $('close-student-details').addEventListener('click', closeStudentDetails);
+
+  $('edit-student-name').addEventListener('input', function() {
+    var preview = $('edit-avatar-preview');
+    preview.textContent = this.value.trim().charAt(0) || '؟';
+  });
+
   $('close-import').addEventListener('click', closeImportModal);
   $('btn-reset-import').addEventListener('click', resetImportForm);
   $('import-btn').addEventListener('click', doImportStudents);
 
-  // Drop zone
   var dropZone = $('drop-zone');
   var fileInput = $('file-input');
   if (dropZone && fileInput) {
@@ -1699,16 +2144,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
     overlay.addEventListener('click', function(e) {
       if (e.target === overlay) overlay.classList.remove('show');
     });
   });
 
-  // Check existing session
   checkExistingSession();
 });
+
+/* ==========================================
+   Reset Class Points (helper)
+   ========================================== */
+function confirmDeleteAll() {
+  if (!state.currentClassId) return showToast('اختر صفًا أولًا', 'warn');
+  var semLabel = state.semester === 's1' ? 'الفصل الأول' : 'الفصل الثاني';
+  if (!confirm('⚠️ سيتم تصفير نقاط ' + semLabel + ' لجميع طلاب هذا الصف. متابعة؟')) return;
+  api('resetSemesterInClass', { classId: state.currentClassId, semester: state.semester })
+    .then(function(res) {
+      showToast('تم تصفير ' + res.count + ' طالب في ' + semLabel, 'success');
+      loadStudents();
+    })
+    .catch(function(e) { showToast(e.message, 'error'); });
+}
 </script>
 
 </body>
