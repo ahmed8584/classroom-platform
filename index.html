@@ -129,16 +129,12 @@ body.authenticated .login-screen { display: none; }
 .login-box input:focus { border-color: #1a73e8; box-shadow: 0 0 0 4px rgba(26,115,232,0.12); }
 .login-box .btn { width: 100%; padding: 14px; font-size: 16px; }
 .login-error { color: #ea4335; font-size: 13px; margin-top: 12px; min-height: 20px; font-weight: 600; }
-.login-hint { color: #9aa0a6; font-size: 12px; margin-top: 20px; border-top: 1px dashed #e8eaed; padding-top: 14px; }
 body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.authenticated) nav.tabs, body:not(.authenticated) main { display: none !important; }
 .password-section input { padding: 10px 12px; border: 1px solid #dadce0; border-radius: 8px; outline: none; }
 .password-section input:focus { border-color: #1a73e8; }
-.file-drop-box { border: 2px dashed #1a73e8; border-radius: 12px; padding: 28px 20px; text-align: center; background: #f0f7ff; cursor: pointer; transition: 0.2s; }
-.file-drop-box:hover { background: #e3f0ff; border-color: #1557b0; }
-.file-drop-icon { font-size: 42px; line-height: 1; }
-.file-drop-title { margin-top: 10px; font-weight: 700; color: #1a73e8; font-size: 15px; }
-.file-drop-hint { font-size: 12px; color: #5f6368; margin-top: 4px; }
-.file-drop-name { font-size: 12px; color: #34a853; margin-top: 8px; font-weight: 600; min-height: 16px; }
+.drop-zone { border: 2px dashed #1a73e8; border-radius: 12px; padding: 30px 20px; text-align: center; background: #f0f7ff; cursor: pointer; transition: 0.2s; }
+.drop-zone:hover { background: #e3f0ff; }
+.drop-zone.dragover { background: #d2e7ff; border-color: #1557b0; }
 @media (max-width: 600px) {
   .timer-display, .stopwatch-display { font-size: 44px; }
   header h1 { font-size: 16px; }
@@ -156,7 +152,6 @@ body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.au
            onkeypress="if(event.key==='Enter')doLogin()" autofocus>
     <button class="btn" id="login-btn" onclick="doLogin()">🔓 دخول</button>
     <div class="login-error" id="login-error"></div>
-    <div class="login-hint">كلمة المرور الافتراضية: 1234</div>
   </div>
 </div>
 
@@ -205,13 +200,13 @@ body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.au
       <p style="color:#5f6368;font-size:13px;margin-bottom:12px">
         عمود أول: الاسم. الصف الأول عنوان. سيتم الاستيراد إلى <b>الصف الحالي</b>.
       </p>
-      <div class="file-drop-box" onclick="document.getElementById('file-input').click()">
-        <div class="file-drop-icon">📄</div>
-        <div class="file-drop-title">اضغط لاختيار ملف</div>
-        <div class="file-drop-hint">xlsx, xls, csv</div>
-        <div class="file-drop-name" id="file-name-display"></div>
+      <div id="drop-zone" class="drop-zone">
+        <div style="font-size: 42px; line-height: 1;">📄</div>
+        <div style="margin-top: 10px; font-weight: 700; color: #1a73e8; font-size: 15px;">اضغط لاختيار ملف</div>
+        <div style="font-size: 12px; color: #5f6368; margin-top: 4px;">xlsx, xls, csv</div>
+        <div id="file-name-display" style="font-size: 12px; color: #34a853; margin-top: 8px; font-weight: 600; min-height: 16px;"></div>
       </div>
-      <input type="file" id="file-input" accept=".xlsx,.xls,.csv" onchange="handleFileImport(event)" style="display:none;">
+      <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display:none;">
     </div>
 
     <div class="card">
@@ -1255,6 +1250,32 @@ async function bootApp() {
   loadClasses();
   switchSemester(state.semester);
 }
+
+/* ==================== Drop Zone Setup ==================== */
+document.addEventListener('DOMContentLoaded', () => {
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+  if (dropZone && fileInput) {
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', handleFileImport);
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        handleFileImport({ target: fileInput });
+      }
+    });
+  }
+});
 
 checkExistingSession();
 </script>
