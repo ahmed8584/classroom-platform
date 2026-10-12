@@ -134,7 +134,8 @@ body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.au
 .password-section input:focus { border-color: #1a73e8; }
 .drop-zone { border: 2px dashed #1a73e8; border-radius: 12px; padding: 30px 20px; text-align: center; background: #f0f7ff; cursor: pointer; transition: 0.2s; }
 .drop-zone:hover { background: #e3f0ff; }
-.drop-zone.dragover { background: #d2e7ff; border-color: #1557b0; }
+.drop-zone.dragover { background: #d2e7ff; border-color: #1557b0; transform: scale(1.01); }
+.drop-zone.has-file { background: #e6f4ea; border-color: #34a853; }
 @media (max-width: 600px) {
   .timer-display, .stopwatch-display { font-size: 44px; }
   header h1 { font-size: 16px; }
@@ -195,18 +196,34 @@ body:not(.authenticated) header, body:not(.authenticated) .toolbar, body:not(.au
       </div>
     </div>
 
+    <!-- بطاقة الاستيراد الجديدة -->
     <div class="card">
-      <h2>📥 استيراد من Excel / CSV</h2>
-      <p style="color:#5f6368;font-size:13px;margin-bottom:12px">
-        عمود أول: الاسم. الصف الأول عنوان. سيتم الاستيراد إلى <b>الصف الحالي</b>.
+      <h2>📥 استيراد طلاب من Excel / CSV</h2>
+      <p style="color:#5f6368;font-size:13px;margin-bottom:14px">
+        اختر الصف والشعبة أولًا، ثم ارفع ملف الأسماء. سيتم استيرادهم إلى الوجهة المحددة مباشرة.
       </p>
+
+      <div class="row" style="margin-bottom:14px">
+        <label style="font-weight:700;font-size:13px;color:#5f6368">📚 الصف الهدف:</label>
+        <select id="import-grade" style="flex:1;min-width:180px"></select>
+        <label style="font-weight:700;font-size:13px;color:#5f6368">الشعبة:</label>
+        <select id="import-section" style="width:150px"></select>
+      </div>
+
       <div id="drop-zone" class="drop-zone">
         <div style="font-size: 42px; line-height: 1;">📄</div>
-        <div style="margin-top: 10px; font-weight: 700; color: #1a73e8; font-size: 15px;">اضغط لاختيار ملف</div>
+        <div style="margin-top: 10px; font-weight: 700; color: #1a73e8; font-size: 15px;">اضغط لاختيار ملف أو اسحبه هنا</div>
         <div style="font-size: 12px; color: #5f6368; margin-top: 4px;">xlsx, xls, csv</div>
-        <div id="file-name-display" style="font-size: 12px; color: #34a853; margin-top: 8px; font-weight: 600; min-height: 16px;"></div>
+        <div id="file-name-display" style="font-size: 13px; color: #34a853; margin-top: 8px; font-weight: 700; min-height: 16px;"></div>
       </div>
       <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display:none;">
+
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <button class="btn success" id="import-btn" onclick="doImportStudents()" disabled style="min-width:200px">
+          📥 استيراد الآن
+        </button>
+        <button class="btn secondary" onclick="resetImportForm()">🔄 إعادة تعيين</button>
+      </div>
     </div>
 
     <div class="card">
@@ -448,7 +465,8 @@ const state = {
   currentClassId: null,
   students: [],
   selected: new Set(),
-  semester: sessionStorage.getItem('semester') || 's1'
+  semester: sessionStorage.getItem('semester') || 's1',
+  importFile: null
 };
 
 /* ==================== Utils ==================== */
@@ -593,6 +611,7 @@ async function loadClasses() {
       state.currentClassId = null; state.students = [];
       document.getElementById('class-info').style.display = 'none';
       renderAll();
+      populateImportSelects();
       return;
     }
     const grouped = {};
@@ -617,6 +636,7 @@ async function loadClasses() {
     }
     sel.value = state.currentClassId;
     switchClass(state.currentClassId);
+    populateImportSelects();
     if (document.getElementById('classes-modal').classList.contains('show')) {
       populateGradeAndSectionSelects();
       renderClassesList();
@@ -698,104 +718,118 @@ function populateClassesIntoSelect(selectId) {
   }).join('');
 }
 
-async function addClassFromSelects() {
-  const grade = document.getElementById('new-grade-select').value;
-  const section = document.getElementById('new-section-select').value;
-  if (!grade) return showToast('اختر الصف', 'warn');
-  try {
-    const cls = await api('addClass', { grade, section });
-    showToast(`تم إنشاء ${cls.grade}${cls.section ? ' / شعبة ' + cls.section : ''}`, 'success');
-    loadClasses();
-    setTimeout(() => { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
-  } catch (e) { showToast(e.message, 'error'); }
+/* ==================== Import Selects ==================== */
+function populateImportSelects() {
+  // الصف: قائمة من 5 إلى 12
+  const gradeSel = document.getElementById('import-grade');
+  fillSelect(gradeSel, GRADES_LIST, '— اختر الصف —');
+  // الشعبة: بدون شعبة + 1..10
+  const secSel = document.getElementById('import-section');
+  fillSelect(secSel, SECTIONS_LIST, 'بدون شعبة');
 }
 
-async function onPromoteSourceChange() {
-  const sourceId = document.getElementById('promote-source').value;
-  const src = state.classes.find(c => c.id === sourceId);
-  if (!src) return;
-  try {
-    const res = await api('getNextGrade', { grade: src.grade });
-    if (res.nextGrade) document.getElementById('promote-target-grade').value = res.nextGrade;
-    document.getElementById('promote-target-section').value = src.section || '';
-  } catch (e) {}
+async function findOrCreateClass(grade, section) {
+  // ابحث في القائمة الحالية أولًا
+  let cls = state.classes.find(c => c.grade === grade && c.section === section);
+  if (cls) return cls;
+
+  // لم يوجد، أنشئه
+  await api('addClass', { grade, section });
+  // أعد تحميل الصفوف
+  const classes = await api('getClasses');
+  state.classes = classes;
+  cls = classes.find(c => c.grade === grade && c.section === section);
+  return cls;
 }
 
-async function doCopyClass() {
-  const sourceId = document.getElementById('copy-source').value;
-  const grade = document.getElementById('copy-target-grade').value;
-  const section = document.getElementById('copy-target-section').value;
-  const reset = document.getElementById('copy-reset').checked;
-  if (!sourceId) return showToast('اختر الصف المصدر', 'warn');
-  if (!grade) return showToast('اختر الصف الهدف', 'warn');
-  const src = state.classes.find(c => c.id === sourceId);
-  const label = `${grade}${section ? ' / شعبة ' + section : ''}`;
-  if (!confirm(`سيتم إنشاء "${label}" بنسخ طلاب "${src.grade}${src.section ? ' / شعبة ' + src.section : ''}". متابعة؟`)) return;
-  try {
-    const res = await api('copyClass', { sourceId, grade, section, reset: String(reset) });
-    showToast(`✅ تم نسخ ${res.copied} طالبًا إلى ${label}`, 'success');
-    loadClasses();
-    setTimeout(() => { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
-  } catch (e) { showToast(e.message, 'error'); }
+/* ==================== Import ==================== */
+function setImportFile(file) {
+  state.importFile = file;
+  const nameDisplay = document.getElementById('file-name-display');
+  const dropZone = document.getElementById('drop-zone');
+  const importBtn = document.getElementById('import-btn');
+
+  if (file) {
+    nameDisplay.textContent = '✓ ' + file.name;
+    dropZone.classList.add('has-file');
+    importBtn.disabled = false;
+  } else {
+    nameDisplay.textContent = '';
+    dropZone.classList.remove('has-file');
+    importBtn.disabled = true;
+  }
 }
 
-async function doPromoteClass() {
-  const sourceId = document.getElementById('promote-source').value;
-  const grade = document.getElementById('promote-target-grade').value;
-  const section = document.getElementById('promote-target-section').value;
-  const reset = document.getElementById('promote-reset').checked;
-  const createIfMissing = document.getElementById('promote-create').checked;
-  if (!sourceId) return showToast('اختر الصف المصدر', 'warn');
-  if (!grade) return showToast('اختر الصف الهدف', 'warn');
-  const src = state.classes.find(c => c.id === sourceId);
-  const label = `${grade}${section ? ' / شعبة ' + section : ''}`;
-  if (!confirm(`⚠️ سيتم نقل طلاب "${src.grade}${src.section ? ' / شعبة ' + src.section : ''}" إلى "${label}" وحذفهم من المصدر.\n\nهذا الإجراء لا يمكن التراجع عنه. متابعة؟`)) return;
-  try {
-    const res = await api('promoteClass', { sourceId, grade, section, reset: String(reset), create: String(createIfMissing) });
-    const msg = `🎓 تم نقل ${res.moved} طالبًا${res.skipped ? ` (تم تجاهل ${res.skipped} مكرر)` : ''}`;
-    showToast(msg, 'success');
-    loadClasses();
-    setTimeout(() => { populateGradeAndSectionSelects(); renderClassesList(); }, 500);
-  } catch (e) { showToast(e.message, 'error'); }
+function resetImportForm() {
+  state.importFile = null;
+  document.getElementById('file-input').value = '';
+  setImportFile(null);
+  document.getElementById('import-grade').value = '';
+  document.getElementById('import-section').value = '';
 }
 
-async function renderClassesList() {
-  const c = document.getElementById('classes-list');
-  if (!c) return;
-  if (!state.classes.length) { c.innerHTML = '<div class="empty">لا يوجد صفوف بعد</div>'; return; }
+async function doImportStudents() {
+  const grade = document.getElementById('import-grade').value;
+  const section = document.getElementById('import-section').value;
+
+  if (!grade) return showToast('اختر الصف أولًا', 'warn');
+  if (!state.importFile) return showToast('اختر ملفًا أولًا', 'warn');
+
+  // 1) ابحث عن الصف أو أنشئه
+  showToast('جارٍ التحقق من الصف...', 'info');
+  let targetClass;
   try {
-    const all = await api('getStudents');
-    const counts = {};
-    all.forEach(s => { counts[s.classId] = (counts[s.classId] || 0) + 1; });
-    const grouped = {};
-    state.classes.forEach(cls => { if (!grouped[cls.grade]) grouped[cls.grade] = []; grouped[cls.grade].push(cls); });
-    let html = '';
-    Object.keys(grouped).forEach(grade => {
-      html += `<div style="margin-bottom:14px"><div style="font-weight:700;color:#1a73e8;margin-bottom:6px">📚 ${escapeHtml(grade)}</div>`;
-      grouped[grade].forEach(cls => {
-        const label = cls.section ? `شعبة ${escapeHtml(cls.section)}` : 'بدون تقسيم';
-        html += `<div class="class-row" style="margin-right:14px">
-          <div><div class="class-name">${label}</div><div class="class-count">${counts[cls.id] || 0} طالب</div></div>
-          <button class="btn danger small" onclick="deleteClass('${cls.id}')">🗑️</button>
-        </div>`;
+    targetClass = await findOrCreateClass(grade, section);
+    if (!targetClass) throw new Error('فشل إنشاء الصف');
+  } catch (e) {
+    return showToast(e.message, 'error');
+  }
+
+  // 2) اقرأ الملف وارفع الأسماء
+  const reader = new FileReader();
+  reader.onload = async (evt) => {
+    try {
+      const data = new Uint8Array(evt.target.result);
+      const wb = XLSX.read(data, { type: 'array' });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      const students = [];
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row || !row[0]) continue;
+        const name = String(row[0]).trim();
+        if (name) students.push({ name });
+      }
+
+      if (!students.length) return showToast('لم يتم العثور على أسماء في الملف', 'warn');
+
+      showToast(`جارٍ استيراد ${students.length} طالبًا...`, 'info');
+      const res = await api('bulkImportStudents', {
+        students: JSON.stringify(students),
+        classId: targetClass.id
       });
-      html += `</div>`;
-    });
-    c.innerHTML = html;
-  } catch (e) { c.innerHTML = '<div class="empty">خطأ في التحميل</div>'; }
-}
 
-async function deleteClass(id) {
-  const cls = state.classes.find(c => c.id === id);
-  if (!cls) return;
-  if (!confirm(`⚠️ سيتم حذف "${cls.grade}${cls.section ? ' / شعبة ' + cls.section : ''}" وكل طلابها. متأكد؟`)) return;
-  try {
-    await api('deleteClass', { id });
-    showToast('تم حذف الصف', 'success');
-    if (state.currentClassId === id) state.currentClassId = null;
-    loadClasses();
-    setTimeout(renderClassesList, 400);
-  } catch (e) { showToast(e.message, 'error'); }
+      const targetLabel = targetClass.section
+        ? `${targetClass.grade} / شعبة ${targetClass.section}`
+        : targetClass.grade;
+      showToast(`✅ تم استيراد ${res.count} طالبًا إلى "${targetLabel}"`, 'success');
+
+      // إن كان الصف الحالي هو الهدف، حدّث القائمة
+      if (state.currentClassId === targetClass.id) {
+        loadStudents();
+      } else {
+        // حدّث فقط عدّاد الصفوف في النافذة إن كانت مفتوحة
+        if (document.getElementById('classes-modal').classList.contains('show')) {
+          renderClassesList();
+        }
+      }
+
+      resetImportForm();
+    } catch (err) {
+      showToast('خطأ في القراءة: ' + err.message, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(state.importFile);
 }
 
 /* ==================== Students ==================== */
@@ -850,50 +884,6 @@ async function confirmDeleteAll() {
     showToast(`تم تصفير ${res.count} طالب في ${semLabel}`, 'success');
     loadStudents();
   } catch (e) { showToast(e.message, 'error'); }
-}
-
-/* ==================== Excel Import ==================== */
-function handleFileImport(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  if (!state.currentClassId) {
-    event.target.value = '';
-    return showToast('اختر صفًا أولًا', 'warn');
-  }
-
-  const nameDisplay = document.getElementById('file-name-display');
-  if (nameDisplay) nameDisplay.textContent = '✓ ' + file.name;
-
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    try {
-      const data = new Uint8Array(e.target.result);
-      const wb = XLSX.read(data, { type: 'array' });
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-      const students = [];
-      for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
-        if (!row || !row[0]) continue;
-        students.push({ name: String(row[0]).trim() });
-      }
-      if (!students.length) {
-        event.target.value = '';
-        return showToast('لم يتم العثور على بيانات', 'warn');
-      }
-      showToast(`جارٍ استيراد ${students.length} طالبًا...`, 'info');
-      const res = await api('bulkImportStudents', { students: JSON.stringify(students), classId: state.currentClassId });
-      showToast(`تم استيراد ${res.count} طالبًا`, 'success');
-      loadStudents();
-    } catch (err) {
-      showToast('خطأ في القراءة: ' + err.message, 'error');
-    }
-    event.target.value = '';
-    setTimeout(() => {
-      if (nameDisplay) nameDisplay.textContent = '';
-    }, 3000);
-  };
-  reader.readAsArrayBuffer(file);
 }
 
 /* ==================== Points ==================== */
@@ -1255,9 +1245,14 @@ async function bootApp() {
 document.addEventListener('DOMContentLoaded', () => {
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
+
   if (dropZone && fileInput) {
     dropZone.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', handleFileImport);
+
+    fileInput.addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (f) setImportFile(f);
+    });
 
     dropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
@@ -1269,10 +1264,8 @@ document.addEventListener('DOMContentLoaded', () => {
     dropZone.addEventListener('drop', (e) => {
       e.preventDefault();
       dropZone.classList.remove('dragover');
-      if (e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files;
-        handleFileImport({ target: fileInput });
-      }
+      const f = e.dataTransfer.files[0];
+      if (f) setImportFile(f);
     });
   }
 });
