@@ -2,18 +2,15 @@
    roster.js — إدارة الطلاب والصفوف والنقاط
    ============================================================ */
 
-/* ============================================================
-   حالة وحدة roster
-   ============================================================ */
 const RosterState = {
-  classes: [],          // قائمة الصفوف
-  currentClassId: null, // الصف المحدد حاليًا
-  students: [],         // طلاب الصف الحالي
-  selected: new Set(),  // IDs الطلاب المحددين
+  classes: [],
+  currentClassId: null,
+  students: [],
+  selected: new Set(),
   semester: sessionStorage.getItem('semester') || 's1',
-  chart: null,          // Chart.js instance
-  editingId: null,      // الطالب الجاري تعديله
-  editingColor: null    // لون الأفاتار المؤقت
+  chart: null,
+  editingId: null,
+  editingColor: null
 };
 
 /* ============================================================
@@ -23,7 +20,6 @@ async function renderRosterPage() {
   const content = document.getElementById('content');
   if (!content) return;
 
-  // أزل الصفحات القديمة وأضف صفحة roster
   content.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
   let page = document.getElementById('page-roster');
@@ -101,15 +97,12 @@ function bindRosterEvents() {
   const page = document.getElementById('page-roster');
   if (!page) return;
 
-  // اختيار الصف
   page.querySelector('#roster-class-selector').onchange = (e) => {
     switchClass(e.target.value);
   };
 
-  // إدارة الصفوف
   page.querySelector('#btn-manage-classes').onclick = () => openClassesModal();
 
-  // تبديل الفصل الدراسي
   page.querySelectorAll('.sem-btn').forEach(btn => {
     btn.onclick = () => {
       RosterState.semester = btn.dataset.sem;
@@ -121,20 +114,15 @@ function bindRosterEvents() {
     };
   });
 
-  // إضافة طالب
   page.querySelector('#btn-add-student').onclick = addStudent;
   page.querySelector('#new-student-name').onkeypress = (e) => {
     if (e.key === 'Enter') addStudent();
   };
 
-  // استيراد / تصدير
   page.querySelector('#btn-import-excel').onclick = openImportModal;
   page.querySelector('#btn-export-excel').onclick = exportToExcel;
-
-  // تصفير نقاط الفصل
   page.querySelector('#btn-reset-class-points').onclick = resetClassPoints;
 
-  // منح/خصم نقاط
   page.querySelector('#btn-plus-selected').onclick = () => applyPoints(1);
   page.querySelector('#btn-minus-selected').onclick = () => applyPoints(-1);
   page.querySelector('#btn-clear-selection').onclick = () => {
@@ -168,7 +156,6 @@ async function loadClassesAndPopulate() {
         return `<option value="${c.id}">${escapeHtml(label)}</option>`;
       }).join('');
 
-    // اختر الأول تلقائيًا
     if (!RosterState.currentClassId && RosterState.classes.length) {
       RosterState.currentClassId = RosterState.classes[0].id;
       selector.value = RosterState.currentClassId;
@@ -212,7 +199,6 @@ async function loadStudents() {
     const students = await Api.listRoster(RosterState.currentClassId);
     RosterState.students = students || [];
 
-    // احتفظ فقط بالتحديد الصالح
     const validIds = new Set(RosterState.students.map(s => s.id));
     RosterState.selected.forEach(id => {
       if (!validIds.has(id)) RosterState.selected.delete(id);
@@ -251,7 +237,6 @@ function renderStudentsList() {
   if (pointsCard) pointsCard.style.display = RosterState.selected.size > 0 ? 'block' : 'none';
 
   const sem = RosterState.semester;
-  const color = window.APP_CONFIG.AVATAR_COLORS;
 
   list.innerHTML = RosterState.students.map(s => {
     const selected = RosterState.selected.has(s.id);
@@ -259,9 +244,7 @@ function renderStudentsList() {
     const initial = getInitial(s.name);
     const s1Active = sem === 's1' ? 'active' : '';
     const s2Active = sem === 's2' ? 'active s2' : '';
-    const notesHtml = s.notes
-      ? `<div class="s-notes">📝 ${escapeHtml(s.notes)}</div>`
-      : '';
+    const notesHtml = s.notes ? `<div class="s-notes">📝 ${escapeHtml(s.notes)}</div>` : '';
 
     return `
       <div class="student-card ${selected ? 'selected' : ''}" data-id="${s.id}">
@@ -283,41 +266,27 @@ function renderStudentsList() {
     `;
   }).join('');
 
-  // ربط الأحداث بعد البناء
   list.querySelectorAll('.student-card').forEach(card => {
     card.addEventListener('click', (e) => {
-      // إذا كان النقر على زر، لا تفعّل التحديد
       if (e.target.closest('button')) return;
       toggleSelect(card.dataset.id);
     });
   });
 
   list.querySelectorAll('[data-quick]').forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      quickAddPoints(btn.dataset.quick, Number(btn.dataset.delta));
-    };
+    btn.onclick = (e) => { e.stopPropagation(); quickAddPoints(btn.dataset.quick, Number(btn.dataset.delta)); };
   });
 
   list.querySelectorAll('[data-edit]').forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      openEditStudentModal(btn.dataset.edit);
-    };
+    btn.onclick = (e) => { e.stopPropagation(); openEditStudentModal(btn.dataset.edit); };
   });
 
   list.querySelectorAll('[data-delete]').forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      deleteStudent(btn.dataset.delete);
-    };
+    btn.onclick = (e) => { e.stopPropagation(); deleteStudent(btn.dataset.delete); };
   });
 
   list.querySelectorAll('[data-view]').forEach(avatar => {
-    avatar.onclick = (e) => {
-      e.stopPropagation();
-      openStudentDetailsModal(avatar.dataset.view);
-    };
+    avatar.onclick = (e) => { e.stopPropagation(); openStudentDetailsModal(avatar.dataset.view); };
   });
 }
 
@@ -325,11 +294,8 @@ function renderStudentsList() {
    تحديد طالب
    ============================================================ */
 function toggleSelect(id) {
-  if (RosterState.selected.has(id)) {
-    RosterState.selected.delete(id);
-  } else {
-    RosterState.selected.add(id);
-  }
+  if (RosterState.selected.has(id)) RosterState.selected.delete(id);
+  else RosterState.selected.add(id);
   renderStudentsList();
 }
 
@@ -337,29 +303,17 @@ function toggleSelect(id) {
    إضافة طالب
    ============================================================ */
 async function addStudent() {
-  if (!RosterState.currentClassId) {
-    toast('اختر صفًا أولًا', 'warn');
-    return;
-  }
-
+  if (!RosterState.currentClassId) return toast('اختر صفًا أولًا', 'warn');
   const input = document.getElementById('new-student-name');
   const name = input.value.trim();
-  if (!name) {
-    toast('أدخل اسم الطالب', 'warn');
-    return;
-  }
+  if (!name) return toast('أدخل اسم الطالب', 'warn');
 
   try {
-    await Api.addRoster({
-      name,
-      classId: RosterState.currentClassId
-    });
+    await Api.addRoster({ name, classId: RosterState.currentClassId });
     input.value = '';
     toast('تمت إضافة ' + name, 'success');
     await loadStudents();
-  } catch (e) {
-    toast(e.message, 'error');
-  }
+  } catch (e) { toast(e.message, 'error'); }
 }
 
 /* ============================================================
@@ -369,19 +323,14 @@ async function deleteStudent(id) {
   const s = RosterState.students.find(x => x.id === id);
   if (!s) return;
 
-  const ok = await confirmAction(
-    `🗑️ هل تريد حذف الطالب "${s.name}"؟<br><br>سيتم حذف نقاطه نهائيًا.`,
-    'حذف'
-  );
+  const ok = await confirmAction(`🗑️ هل تريد حذف الطالب "${s.name}"؟<br><br>سيتم حذف نقاطه نهائيًا.`, 'حذف');
   if (!ok) return;
 
   try {
     await Api.deleteRoster(id);
     toast('تم حذف الطالب', 'success');
     await loadStudents();
-  } catch (e) {
-    toast(e.message, 'error');
-  }
+  } catch (e) { toast(e.message, 'error'); }
 }
 
 /* ============================================================
@@ -392,22 +341,13 @@ async function quickAddPoints(id, delta) {
   const reason = reasonInput ? reasonInput.value.trim() : '';
 
   try {
-    const res = await Api.addPoints({
-      id,
-      delta,
-      reason,
-      semester: RosterState.semester
-    });
-
+    const res = await Api.addPoints({ id, delta, reason, semester: RosterState.semester });
     const s = RosterState.students.find(x => x.id === id);
     if (s) s[RosterState.semester] = res.newValue;
-
     renderStudentsList();
     const semLabel = RosterState.semester === 's1' ? 'ف1' : 'ف2';
     toast(`${delta > 0 ? '+' : ''}${delta} ${semLabel}`, delta > 0 ? 'success' : 'warn');
-  } catch (e) {
-    toast(e.message, 'error');
-  }
+  } catch (e) { toast(e.message, 'error'); }
 }
 
 /* ============================================================
@@ -415,10 +355,7 @@ async function quickAddPoints(id, delta) {
    ============================================================ */
 async function applyPoints(sign) {
   const ids = Array.from(RosterState.selected);
-  if (!ids.length) {
-    toast('لم تحدد أي طالب', 'warn');
-    return;
-  }
+  if (!ids.length) return toast('لم تحدد أي طالب', 'warn');
 
   const valueInput = document.getElementById('points-value');
   const value = Math.abs(Number(valueInput.value) || 1);
@@ -427,53 +364,34 @@ async function applyPoints(sign) {
   const reason = reasonInput ? reasonInput.value.trim() : '';
 
   try {
-    const results = await Api.addPointsBulk(
-      ids,
-      delta,
-      reason,
-      RosterState.semester
-    );
-
+    const results = await Api.addPointsBulk(ids, delta, reason, RosterState.semester);
     results.forEach(r => {
       const s = RosterState.students.find(x => x.id === r.id);
       if (s) s[RosterState.semester] = r.newValue;
     });
-
     RosterState.selected.clear();
     renderStudentsList();
-
     toast(`تم تحديث ${results.length} طالب`, 'success');
     flash(delta > 0 ? '👏 أحسنتم!' : '💪 حاولوا مرة أخرى', 1200);
-  } catch (e) {
-    toast(e.message, 'error');
-  }
+  } catch (e) { toast(e.message, 'error'); }
 }
 
 /* ============================================================
    تصفير نقاط الفصل
    ============================================================ */
 async function resetClassPoints() {
-  if (!RosterState.currentClassId) {
-    toast('اختر صفًا أولًا', 'warn');
-    return;
-  }
-
+  if (!RosterState.currentClassId) return toast('اختر صفًا أولًا', 'warn');
   const cls = RosterState.classes.find(c => c.id === RosterState.currentClassId);
   const semLabel = RosterState.semester === 's1' ? 'الفصل الأول' : 'الفصل الثاني';
 
-  const ok = await confirmAction(
-    `⚠️ سيتم تصفير نقاط <b>${semLabel}</b> لجميع طلاب:<br><b>${cls ? cls.name || cls.grade : ''}</b><br><br>متابعة؟`,
-    'تصفير'
-  );
+  const ok = await confirmAction(`⚠️ سيتم تصفير نقاط <b>${semLabel}</b> لجميع طلاب:<br><b>${cls ? cls.name || cls.grade : ''}</b><br><br>متابعة؟`, 'تصفير');
   if (!ok) return;
 
   try {
     const res = await Api.resetPoints(RosterState.currentClassId, RosterState.semester);
     toast(`تم تصفير ${res.count} طالب`, 'success');
     await loadStudents();
-  } catch (e) {
-    toast(e.message, 'error');
-  }
+  } catch (e) { toast(e.message, 'error'); }
 }
 
 /* ============================================================
@@ -499,16 +417,12 @@ function openEditStudentModal(id) {
       <div style="text-align:center;margin-bottom:16px">
         <div id="edit-avatar-preview" class="student-avatar lg" style="background:${RosterState.editingColor};margin:0 auto"></div>
       </div>
-
       <label>الاسم:</label>
       <input type="text" id="edit-name" value="${escapeHtml(s.name)}">
-
       <label>🎨 لون الأفاتار:</label>
       <div class="color-picker" id="color-picker"></div>
-
       <label>📝 ملاحظات:</label>
       <textarea id="edit-notes" rows="3" placeholder="ملاحظات عن الطالب (اختياري)">${escapeHtml(s.notes || '')}</textarea>
-
       <div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:8px;font-size:13px">
         <div style="margin-bottom:6px"><b>النقاط الحالية:</b></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -518,13 +432,10 @@ function openEditStudentModal(id) {
       </div>
     `;
 
-    // بناء منتقي الألوان
     const colors = window.APP_CONFIG.AVATAR_COLORS;
     const picker = body.querySelector('#color-picker');
     picker.innerHTML = colors.map(c => `
-      <div class="color-swatch ${c === RosterState.editingColor ? 'selected' : ''}" 
-           style="background:${c}" 
-           data-color="${c}"></div>
+      <div class="color-swatch ${c === RosterState.editingColor ? 'selected' : ''}" style="background:${c}" data-color="${c}"></div>
     `).join('');
 
     picker.querySelectorAll('.color-swatch').forEach(sw => {
@@ -532,18 +443,15 @@ function openEditStudentModal(id) {
         RosterState.editingColor = sw.dataset.color;
         picker.querySelectorAll('.color-swatch').forEach(x => x.classList.remove('selected'));
         sw.classList.add('selected');
-        const preview = body.querySelector('#edit-avatar-preview');
-        preview.style.background = RosterState.editingColor;
+        body.querySelector('#edit-avatar-preview').style.background = RosterState.editingColor;
       };
     });
 
-    // تحديث معاينة الأفاتار عند تغيير الاسم
     const nameInput = body.querySelector('#edit-name');
     nameInput.oninput = () => {
-      const preview = body.querySelector('#edit-avatar-preview');
-      preview.textContent = getInitial(nameInput.value);
+      body.querySelector('#edit-avatar-preview').textContent = getInitial(nameInput.value);
     };
-    nameInput.oninput(); // استدعِ مرة للتهيئة
+    nameInput.oninput();
   }, { footer });
 
   document.getElementById('btn-cancel-edit').onclick = closeAllModals;
@@ -560,28 +468,16 @@ function openEditStudentModal(id) {
 async function saveStudentEdit() {
   const id = RosterState.editingId;
   if (!id) return;
-
   const name = document.getElementById('edit-name').value.trim();
   const notes = document.getElementById('edit-notes').value.trim();
-
-  if (!name) {
-    toast('الاسم مطلوب', 'warn');
-    return;
-  }
+  if (!name) return toast('الاسم مطلوب', 'warn');
 
   try {
-    await Api.updateRoster({
-      id,
-      name,
-      notes,
-      avatar: RosterState.editingColor
-    });
+    await Api.updateRoster({ id, name, notes, avatar: RosterState.editingColor });
     toast('تم حفظ التعديلات', 'success');
     closeAllModals();
     await loadStudents();
-  } catch (e) {
-    toast(e.message, 'error');
-  }
+  } catch (e) { toast(e.message, 'error'); }
 }
 
 /* ============================================================
@@ -605,7 +501,6 @@ function openStudentDetailsModal(id) {
         <h3 style="color:var(--primary);font-size:20px;margin-bottom:4px">${escapeHtml(s.name)}</h3>
         ${s.notes ? `<p style="color:var(--text-muted);font-size:13px;font-style:italic">📝 ${escapeHtml(s.notes)}</p>` : ''}
       </div>
-
       <div class="row" style="gap:12px;margin-bottom:20px">
         <div class="stat-card">
           <div class="stat-label">الفصل الأول</div>
@@ -620,39 +515,22 @@ function openStudentDetailsModal(id) {
           <div class="stat-value" style="color:${diffColor}">${diff > 0 ? '+' : ''}${diff}</div>
         </div>
       </div>
-
       <div class="chart-container" style="height:240px">
         <canvas id="student-chart"></canvas>
       </div>
     `;
 
-    // ارسم الرسم البياني بعد بناء المحتوى
     setTimeout(() => {
       const canvas = document.getElementById('student-chart');
       if (!canvas) return;
-
       if (RosterState.chart) RosterState.chart.destroy();
-
       RosterState.chart = new Chart(canvas.getContext('2d'), {
         type: 'bar',
         data: {
           labels: ['الفصل الأول', 'الفصل الثاني'],
-          datasets: [{
-            label: 'النقاط',
-            data: [s1, s2],
-            backgroundColor: [color, color],
-            borderRadius: 10,
-            borderWidth: 0
-          }]
+          datasets: [{ label: 'النقاط', data: [s1, s2], backgroundColor: [color, color], borderRadius: 10 }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, ticks: { stepSize: 1 } }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
       });
     }, 100);
   });
@@ -662,11 +540,7 @@ function openStudentDetailsModal(id) {
    استيراد Excel / CSV
    ============================================================ */
 function openImportModal() {
-  if (!RosterState.currentClassId) {
-    toast('اختر صفًا أولًا', 'warn');
-    return;
-  }
-
+  if (!RosterState.currentClassId) return toast('اختر صفًا أولًا', 'warn');
   const cls = RosterState.classes.find(c => c.id === RosterState.currentClassId);
 
   const footer = document.createElement('div');
@@ -678,17 +552,13 @@ function openImportModal() {
 
   openModal('📥 استيراد الطلاب', (body) => {
     body.innerHTML = `
-      <p style="color:var(--text-muted);font-size:13px;margin-bottom:14px">
-        سيتم إضافة الطلاب إلى: <b>${escapeHtml(cls ? cls.name || cls.grade : '')}</b>
-      </p>
-
+      <p style="color:var(--text-muted);font-size:13px;margin-bottom:14px">سيتم إضافة الطلاب إلى: <b>${escapeHtml(cls ? cls.name || cls.grade : '')}</b></p>
       <div id="import-drop-zone" class="drop-zone">
         <div class="drop-icon">📄</div>
         <div class="drop-title">اضغط لاختيار ملف أو اسحبه هنا</div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:4px">xlsx, xls, csv</div>
         <div id="import-file-name" style="font-size:13px;color:var(--success);margin-top:8px;font-weight:700;min-height:16px"></div>
       </div>
-
       <input type="file" id="import-file-input" accept=".xlsx,.xls,.csv" style="display:none">
     `;
 
@@ -696,11 +566,9 @@ function openImportModal() {
     const fileInput = body.querySelector('#import-file-input');
     const fileName = body.querySelector('#import-file-name');
     const importBtn = document.getElementById('btn-do-import');
-
     let selectedFile = null;
 
     dropZone.onclick = () => fileInput.click();
-
     fileInput.onchange = (e) => {
       const f = e.target.files[0];
       if (!f) return;
@@ -709,11 +577,7 @@ function openImportModal() {
       dropZone.classList.add('has-file');
       importBtn.disabled = false;
     };
-
-    dropZone.ondragover = (e) => {
-      e.preventDefault();
-      dropZone.classList.add('dragover');
-    };
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
     dropZone.ondragleave = () => dropZone.classList.remove('dragover');
     dropZone.ondrop = (e) => {
       e.preventDefault();
@@ -729,27 +593,17 @@ function openImportModal() {
 
     importBtn.onclick = async () => {
       if (!selectedFile) return;
-
       try {
         importBtn.disabled = true;
         importBtn.textContent = '⏳ جارٍ الاستيراد...';
-
         const students = await parseExcelFile(selectedFile);
-        if (!students.length) {
-          toast('لم يتم العثور على أسماء', 'warn');
-          return;
-        }
-
+        if (!students.length) return toast('لم يتم العثور على أسماء', 'warn');
         const res = await Api.bulkRoster(RosterState.currentClassId, students);
         toast(`تم استيراد ${res.added} طالب (تم تجاهل ${res.skipped || 0})`, 'success');
         closeAllModals();
         await loadStudents();
-      } catch (e) {
-        toast('خطأ: ' + e.message, 'error');
-      } finally {
-        importBtn.disabled = false;
-        importBtn.textContent = '📥 استيراد الآن';
-      }
+      } catch (e) { toast('خطأ: ' + e.message, 'error'); }
+      finally { importBtn.disabled = false; importBtn.textContent = '📥 استيراد الآن'; }
     };
   }, { footer });
 
@@ -762,14 +616,12 @@ function openImportModal() {
 function parseExcelFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.onload = (e) => {
       try {
         const data = new Uint8Array(e.target.result);
         const wb = XLSX.read(data, { type: 'array' });
         const sheet = wb.Sheets[wb.SheetNames[0]];
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
         const students = [];
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
@@ -778,11 +630,8 @@ function parseExcelFile(file) {
           if (name) students.push({ name });
         }
         resolve(students);
-      } catch (err) {
-        reject(new Error('فشل قراءة الملف: ' + err.message));
-      }
+      } catch (err) { reject(new Error('فشل قراءة الملف: ' + err.message)); }
     };
-
     reader.onerror = () => reject(new Error('فشل قراءة الملف'));
     reader.readAsArrayBuffer(file);
   });
@@ -792,24 +641,15 @@ function parseExcelFile(file) {
    تصدير Excel (3 أوراق)
    ============================================================ */
 async function exportToExcel() {
-  if (!RosterState.currentClassId) {
-    toast('اختر صفًا أولًا', 'warn');
-    return;
-  }
-
-  if (!RosterState.students.length) {
-    toast('لا يوجد طلاب لتصديرهم', 'warn');
-    return;
-  }
+  if (!RosterState.currentClassId) return toast('اختر صفًا أولًا', 'warn');
+  if (!RosterState.students.length) return toast('لا يوجد طلاب لتصديرهم', 'warn');
 
   try {
     const cls = RosterState.classes.find(c => c.id === RosterState.currentClassId);
     const className = cls ? (cls.name || cls.grade) : 'الصف';
     const exportDate = new Date().toISOString().slice(0, 10);
-
     const wb = XLSX.utils.book_new();
 
-    // ورقة 1: القائمة الكاملة
     const rows1 = [['م', 'الاسم', 'الفصل الأول', 'الفصل الثاني', 'المجموع', 'الفرق', 'ملاحظات']];
     RosterState.students.forEach((s, i) => {
       const s1 = s.s1 || 0;
@@ -820,7 +660,6 @@ async function exportToExcel() {
     ws1['!cols'] = [{ wch: 6 }, { wch: 26 }, { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 10 }, { wch: 22 }];
     XLSX.utils.book_append_sheet(wb, ws1, 'القائمة');
 
-    // ورقة 2: المقارنة (مرتبة)
     const sorted = RosterState.students.slice().sort((a, b) => {
       const totalA = (a.s1 || 0) + (a.s2 || 0);
       const totalB = (b.s1 || 0) + (b.s2 || 0);
@@ -838,7 +677,6 @@ async function exportToExcel() {
     ws2['!cols'] = [{ wch: 8 }, { wch: 26 }, { wch: 12 }, { wch: 12 }, { wch: 8 }, { wch: 12 }];
     XLSX.utils.book_append_sheet(wb, ws2, 'المقارنة');
 
-    // ورقة 3: الإحصائيات
     const s1Total = RosterState.students.reduce((a, s) => a + (s.s1 || 0), 0);
     const s2Total = RosterState.students.reduce((a, s) => a + (s.s2 || 0), 0);
     const improved = RosterState.students.filter(s => (s.s2 || 0) > (s.s1 || 0)).length;
@@ -861,17 +699,14 @@ async function exportToExcel() {
     ws3['!cols'] = [{ wch: 22 }, { wch: 28 }];
     XLSX.utils.book_append_sheet(wb, ws3, 'إحصائيات');
 
-    // احفظ الملف
     const safeName = className.replace(/[\/\\:*?"<>|]/g, '-');
     XLSX.writeFile(wb, `${safeName}_${exportDate}.xlsx`);
     toast('تم تصدير الملف', 'success');
-  } catch (e) {
-    toast('خطأ في التصدير: ' + e.message, 'error');
-  }
+  } catch (e) { toast('خطأ في التصدير: ' + e.message, 'error'); }
 }
 
 /* ============================================================
-   نافذة إدارة الصفوف (إنشاء / حذف)
+   نافذة إدارة الصفوف
    ============================================================ */
 function openClassesModal() {
   const footer = document.createElement('div');
@@ -888,48 +723,31 @@ function openClassesModal() {
           <button class="btn btn-primary" id="btn-create-class" type="button">إنشاء</button>
         </div>
       </div>
-
       <div class="card" style="box-shadow:none;border:1px solid var(--border)">
         <h3>📋 الصفوف الحالية</h3>
         <div id="classes-list-modal" style="margin-top:10px"></div>
       </div>
     `;
 
-    // املأ القوائم
     const grades = window.APP_CONFIG.GRADES_LIST;
     const sections = window.APP_CONFIG.SECTIONS_LIST;
-    body.querySelector('#new-class-grade').innerHTML =
-      '<option value="">— اختر الصف —</option>' +
-      grades.map(g => `<option value="${g}">${g}</option>`).join('');
-    body.querySelector('#new-class-section').innerHTML =
-      '<option value="">بدون شعبة</option>' +
-      sections.map(s => `<option value="${s}">شعبة ${s}</option>`).join('');
+    body.querySelector('#new-class-grade').innerHTML = '<option value="">— اختر الصف —</option>' + grades.map(g => `<option value="${g}">${g}</option>`).join('');
+    body.querySelector('#new-class-section').innerHTML = '<option value="">بدون شعبة</option>' + sections.map(s => `<option value="${s}">شعبة ${s}</option>`).join('');
 
-    // اعرض الصفوف
     renderClassesModalList(body.querySelector('#classes-list-modal'));
 
-    // زر الإنشاء
     body.querySelector('#btn-create-class').onclick = async () => {
       const grade = body.querySelector('#new-class-grade').value;
       const section = body.querySelector('#new-class-section').value;
-      if (!grade) {
-        toast('اختر الصف', 'warn');
-        return;
-      }
+      if (!grade) return toast('اختر الصف', 'warn');
       try {
-        await Api.createClass({
-          name: grade + (section ? ' - شعبة ' + section : ''),
-          grade,
-          section
-        });
+        await Api.createClass({ name: grade + (section ? ' - شعبة ' + section : ''), grade, section });
         toast('تم إنشاء الصف', 'success');
         await loadClassesAndPopulate();
         renderClassesModalList(body.querySelector('#classes-list-modal'));
         body.querySelector('#new-class-grade').value = '';
         body.querySelector('#new-class-section').value = '';
-      } catch (e) {
-        toast(e.message, 'error');
-      }
+      } catch (e) { toast(e.message, 'error'); }
     };
   }, { footer });
 
@@ -937,7 +755,7 @@ function openClassesModal() {
 }
 
 /* ============================================================
-   عرض الصفوف في نافذة الإدارة
+   عرض الصفوف في نافذة الإدارة (مصحّح)
    ============================================================ */
 function renderClassesModalList(container) {
   if (!container) return;
@@ -947,7 +765,7 @@ function renderClassesModalList(container) {
     return;
   }
 
-    container.innerHTML = RosterState.classes.map(c => `
+  container.innerHTML = RosterState.classes.map(c => `
     <div class="student-row" style="padding:10px 12px">
       <div style="flex:1">
         <div style="font-weight:700">${escapeHtml(c.name || c.grade)}</div>
@@ -962,20 +780,19 @@ function renderClassesModalList(container) {
     </div>
   `).join('');
 
+  // ⭐ ربط زر الترقية (في المكان الصحيح خارج دالة الحذف)
+  container.querySelectorAll('[data-promote-class]').forEach(btn => {
+    btn.onclick = () => openPromoteModal(btn.dataset.promoteClass);
+  });
+
+  // ربط زر الحذف
   container.querySelectorAll('[data-del-class]').forEach(btn => {
     btn.onclick = async () => {
       const id = btn.dataset.delClass;
       const cls = RosterState.classes.find(c => c.id === id);
       if (!cls) return;
-        // ⭐ زر الترقية
-  container.querySelectorAll('[data-promote-class]').forEach(btn => {
-    btn.onclick = () => openPromoteModal(btn.dataset.promoteClass);
-  });
 
-      const ok = await confirmAction(
-        `⚠️ سيتم حذف الصف "<b>${escapeHtml(cls.name || cls.grade)}</b>" مع جميع طلابه.<br><br>هل أنت متأكد؟`,
-        'حذف الصف'
-      );
+      const ok = await confirmAction(`⚠️ سيتم حذف الصف "<b>${escapeHtml(cls.name || cls.grade)}</b>" مع جميع طلابه.<br><br>هل أنت متأكد؟`, 'حذف الصف');
       if (!ok) return;
 
       try {
@@ -984,23 +801,24 @@ function renderClassesModalList(container) {
         if (RosterState.currentClassId === id) RosterState.currentClassId = null;
         await loadClassesAndPopulate();
         renderClassesModalList(container);
-      } catch (e) {
-        toast(e.message, 'error');
-      }
+      } catch (e) { toast(e.message, 'error'); }
     };
   });
 }
+
 /* ============================================================
-   نافذة ترقية الصف
+   نافذة ترقية الصف (نسخة واحدة نظيفة)
    ============================================================ */
 function openPromoteModal(sourceClassId) {
   const sourceClass = RosterState.classes.find(c => c.id === sourceClassId);
-  if (!sourceClass) return;
+  if (!sourceClass) {
+    toast('الصف غير موجود', 'error');
+    return;
+  }
 
   const grades = window.APP_CONFIG.GRADES_LIST;
   const sections = window.APP_CONFIG.SECTIONS_LIST;
 
-  // احسب الصف التالي تلقائياً
   const currentGradeIdx = grades.indexOf(sourceClass.grade);
   const nextGrade = currentGradeIdx >= 0 && currentGradeIdx < grades.length - 1
     ? grades[currentGradeIdx + 1]
@@ -1016,26 +834,21 @@ function openPromoteModal(sourceClassId) {
   openModal('🎓 ترقية الصف', (body) => {
     body.innerHTML = `
       <div style="padding:14px;background:#fef3c7;border-radius:10px;margin-bottom:16px;font-size:13px;color:#92400e">
-        <b>⚠️ تنبيه:</b> سيتم نقل الطلاب من الصف الحالي إلى صف أعلى. 
-        يمكنك اختيار تصفير النقاط (نهاية العام).
+        <b>⚠️ تنبيه:</b> سيتم نقل الطلاب من الصف الحالي إلى صف أعلى مع تصفير النقاط.
       </div>
-
       <div style="margin-bottom:14px;padding:12px;background:#f8fafc;border-radius:8px">
         <div style="font-weight:700;margin-bottom:4px">الصف المصدر:</div>
         <div style="color:var(--primary)">${escapeHtml(sourceClass.name || sourceClass.grade)}</div>
       </div>
-
       <label>إلى الصف:</label>
-      <select id="promote-target-grade">
+      <select id="promote-target-grade" style="width:100%;padding:10px;margin-bottom:10px">
         ${grades.map(g => `<option value="${g}" ${g === nextGrade ? 'selected' : ''}>${g}</option>`).join('')}
       </select>
-
       <label>الشعبة:</label>
-      <select id="promote-target-section">
+      <select id="promote-target-section" style="width:100%;padding:10px;margin-bottom:10px">
         <option value="">بدون شعبة</option>
         ${sections.map(s => `<option value="${s}" ${s === sourceClass.section ? 'selected' : ''}>شعبة ${s}</option>`).join('')}
       </select>
-
       <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
           <input type="checkbox" id="promote-reset" checked style="width:auto">
@@ -1057,17 +870,7 @@ function openPromoteModal(sourceClassId) {
     const reset = document.getElementById('promote-reset').checked;
     const create = document.getElementById('promote-create').checked;
 
-    if (!targetGrade) {
-      toast('اختر الصف الهدف', 'warn');
-      return;
-    }
-
-    const ok = await confirmAction(
-      `🎓 نقل طلاب <b>"${escapeHtml(sourceClass.name || sourceClass.grade)}"</b> إلى <b>"${targetGrade}${targetSection ? ' - شعبة ' + targetSection : ''}"</b>؟<br><br>
-       ${reset ? '✅ سيتم تصفير النقاط.' : '⚠️ ستبقى النقاط كما هي.'}`,
-      'ترقية'
-    );
-    if (!ok) return;
+    if (!targetGrade) return toast('اختر الصف الهدف', 'warn');
 
     const btn = document.getElementById('btn-confirm-promote');
     btn.disabled = true;
@@ -1085,14 +888,9 @@ function openPromoteModal(sourceClassId) {
       closeAllModals();
       toast(`✅ تم نقل ${result.moved} طالب`, 'success');
       
-      if (result.skipped > 0) {
-        toast(`(تم تجاهل ${result.skipped} اسم مكرر)`, 'info');
-      }
+      if (result.skipped > 0) toast(`(تم تجاهل ${result.skipped} اسم مكرر)`, 'info');
 
-      // أعد تحميل الصفوف
       await loadClassesAndPopulate();
-      
-      // أعد رسم النافذة
       const classesList = document.getElementById('classes-list-modal');
       if (classesList) renderClassesModalList(classesList);
 
@@ -1103,195 +901,5 @@ function openPromoteModal(sourceClassId) {
     }
   };
 }
-/* ============================================================
-   نافذة ترقية الصف
-   ============================================================ */
-function openPromoteModal(sourceClassId) {
-  const sourceClass = RosterState.classes.find(c => c.id === sourceClassId);
-  if (!sourceClass) {
-    toast('الصف غير موجود', 'error');
-    return;
-  }
 
-  const grades = window.APP_CONFIG.GRADES_LIST;
-  const sections = window.APP_CONFIG.SECTIONS_LIST;
-
-  const currentGradeIdx = grades.indexOf(sourceClass.grade);
-  const nextGrade = currentGradeIdx >= 0 && currentGradeIdx < grades.length - 1
-    ? grades[currentGradeIdx + 1]
-    : '';
-
-  const footer = document.createElement('div');
-  footer.className = 'modal-footer';
-  footer.innerHTML = `
-    <button class="btn btn-ghost" id="btn-cancel-promote" type="button">إلغاء</button>
-    <button class="btn btn-purple" id="btn-confirm-promote" type="button">🎓 ترقية الآن</button>
-  `;
-
-  openModal('🎓 ترقية الصف', (body) => {
-    body.innerHTML = `
-      <div style="padding:14px;background:#fef3c7;border-radius:10px;margin-bottom:16px;font-size:13px;color:#92400e">
-        <b>⚠️ تنبيه:</b> سيتم نقل الطلاب من الصف الحالي إلى صف أعلى مع تصفير النقاط.
-      </div>
-      <div style="margin-bottom:14px;padding:12px;background:#f8fafc;border-radius:8px">
-        <div style="font-weight:700;margin-bottom:4px">الصف المصدر:</div>
-        <div style="color:var(--primary)">${escapeHtml(sourceClass.name || sourceClass.grade)}</div>
-      </div>
-      <label>إلى الصف:</label>
-      <select id="promote-target-grade">
-        ${grades.map(g => `<option value="${g}" ${g === nextGrade ? 'selected' : ''}>${g}</option>`).join('')}
-      </select>
-      <label>الشعبة:</label>
-      <select id="promote-target-section">
-        <option value="">بدون شعبة</option>
-        ${sections.map(s => `<option value="${s}" ${s === sourceClass.section ? 'selected' : ''}>شعبة ${s}</option>`).join('')}
-      </select>
-      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
-          <input type="checkbox" id="promote-reset" checked style="width:auto">
-          <span>تصفير النقاط</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
-          <input type="checkbox" id="promote-create" checked style="width:auto">
-          <span>إنشاء الصف الهدف إذا لم يكن موجوداً</span>
-        </label>
-      </div>
-    `;
-  }, { footer });
-
-  document.getElementById('btn-cancel-promote').onclick = closeAllModals;
-
-  document.getElementById('btn-confirm-promote').onclick = async () => {
-    const targetGrade = document.getElementById('promote-target-grade').value;
-    const targetSection = document.getElementById('promote-target-section').value;
-    const reset = document.getElementById('promote-reset').checked;
-    const create = document.getElementById('promote-create').checked;
-
-    if (!targetGrade) {
-      toast('اختر الصف الهدف', 'warn');
-      return;
-    }
-
-    const btn = document.getElementById('btn-confirm-promote');
-    btn.disabled = true;
-    btn.textContent = '⏳ جاري الترقية...';
-
-    try {
-      const result = await API.call('classes.promote', {
-        sourceId: sourceClassId,
-        grade: targetGrade,
-        section: targetSection,
-        reset: String(reset),
-        create: String(create)
-      });
-
-      closeAllModals();
-      toast(`✅ تم نقل ${result.moved} طالب`, 'success');
-
-      await loadClassesAndPopulate();
-      const classesList = document.getElementById('classes-list-modal');
-      if (classesList) renderClassesModalList(classesList);
-    } catch (e) {
-      toast('فشل: ' + e.message, 'error');
-      btn.disabled = false;
-      btn.textContent = '🎓 ترقية الآن';
-    }
-  };
-}
-/* ============================================================
-   نافذة ترقية الصف
-   ============================================================ */
-function openPromoteModal(sourceClassId) {
-  const sourceClass = RosterState.classes.find(c => c.id === sourceClassId);
-  if (!sourceClass) {
-    toast('الصف غير موجود', 'error');
-    return;
-  }
-
-  const grades = window.APP_CONFIG.GRADES_LIST;
-  const sections = window.APP_CONFIG.SECTIONS_LIST;
-
-  const currentGradeIdx = grades.indexOf(sourceClass.grade);
-  const nextGrade = currentGradeIdx >= 0 && currentGradeIdx < grades.length - 1
-    ? grades[currentGradeIdx + 1]
-    : '';
-
-  const footer = document.createElement('div');
-  footer.className = 'modal-footer';
-  footer.innerHTML = `
-    <button class="btn btn-ghost" id="btn-cancel-promote" type="button">إلغاء</button>
-    <button class="btn btn-purple" id="btn-confirm-promote" type="button">🎓 ترقية الآن</button>
-  `;
-
-  openModal('🎓 ترقية الصف', (body) => {
-    body.innerHTML = `
-      <div style="padding:14px;background:#fef3c7;border-radius:10px;margin-bottom:16px;font-size:13px;color:#92400e">
-        <b>⚠️ تنبيه:</b> سيتم نقل الطلاب من الصف الحالي إلى صف أعلى مع تصفير النقاط.
-      </div>
-      <div style="margin-bottom:14px;padding:12px;background:#f8fafc;border-radius:8px">
-        <div style="font-weight:700;margin-bottom:4px">الصف المصدر:</div>
-        <div style="color:var(--primary)">${escapeHtml(sourceClass.name || sourceClass.grade)}</div>
-      </div>
-      <label>إلى الصف:</label>
-      <select id="promote-target-grade">
-        ${grades.map(g => `<option value="${g}" ${g === nextGrade ? 'selected' : ''}>${g}</option>`).join('')}
-      </select>
-      <label>الشعبة:</label>
-      <select id="promote-target-section">
-        <option value="">بدون شعبة</option>
-        ${sections.map(s => `<option value="${s}" ${s === sourceClass.section ? 'selected' : ''}>شعبة ${s}</option>`).join('')}
-      </select>
-      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
-          <input type="checkbox" id="promote-reset" checked style="width:auto">
-          <span>تصفير النقاط</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
-          <input type="checkbox" id="promote-create" checked style="width:auto">
-          <span>إنشاء الصف الهدف إذا لم يكن موجوداً</span>
-        </label>
-      </div>
-    `;
-  }, { footer });
-
-  document.getElementById('btn-cancel-promote').onclick = closeAllModals;
-
-  document.getElementById('btn-confirm-promote').onclick = async () => {
-    const targetGrade = document.getElementById('promote-target-grade').value;
-    const targetSection = document.getElementById('promote-target-section').value;
-    const reset = document.getElementById('promote-reset').checked;
-    const create = document.getElementById('promote-create').checked;
-
-    if (!targetGrade) {
-      toast('اختر الصف الهدف', 'warn');
-      return;
-    }
-
-    const btn = document.getElementById('btn-confirm-promote');
-    btn.disabled = true;
-    btn.textContent = '⏳ جاري الترقية...';
-
-    try {
-      const result = await API.call('classes.promote', {
-        sourceId: sourceClassId,
-        grade: targetGrade,
-        section: targetSection,
-        reset: String(reset),
-        create: String(create)
-      });
-
-      closeAllModals();
-      toast(`✅ تم نقل ${result.moved} طالب`, 'success');
-
-      await loadClassesAndPopulate();
-      const classesList = document.getElementById('classes-list-modal');
-      if (classesList) renderClassesModalList(classesList);
-    } catch (e) {
-      toast('فشل: ' + e.message, 'error');
-      btn.disabled = false;
-      btn.textContent = '🎓 ترقية الآن';
-    }
-  };
-}
-
-console.log('✅ openPromoteModal جاهزة');
+console.log('✅ roster.js جاهز');
