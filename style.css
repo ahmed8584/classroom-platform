@@ -1,0 +1,1687 @@
+/* ============================================================
+   منصة الحصة التفاعلية — الأنماط الكاملة
+   ============================================================ */
+
+/* ============ المتغيرات ============ */
+:root {
+  /* الألوان الأساسية (هوية A) */
+  --primary: #1e3a8a;
+  --primary-light: #2563eb;
+  --primary-hover: #1e40af;
+  --accent: #f59e0b;
+  --accent-hover: #d97706;
+
+  /* ألوان الحالة */
+  --success: #16a34a;
+  --success-bg: #dcfce7;
+  --danger: #dc2626;
+  --danger-bg: #fee2e2;
+  --warn: #f59e0b;
+  --warn-bg: #fef3c7;
+  --info: #0891b2;
+  --info-bg: #cffafe;
+  --purple: #7c3aed;
+  --purple-bg: #ede9fe;
+
+  /* الخلفيات */
+  --bg: #f1f5f9;
+  --bg-dark: #0f172a;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  /* النصوص */
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-soft: #94a3b8;
+
+  /* قياسات */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.12);
+  --shadow-xl: 0 20px 60px rgba(15, 23, 42, 0.18);
+
+  /* القياسات */
+  --sidebar-w: 260px;
+  --topbar-h: 64px;
+  --content-max: 1200px;
+
+  /* الحركة */
+  --transition: 0.2s ease;
+}
+
+/* ============ Reset ============ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', 'Tahoma', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  direction: rtl;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font-family: inherit; font-size: 14px; }
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; display: block; }
+
+.hidden { display: none !important; }
+
+/* ============ الأزرار ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 2px solid transparent;
+  text-decoration: none;
+  user-select: none;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn:hover:not(:disabled) { transform: translateY(-1px); }
+.btn:active:not(:disabled) { transform: translateY(0); }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); box-shadow: var(--shadow); }
+
+.btn-secondary {
+  background: #fff;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.btn-secondary:hover:not(:disabled) { background: var(--primary); color: #fff; }
+
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-accent:hover:not(:disabled) { background: var(--accent-hover); }
+
+.btn-success {
+  background: var(--success);
+  color: #fff;
+}
+.btn-success:hover:not(:disabled) { background: #15803d; }
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-danger:hover:not(:disabled) { background: #b91c1c; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.btn-ghost:hover:not(:disabled) { background: var(--bg); color: var(--primary); border-color: var(--primary); }
+
+.btn-block { width: 100%; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-lg { padding: 14px 24px; font-size: 16px; }
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-muted);
+}
+.btn-icon:hover { background: var(--bg); color: var(--primary); }
+
+/* ============ المدخلات ============ */
+.input, input[type=text], input[type=number], input[type=password],
+input[type=email], input[type=date], select, textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: var(--transition);
+  background: #fff;
+  color: var(--text);
+  font-size: 14px;
+}
+.input:focus, input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+}
+input:disabled, select:disabled, textarea:disabled {
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+/* ============================================================
+   شاشة تسجيل الدخول
+   ============================================================ */
+.login-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #7c3aed 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.login-box {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-xl);
+  text-align: center;
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo {
+  font-size: 56px;
+  margin-bottom: 12px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.login-box h1 {
+  font-size: 22px;
+  color: var(--primary);
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+
+.login-tagline {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.login-step input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+  text-align: center;
+  outline: none;
+  transition: var(--transition);
+}
+.login-step input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.12);
+}
+
+.login-error {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 12px;
+  min-height: 20px;
+  font-weight: 600;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: var(--text-soft);
+  font-size: 12px;
+}
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.login-divider span {
+  padding: 0 12px;
+}
+
+.login-hint {
+  font-size: 12px;
+  color: var(--text-soft);
+  margin-top: 10px;
+}
+
+/* ============================================================
+   App Shell (بعد الدخول)
+   ============================================================ */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============ Sidebar ============ */
+.sidebar {
+  width: var(--sidebar-w);
+  background: #fff;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 800;
+  color: var(--primary);
+  font-size: 16px;
+}
+.sidebar-brand .brand-icon {
+  font-size: 26px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 12px 14px 6px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 2px;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: right;
+}
+.nav-link:hover {
+  background: var(--bg);
+  color: var(--primary);
+}
+.nav-link.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+}
+.nav-link .nav-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-chip {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.user-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============ Main ============ */
+.app-main {
+  flex: 1;
+  margin-right: var(--sidebar-w);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  height: var(--topbar-h);
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.page-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+  flex: 1;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+  max-width: var(--content-max);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.page {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   الرئيسية — Welcome + Tiles
+   ============================================================ */
+.welcome-hero {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 24px 20px;
+  background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+  border-radius: var(--radius-lg);
+  border: 1px solid #dbeafe;
+}
+.welcome-hero h1 {
+  font-size: 28px;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.welcome-hero p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.tiles-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.tiles-group-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 14px;
+  padding-right: 4px;
+}
+
+.tiles-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.tile {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 22px 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  text-align: center;
+}
+.tile:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+.tile-icon {
+  font-size: 42px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.tile-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+.tile-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Variants */
+.tile-accent { background: linear-gradient(135deg, #fff7ed, #fff); }
+.tile-accent:hover { border-color: var(--accent); }
+.tile-accent .tile-title { color: var(--accent-hover); }
+
+.tile-purple { background: linear-gradient(135deg, #f5f3ff, #fff); }
+.tile-purple:hover { border-color: var(--purple); }
+.tile-purple .tile-title { color: var(--purple); }
+
+.tile-warn { background: linear-gradient(135deg, #fffbeb, #fff); }
+.tile-warn:hover { border-color: var(--warn); }
+.tile-warn .tile-title { color: var(--accent-hover); }
+
+/* ============================================================
+   البطاقات
+   ============================================================ */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.card h2 {
+  font-size: 17px;
+  color: var(--text);
+  font-weight: 800;
+}
+.card h3 {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* ============================================================
+   Forms & Rows
+   ============================================================ */
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.row-between { justify-content: space-between; }
+.row-center { justify-content: center; }
+.row-end { justify-content: flex-end; }
+
+.col { display: flex; flex-direction: column; gap: 12px; }
+
+/* ============================================================
+   شبكة الطلاب
+   ============================================================ */
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.student-card {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+}
+.student-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+.student-card.selected {
+  border-color: var(--success);
+  background: var(--success-bg);
+}
+
+.student-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+  user-select: none;
+  flex-shrink: 0;
+}
+.student-avatar.sm { width: 30px; height: 30px; font-size: 14px; }
+.student-avatar.lg { width: 60px; height: 60px; font-size: 26px; }
+
+.student-card .name {
+  font-weight: 700;
+  margin-bottom: 6px;
+  padding-right: 48px;
+  min-height: 24px;
+}
+.student-card .student-avatar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.points-pair {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  margin-top: 6px;
+}
+.points-pair span {
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.points-pair span.active {
+  background: #dbeafe;
+  color: var(--primary);
+}
+.points-pair span.active.s2 {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+/* ============ صف الطالب (قائمة) ============ */
+.student-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  transition: var(--transition);
+}
+.student-row:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+.student-row .s-info {
+  flex: 1;
+  min-width: 0;
+}
+.student-row .s-name {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.student-row .s-notes {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+}
+.student-row .s-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   لوحة المتصدرين
+   ============================================================ */
+.leader-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--bg);
+  border-right: 4px solid transparent;
+  transition: var(--transition);
+}
+.leader-item:hover {
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.leader-item.top1 {
+  background: linear-gradient(90deg, #fef3c7, #fff);
+  border-right-color: var(--accent);
+}
+.leader-item.top2 {
+  background: linear-gradient(90deg, #f1f5f9, #fff);
+  border-right-color: #94a3b8;
+}
+.leader-item.top3 {
+  background: linear-gradient(90deg, #fed7aa, #fff);
+  border-right-color: #c2410c;
+}
+.leader-rank {
+  font-size: 22px;
+  font-weight: 900;
+  width: 40px;
+  text-align: center;
+}
+.leader-name {
+  flex: 1;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.leader-points {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--primary);
+}
+
+/* ============================================================
+   الإحصائيات
+   ============================================================ */
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  border-right: 4px solid var(--primary);
+}
+.stat-card.green { border-right-color: var(--success); }
+.stat-card.red { border-right-color: var(--danger); }
+.stat-card.purple { border-right-color: var(--purple); }
+.stat-card.warn { border-right-color: var(--warn); }
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--primary);
+}
+.stat-card.green .stat-value { color: var(--success); }
+.stat-card.red .stat-value { color: var(--danger); }
+.stat-card.purple .stat-value { color: var(--purple); }
+.stat-card.warn .stat-value { color: var(--accent-hover); }
+
+/* ============================================================
+   المقارنة
+   ============================================================ */
+.comparison-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: #f8fafc;
+  border-right: 4px solid var(--border);
+  transition: var(--transition);
+}
+.comparison-row.up {
+  border-right-color: var(--success);
+  background: var(--success-bg);
+}
+.comparison-row.down {
+  border-right-color: var(--danger);
+  background: var(--danger-bg);
+}
+.comparison-row.same {
+  border-right-color: var(--text-soft);
+}
+.cmp-name {
+  flex: 1;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cmp-sem {
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 70px;
+  text-align: center;
+}
+.cmp-sem b {
+  color: var(--text);
+  font-size: 16px;
+}
+.cmp-diff {
+  font-size: 16px;
+  font-weight: 900;
+  min-width: 70px;
+  text-align: center;
+}
+.comparison-row.up .cmp-diff { color: var(--success); }
+.comparison-row.down .cmp-diff { color: var(--danger); }
+
+/* ============================================================
+   المؤقت وساعة الإيقاف
+   ============================================================ */
+.timer-display, .stopwatch-display {
+  font-size: 72px;
+  font-weight: 900;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+  margin: 20px 0;
+  letter-spacing: 3px;
+  line-height: 1;
+}
+.stopwatch-display { color: var(--success); }
+
+/* ============================================================
+   العجلة
+   ============================================================ */
+.wheel-wrap {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin: 20px auto;
+  max-width: 90vw;
+}
+.wheel-wrap canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.1s linear;
+}
+.wheel-pointer {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-top: 30px solid var(--danger);
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.wheel-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  font-weight: 900;
+  color: var(--primary);
+  font-size: 15px;
+  z-index: 3;
+  border: 3px solid var(--primary);
+  transition: var(--transition);
+}
+.wheel-center:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* ============================================================
+   المجموعات
+   ============================================================ */
+.group-card {
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  border: 2px solid var(--border);
+  margin-bottom: 12px;
+}
+.group-card h3 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+.group-card ul {
+  list-style: none;
+  padding: 0;
+}
+.group-card li {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.group-card li:last-child { border-bottom: none; }
+
+/* ============================================================
+   منتقي الألوان
+   ============================================================ */
+.color-picker {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+.color-swatch {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 3px solid transparent;
+}
+.color-swatch:hover { transform: scale(1.12); }
+.color-swatch.selected {
+  border-color: var(--text);
+  transform: scale(1.18);
+  box-shadow: var(--shadow);
+}
+
+/* ============================================================
+   الرسم البياني
+   ============================================================ */
+.chart-container {
+  background: #f8fafc;
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 12px;
+  height: 340px;
+  position: relative;
+}
+
+/* ============================================================
+   Modals
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.modal {
+  background: #fff;
+  border-radius: var(--radius);
+  max-width: 620px;
+  width: 100%;
+  max-height: 88vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.3s ease;
+}
+.modal-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.modal-header h2 {
+  font-size: 17px;
+  color: var(--primary);
+  font-weight: 800;
+}
+.modal-body {
+  padding: 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+.modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.modal-close {
+  font-size: 22px;
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.modal-close:hover {
+  background: var(--bg);
+  color: var(--danger);
+}
+
+/* ============================================================
+   Toast
+   ============================================================ */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  min-width: 240px;
+  max-width: 400px;
+  transform: translateX(-120%);
+  transition: transform 0.3s ease;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toast.show { transform: translateX(0); }
+.toast-info { background: var(--primary); }
+.toast-success { background: var(--success); }
+.toast-error { background: var(--danger); }
+.toast-warn { background: var(--warn); color: var(--text); }
+
+/* ============================================================
+   Flash Overlay
+   ============================================================ */
+.flash-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 58, 138, 0.9);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  font-weight: 900;
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  text-align: center;
+  padding: 20px;
+}
+.flash-overlay.show { opacity: 1; }
+.flash-overlay.flash { animation: flashPulse 0.4s ease-in-out 3; }
+
+@keyframes flashPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ============================================================
+   حالة فراغ
+   ============================================================ */
+.empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-soft);
+  font-size: 14px;
+}
+.empty::before {
+  content: '📭';
+  display: block;
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+/* ============================================================
+   شريط الفصل الحالي
+   ============================================================ */
+.class-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  background: #fff;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+.class-selector {
+  padding: 9px 14px;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--primary);
+  background: #fff;
+  cursor: pointer;
+  min-width: 220px;
+  outline: none;
+}
+
+.semester-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-right: auto;
+}
+.sem-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+.sem-btn.active {
+  background: var(--primary);
+  color: #fff;
+}
+.sem-btn[data-sem="s2"].active {
+  background: var(--success);
+}
+
+/* ============================================================
+   منطقة رفع الملفات
+   ============================================================ */
+.drop-zone {
+  border: 2px dashed var(--primary);
+  border-radius: var(--radius);
+  padding: 30px 20px;
+  text-align: center;
+  background: #eff6ff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.drop-zone:hover {
+  background: #dbeafe;
+}
+.drop-zone.dragover {
+  background: #bfdbfe;
+  border-color: var(--primary-hover);
+  transform: scale(1.01);
+}
+.drop-zone.has-file {
+  background: var(--success-bg);
+  border-color: var(--success);
+}
+.drop-zone .drop-icon {
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+.drop-zone .drop-title {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 15px;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(100%);
+    box-shadow: var(--shadow-xl);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .app-main {
+    margin-right: 0;
+  }
+  .menu-toggle {
+    display: inline-flex;
+  }
+  .content {
+    padding: 16px;
+  }
+  .timer-display, .stopwatch-display {
+    font-size: 52px;
+  }
+  .tiles-row {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .welcome-hero h1 { font-size: 22px; }
+  .tile-icon { font-size: 34px; }
+  .tile { padding: 16px 12px; }
+  .students-grid { grid-template-columns: 1fr; }
+  .color-picker { grid-template-columns: repeat(5, 1fr); }
+  .modal { max-height: 95vh; }
+  .timer-display, .stopwatch-display { font-size: 42px; letter-spacing: 1px; }
+}
+
+/* ============================================================
+   تقليل الحركة (تسهيل الوصول)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* ============ AI Source Tabs ============ */
+.source-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.source-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.source-tab:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #f0f7ff;
+}
+
+.source-tab.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+}
+
+/* ============ Preset Buttons ============ */
+.preset-templates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.preset-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #f0f7ff;
+  transform: translateY(-1px);
+}
+/* ============================================================
+   AI Media — أنماط نهائية
+   ============================================================ */
+
+/* بطاقة تحميل الملف */
+.file-loaded-card {
+  padding: 16px;
+  background: linear-gradient(135deg, #dcfce7, #f0fdf4);
+  border: 2px solid var(--success);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.file-loaded-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--success);
+}
+
+/* معاينة نص PDF */
+.pdf-preview {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+  font-size: 12px;
+  line-height: 1.7;
+  font-family: 'Courier New', monospace;
+  border: 1px solid var(--border);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* شريط تقدم الرفع */
+.upload-progress {
+  margin-top: 12px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  animation: progressPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes progressPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* شارة المصدر */
+.source-badge-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.source-badge-none {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--bg);
+  color: var(--text-muted);
+}
+
+/* زر إزالة الملف */
+.file-remove-btn {
+  padding: 6px 12px;
+  background: #fee2e2;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-remove-btn:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* رسالة نجاح الرفع */
+.upload-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #dcfce7;
+  border-radius: 8px;
+  color: #166534;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.upload-success::before {
+  content: '✅';
+  font-size: 16px;
+}
+
+/* رسالة خطأ الرفع */
+.upload-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #fee2e2;
+  border-radius: 8px;
+  color: #991b1b;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.upload-error::before {
+  content: '❌';
+  font-size: 16px;
+}
+
+/* حالة الرفع */
+.upload-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #eff6ff;
+  border-radius: 8px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.upload-loading::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* أيقونة المصدر */
+.source-icon-lg {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+/* بطاقة مصدر فارغة */
+.source-empty {
+  padding: 24px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #f1f5f9, #f8fafc);
+  border-radius: var(--radius-sm);
+  border: 2px dashed var(--border);
+}
+
+.source-empty-text {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* تنسيق للجوال */
+@media (max-width: 600px) {
+  .source-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pdf-preview {
+    max-height: 160px;
+    font-size: 11px;
+  }
+}
+/* ============================================================
+   زر التوليد الذكي
+   ============================================================ */
+#ai-generate-cta {
+  background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+  border: 2px solid var(--primary);
+  animation: ctaSlideIn 0.3s ease;
+}
+
+#ai-generate-cta .btn-primary {
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+  transition: all 0.2s;
+}
+
+#ai-generate-cta .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 58, 138, 0.3);
+}
+
+@keyframes ctaSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* على الجوال — أزرار التوليد عمودية */
+@media (max-width: 600px) {
+  #ai-generate-cta .row-center {
+    flex-direction: column;
+  }
+  #ai-generate-cta .btn {
+    width: 100%;
+  }
+}
+/* ============================================================
+   زر التوليد السريع
+   ============================================================ */
+#ai-quick-generate {
+  animation: quickGenSlide 0.3s ease;
+}
+
+#btn-quick-generate {
+  position: relative;
+  overflow: hidden;
+}
+
+#btn-quick-generate::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+#btn-quick-generate:hover::before {
+  left: 100%;
+}
+
+@keyframes quickGenSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ============================================================
+   أزرار القوالب السريعة — محسّنة
+   ============================================================ */
+.preset-btn {
+  position: relative;
+  transition: all 0.2s;
+}
+
+.preset-btn:hover {
+  transform: translateY(-1px);
+}
+
+.preset-btn-active {
+  background: var(--primary) !important;
+  color: #fff !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3) !important;
+}
+
+.preset-btn-free {
+  border: 2px dashed var(--primary) !important;
+}
+
+.preset-btn-free.preset-btn-active {
+  border-style: solid !important;
+}
+/* ============================================================
+   OCR styles
+   ============================================================ */
+.ocr-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  width: 0%;
+  transition: width 0.3s ease;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ocr-progress-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: ocrShimmer 1.5s infinite;
+}
+
+@keyframes ocrShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.ocr-page-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  background: #f8fafc;
+  border-right: 3px solid var(--success);
+}
+
+.ocr-page-result.error {
+  border-right-color: var(--danger);
+  background: #fef2f2;
+}

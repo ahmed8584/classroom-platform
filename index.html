@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1e3a8a">
+<title>منصة الحصة التفاعلية</title>
+<meta name="theme-color" content="#1e3a8a">
+<link rel="manifest" href="manifest.json">
+
+<!-- مكتبات خارجية -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     شاشة تسجيل الدخول
+     ============================================================ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🎓</div>
+    <h1>منصة الحصة التفاعلية</h1>
+    <p class="login-tagline">كل حصة تجربة، وكل طالب بطل</p>
+
+    <!-- كلمة المرور -->
+    <div class="login-step" id="login-step-password">
+      <input type="password" id="login-password" placeholder="كلمة المرور" autocomplete="current-password">
+      <button class="btn btn-primary btn-block" id="login-btn-password" type="button">🔓 دخول</button>
+      <div class="login-error" id="login-error"></div>
+    </div>
+
+    <!-- OAuth اختياري -->
+    <div class="login-step hidden" id="login-step-oauth">
+      <div class="login-divider"><span>أو</span></div>
+      <button class="btn btn-secondary btn-block" id="login-btn-oauth" type="button">
+        🚀 الدخول بحساب Google
+      </button>
+      <p class="login-hint">اختياري — للمزامنة بين الأجهزة</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     الهيكل الرئيسي (يظهر بعد تسجيل الدخول)
+     ============================================================ -->
+<div class="app-shell hidden" id="app-shell">
+
+  <!-- ============ Sidebar (للديسكتوب) ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">الحصة التفاعلية</span>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <!-- روابط تُبنى ديناميكيًا -->
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip" id="user-chip">
+        <span class="user-avatar" id="user-avatar">؟</span>
+        <span class="user-name" id="user-name">زائر</span>
+      </div>
+      <button class="btn-icon" id="logout-btn" title="خروج">🚪</button>
+    </div>
+  </aside>
+
+  <!-- ============ المحتوى الرئيسي ============ -->
+  <div class="app-main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="btn-icon menu-toggle" id="menu-toggle" type="button">☰</button>
+      <div style="flex:1">
+  <h2 class="page-title" id="page-title" style="margin:0">الرئيسية</h2>
+  <div id="breadcrumb" style="font-size:12px;color:var(--text-muted);margin-top:2px"></div>
+</div>
+      <div class="topbar-actions">
+  <button class="btn-icon" id="btn-back-home" title="الرئيسية" type="button">🏠</button>
+  <a id="sheet-link" href="#" target="_blank" class="btn-icon" title="جدول البيانات">📊</a>
+  <button class="btn-icon" id="btn-notif" title="الإشعارات" type="button">🔔</button>
+</div>
+    </header>
+
+    <!-- الصفحات -->
+    <main class="content" id="content">
+
+      <!-- ======== الرئيسية: Tiles ======== -->
+      <section class="page" id="page-home">
+        <div class="welcome-hero">
+          <h1>🎓 مرحبًا بك</h1>
+          <p>اختر ما تريد البدء به</p>
+        </div>
+
+        <div class="tiles-grid">
+          <!-- قسم المعلم -->
+          <div class="tiles-group">
+            <h3 class="tiles-group-title">👨‍🏫 أدوات المعلم</h3>
+            <div class="tiles-row">
+              <button class="tile" data-goto="roster">
+                <span class="tile-icon">👥</span>
+                <span class="tile-title">الطلاب</span>
+                <span class="tile-desc">إدارة الطلاب والصفوف</span>
+              </button>
+              <button class="tile" data-goto="points">
+                <span class="tile-icon">🏆</span>
+                <span class="tile-title">التعزيز</span>
+                <span class="tile-desc">منح وخصم النقاط</span>
+              </button>
+              <button class="tile" data-goto="studio">
+                <span class="tile-icon">🎨</span>
+                <span class="tile-title">استوديو الدروس</span>
+                <span class="tile-desc">إنشاء حصة تفاعلية</span>
+              </button>
+              <button class="tile" data-goto="bank">
+                <span class="tile-icon">📚</span>
+                <span class="tile-title">بنك الأسئلة</span>
+                <span class="tile-desc">أسئلة جاهزة للاستخدام</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- قسم الألعاب -->
+          <div class="tiles-group">
+            <h3 class="tiles-group-title">🎮 الأنشطة والألعاب</h3>
+            <div class="tiles-row">
+              <button class="tile tile-accent" data-goto="games">
+                <span class="tile-icon">🎲</span>
+                <span class="tile-title">مكتبة الألعاب</span>
+                <span class="tile-desc">18 لعبة تفاعلية</span>
+              </button>
+              <button class="tile tile-accent" data-goto="live">
+                <span class="tile-icon">📺</span>
+                <span class="tile-title">شاشة الحصة</span>
+                <span class="tile-desc">عرض مباشر للطلاب</span>
+              </button>
+              <button class="tile" data-goto="tools">
+                <span class="tile-icon">⏱️</span>
+                <span class="tile-title">الأدوات الصفية</span>
+                <span class="tile-desc">مؤقت، عجلة، مجموعات</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- قسم التحليل -->
+          <div class="tiles-group">
+            <h3 class="tiles-group-title">📊 التحليل والمتابعة</h3>
+            <div class="tiles-row">
+              <button class="tile" data-goto="analytics">
+                <span class="tile-icon">📈</span>
+                <span class="tile-title">الرسم البياني</span>
+                <span class="tile-desc">تطور نقاط الطلاب</span>
+              </button>
+              <button class="tile" data-goto="compare">
+                <span class="tile-icon">⚖️</span>
+                <span class="tile-title">المقارنة</span>
+                <span class="tile-desc">ف1 مقابل ف2</span>
+              </button>
+              <button class="tile" data-goto="reports">
+                <span class="tile-icon">📋</span>
+                <span class="tile-title">التقارير</span>
+                <span class="tile-desc">ملخص الحصص</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- قسم الذكاء والإدارة -->
+          <div class="tiles-group">
+            <h3 class="tiles-group-title">🤖 الذكاء والإدارة</h3>
+            <div class="tiles-row">
+              <button class="tile tile-purple" data-goto="ai">
+                <span class="tile-icon">✨</span>
+                <span class="tile-title">المساعد الذكي</span>
+                <span class="tile-desc">توليد خطط وأسئلة</span>
+              </button>
+              <button class="tile tile-warn" data-goto="settings">
+                <span class="tile-icon">⚙️</span>
+                <span class="tile-title">الإعدادات</span>
+                <span class="tile-desc">الملف الشخصي والحماية</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== بقية الصفحات تُبنى ديناميكيًا بواسطة JS ======== -->
+      <!-- كل صفحة ستُضاف داخل هذا العنصر عند الحاجة -->
+
+    </main>
+  </div>
+</div>
+
+<!-- ============================================================
+     حاويات عامة
+     ============================================================ -->
+<div class="toast-container" id="toast-container"></div>
+<div class="flash-overlay" id="flash-overlay"></div>
+<div class="modal-container" id="modal-container"></div>
+
+<!-- ============================================================
+     السكربتات — الترتيب إلزامي
+     ============================================================ -->
+<script src="config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/roster.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/games.js"></script>
+<script src="js/studio.js"></script>
+<script src="js/bank.js"></script>
+<script src="js/live.js"></script>
+<script src="js/ai-media.js"></script>
+<script src="js/ai-ocr.js"></script>      
+<script src="js/ai.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  // Service Worker لـ PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => console.log('✅ PWA جاهز:', reg.scope))
+      .catch(err => console.warn('PWA فشل:', err));
+  }
+</script>
+</body>
+</html>
