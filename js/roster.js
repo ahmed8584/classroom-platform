@@ -1198,3 +1198,100 @@ function openPromoteModal(sourceClassId) {
     }
   };
 }
+/* ============================================================
+   نافذة ترقية الصف
+   ============================================================ */
+function openPromoteModal(sourceClassId) {
+  const sourceClass = RosterState.classes.find(c => c.id === sourceClassId);
+  if (!sourceClass) {
+    toast('الصف غير موجود', 'error');
+    return;
+  }
+
+  const grades = window.APP_CONFIG.GRADES_LIST;
+  const sections = window.APP_CONFIG.SECTIONS_LIST;
+
+  const currentGradeIdx = grades.indexOf(sourceClass.grade);
+  const nextGrade = currentGradeIdx >= 0 && currentGradeIdx < grades.length - 1
+    ? grades[currentGradeIdx + 1]
+    : '';
+
+  const footer = document.createElement('div');
+  footer.className = 'modal-footer';
+  footer.innerHTML = `
+    <button class="btn btn-ghost" id="btn-cancel-promote" type="button">إلغاء</button>
+    <button class="btn btn-purple" id="btn-confirm-promote" type="button">🎓 ترقية الآن</button>
+  `;
+
+  openModal('🎓 ترقية الصف', (body) => {
+    body.innerHTML = `
+      <div style="padding:14px;background:#fef3c7;border-radius:10px;margin-bottom:16px;font-size:13px;color:#92400e">
+        <b>⚠️ تنبيه:</b> سيتم نقل الطلاب من الصف الحالي إلى صف أعلى مع تصفير النقاط.
+      </div>
+      <div style="margin-bottom:14px;padding:12px;background:#f8fafc;border-radius:8px">
+        <div style="font-weight:700;margin-bottom:4px">الصف المصدر:</div>
+        <div style="color:var(--primary)">${escapeHtml(sourceClass.name || sourceClass.grade)}</div>
+      </div>
+      <label>إلى الصف:</label>
+      <select id="promote-target-grade">
+        ${grades.map(g => `<option value="${g}" ${g === nextGrade ? 'selected' : ''}>${g}</option>`).join('')}
+      </select>
+      <label>الشعبة:</label>
+      <select id="promote-target-section">
+        <option value="">بدون شعبة</option>
+        ${sections.map(s => `<option value="${s}" ${s === sourceClass.section ? 'selected' : ''}>شعبة ${s}</option>`).join('')}
+      </select>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
+          <input type="checkbox" id="promote-reset" checked style="width:auto">
+          <span>تصفير النقاط</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
+          <input type="checkbox" id="promote-create" checked style="width:auto">
+          <span>إنشاء الصف الهدف إذا لم يكن موجوداً</span>
+        </label>
+      </div>
+    `;
+  }, { footer });
+
+  document.getElementById('btn-cancel-promote').onclick = closeAllModals;
+
+  document.getElementById('btn-confirm-promote').onclick = async () => {
+    const targetGrade = document.getElementById('promote-target-grade').value;
+    const targetSection = document.getElementById('promote-target-section').value;
+    const reset = document.getElementById('promote-reset').checked;
+    const create = document.getElementById('promote-create').checked;
+
+    if (!targetGrade) {
+      toast('اختر الصف الهدف', 'warn');
+      return;
+    }
+
+    const btn = document.getElementById('btn-confirm-promote');
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري الترقية...';
+
+    try {
+      const result = await API.call('classes.promote', {
+        sourceId: sourceClassId,
+        grade: targetGrade,
+        section: targetSection,
+        reset: String(reset),
+        create: String(create)
+      });
+
+      closeAllModals();
+      toast(`✅ تم نقل ${result.moved} طالب`, 'success');
+
+      await loadClassesAndPopulate();
+      const classesList = document.getElementById('classes-list-modal');
+      if (classesList) renderClassesModalList(classesList);
+    } catch (e) {
+      toast('فشل: ' + e.message, 'error');
+      btn.disabled = false;
+      btn.textContent = '🎓 ترقية الآن';
+    }
+  };
+}
+
+console.log('✅ openPromoteModal جاهزة');
