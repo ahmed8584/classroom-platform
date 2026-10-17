@@ -28,12 +28,13 @@ const API = {
       throw new Error('الخادم غير مهيأ. تحقق من config.js');
     }
 
-    // ⭐ أضف token كلمة المرور تلقائيًا
+    // ⭐ إضافة token تلقائيًا في كل طلب (حل مشكلة "يجب تسجيل الدخول")
     const token = sessionStorage.getItem('session_token');
     const payload = { action, ...params };
     if (token && !payload.token) {
       payload.token = token;
     }
+
     try {
       const res = await fetch(this.url, {
         method: 'POST',
