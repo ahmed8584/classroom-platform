@@ -947,7 +947,7 @@ function renderClassesModalList(container) {
     return;
   }
 
-  container.innerHTML = RosterState.classes.map(c => `
+    container.innerHTML = RosterState.classes.map(c => `
     <div class="student-row" style="padding:10px 12px">
       <div style="flex:1">
         <div style="font-weight:700">${escapeHtml(c.name || c.grade)}</div>
@@ -955,7 +955,10 @@ function renderClassesModalList(container) {
           ${escapeHtml(c.grade || '')} ${c.section ? ' - شعبة ' + escapeHtml(c.section) : ''}
         </div>
       </div>
-      <button class="btn btn-danger btn-sm" data-del-class="${c.id}" type="button">🗑️</button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-purple btn-sm" data-promote-class="${c.id}" type="button">🎓 ترقية</button>
+        <button class="btn btn-danger btn-sm" data-del-class="${c.id}" type="button">🗑️</button>
+      </div>
     </div>
   `).join('');
 
@@ -964,6 +967,10 @@ function renderClassesModalList(container) {
       const id = btn.dataset.delClass;
       const cls = RosterState.classes.find(c => c.id === id);
       if (!cls) return;
+        // ⭐ زر الترقية
+  container.querySelectorAll('[data-promote-class]').forEach(btn => {
+    btn.onclick = () => openPromoteModal(btn.dataset.promoteClass);
+  });
 
       const ok = await confirmAction(
         `⚠️ سيتم حذف الصف "<b>${escapeHtml(cls.name || cls.grade)}</b>" مع جميع طلابه.<br><br>هل أنت متأكد؟`,
@@ -982,4 +989,117 @@ function renderClassesModalList(container) {
       }
     };
   });
+}
+/* ============================================================
+   نافذة ترقية الصف
+   ============================================================ */
+function openPromoteModal(sourceClassId) {
+  const sourceClass = RosterState.classes.find(c => c.id === sourceClassId);
+  if (!sourceClass) return;
+
+  const grades = window.APP_CONFIG.GRADES_LIST;
+  const sections = window.APP_CONFIG.SECTIONS_LIST;
+
+  // احسب الصف التالي تلقائياً
+  const currentGradeIdx = grades.indexOf(sourceClass.grade);
+  const nextGrade = currentGradeIdx >= 0 && currentGradeIdx < grades.length - 1
+    ? grades[currentGradeIdx + 1]
+    : '';
+
+  const footer = document.createElement('div');
+  footer.className = 'modal-footer';
+  footer.innerHTML = `
+    <button class="btn btn-ghost" id="btn-cancel-promote" type="button">إلغاء</button>
+    <button class="btn btn-purple" id="btn-confirm-promote" type="button">🎓 ترقية الآن</button>
+  `;
+
+  openModal('🎓 ترقية الصف', (body) => {
+    body.innerHTML = `
+      <div style="padding:14px;background:#fef3c7;border-radius:10px;margin-bottom:16px;font-size:13px;color:#92400e">
+        <b>⚠️ تنبيه:</b> سيتم نقل الطلاب من الصف الحالي إلى صف أعلى. 
+        يمكنك اختيار تصفير النقاط (نهاية العام).
+      </div>
+
+      <div style="margin-bottom:14px;padding:12px;background:#f8fafc;border-radius:8px">
+        <div style="font-weight:700;margin-bottom:4px">الصف المصدر:</div>
+        <div style="color:var(--primary)">${escapeHtml(sourceClass.name || sourceClass.grade)}</div>
+      </div>
+
+      <label>إلى الصف:</label>
+      <select id="promote-target-grade">
+        ${grades.map(g => `<option value="${g}" ${g === nextGrade ? 'selected' : ''}>${g}</option>`).join('')}
+      </select>
+
+      <label>الشعبة:</label>
+      <select id="promote-target-section">
+        <option value="">بدون شعبة</option>
+        ${sections.map(s => `<option value="${s}" ${s === sourceClass.section ? 'selected' : ''}>شعبة ${s}</option>`).join('')}
+      </select>
+
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
+          <input type="checkbox" id="promote-reset" checked style="width:auto">
+          <span>تصفير النقاط (للفصلين)</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal">
+          <input type="checkbox" id="promote-create" checked style="width:auto">
+          <span>إنشاء الصف الهدف إذا لم يكن موجوداً</span>
+        </label>
+      </div>
+    `;
+  }, { footer });
+
+  document.getElementById('btn-cancel-promote').onclick = closeAllModals;
+
+  document.getElementById('btn-confirm-promote').onclick = async () => {
+    const targetGrade = document.getElementById('promote-target-grade').value;
+    const targetSection = document.getElementById('promote-target-section').value;
+    const reset = document.getElementById('promote-reset').checked;
+    const create = document.getElementById('promote-create').checked;
+
+    if (!targetGrade) {
+      toast('اختر الصف الهدف', 'warn');
+      return;
+    }
+
+    const ok = await confirmAction(
+      `🎓 نقل طلاب <b>"${escapeHtml(sourceClass.name || sourceClass.grade)}"</b> إلى <b>"${targetGrade}${targetSection ? ' - شعبة ' + targetSection : ''}"</b>؟<br><br>
+       ${reset ? '✅ سيتم تصفير النقاط.' : '⚠️ ستبقى النقاط كما هي.'}`,
+      'ترقية'
+    );
+    if (!ok) return;
+
+    const btn = document.getElementById('btn-confirm-promote');
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري الترقية...';
+
+    try {
+      const result = await API.call('classes.promote', {
+        sourceId: sourceClassId,
+        grade: targetGrade,
+        section: targetSection,
+        reset: String(reset),
+        create: String(create)
+      });
+
+      closeAllModals();
+      toast(`✅ تم نقل ${result.moved} طالب`, 'success');
+      
+      if (result.skipped > 0) {
+        toast(`(تم تجاهل ${result.skipped} اسم مكرر)`, 'info');
+      }
+
+      // أعد تحميل الصفوف
+      await loadClassesAndPopulate();
+      
+      // أعد رسم النافذة
+      const classesList = document.getElementById('classes-list-modal');
+      if (classesList) renderClassesModalList(classesList);
+
+    } catch (e) {
+      toast('فشل: ' + e.message, 'error');
+      btn.disabled = false;
+      btn.textContent = '🎓 ترقية الآن';
+    }
+  };
 }
